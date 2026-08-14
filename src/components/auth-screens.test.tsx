@@ -72,4 +72,23 @@ describe("administrator password sign-in", () => {
     expect(await screen.findByText("Invalid username or password.")).toBeInTheDocument();
     expect(document.body.textContent).not.toContain("private-admin@example.test");
   });
+
+  it("does not relabel a successful login when mobile storage cleanup fails", async () => {
+    const user = userEvent.setup();
+    offline.clear.mockRejectedValue(new Error("IndexedDB unavailable"));
+    auth.clearFoodtopiaCaches.mockRejectedValue(
+      new Error("CacheStorage unavailable"),
+    );
+    render(<SignInScreen adminLoginEnabled />);
+
+    await user.type(screen.getByLabelText("Username"), "Admin");
+    await user.type(screen.getByLabelText("Password"), "a-test-password");
+    await user.click(screen.getByRole("button", { name: "Sign in as admin" }));
+
+    await waitFor(() => {
+      expect(offline.clear).toHaveBeenCalledTimes(1);
+      expect(auth.clearFoodtopiaCaches).toHaveBeenCalledTimes(1);
+    });
+    expect(screen.queryByText("Invalid username or password.")).toBeNull();
+  });
 });

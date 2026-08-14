@@ -85,14 +85,19 @@ function AdminPasswordForm({ nextPath }: { nextPath: string }) {
     setFailed(false);
     try {
       await requestAdminPasswordLogin(username, password);
-      await clear();
-      await clearFoodtopiaCaches();
-      window.location.replace(normalizeInternalPath(nextPath));
     } catch {
       setPassword("");
       setFailed(true);
       setBusy(false);
+      return;
     }
+
+    // Authentication has already succeeded and its response contains the new
+    // session cookies. Mobile browsers can reject IndexedDB or CacheStorage
+    // cleanup independently; that must not be reported as bad credentials.
+    setPassword("");
+    await Promise.allSettled([clear(), clearFoodtopiaCaches()]);
+    window.location.replace(normalizeInternalPath(nextPath));
   }
 
   return (

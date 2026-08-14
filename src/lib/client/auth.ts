@@ -71,8 +71,13 @@ export async function clearFoodtopiaCaches() {
   } catch {
     // Storage may be disabled; continue clearing any available CacheStorage.
   }
-  if ("caches" in window) {
-    const keys = await caches.keys();
-    await Promise.all(keys.filter((key) => key.startsWith("foodtopia-")).map((key) => caches.delete(key)));
+  try {
+    if ("caches" in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.filter((key) => key.startsWith("foodtopia-")).map((key) => caches.delete(key)));
+    }
+  } catch {
+    // Some installed/mobile contexts expose CacheStorage but deny access.
+    // Session establishment must not depend on cache cleanup succeeding.
   }
 }
