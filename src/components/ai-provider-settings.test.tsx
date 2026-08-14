@@ -79,7 +79,7 @@ describe("AI provider settings", () => {
     await user.selectOptions(screen.getByLabelText("Provider"), "openrouter");
     await user.click(screen.getByRole("radio", { name: /Household key/i }));
     const secret = "fake-openrouter-household-key";
-    await user.type(screen.getByLabelText("API key"), secret);
+    await user.type(screen.getByLabelText("OpenRouter API key"), secret);
     await user.click(screen.getByRole("button", { name: "Save AI provider" }));
 
     await waitFor(() => {
@@ -93,7 +93,7 @@ describe("AI provider settings", () => {
         apiKey: secret,
       });
     });
-    expect(screen.getByLabelText("Replace API key")).toHaveValue("");
+    expect(screen.getByLabelText("Replace OpenRouter API key")).toHaveValue("");
     expect(document.body.textContent).not.toContain(secret);
     expect(JSON.stringify(localStorage)).not.toContain(secret);
     expect(JSON.stringify(sessionStorage)).not.toContain(secret);
@@ -110,7 +110,7 @@ describe("AI provider settings", () => {
 
     await screen.findByText("Owner-managed setting");
     expect(screen.getByLabelText("Provider")).toBeDisabled();
-    expect(screen.getByLabelText("Replace API key")).toBeDisabled();
+    expect(screen.getByLabelText("Replace OpenAI API key")).toBeDisabled();
     expect(screen.queryByRole("button", { name: "Save AI provider" })).toBeNull();
   });
 
@@ -122,7 +122,7 @@ describe("AI provider settings", () => {
     await user.selectOptions(screen.getByLabelText("Provider"), "openrouter");
     await user.click(screen.getByRole("radio", { name: /Household key/i }));
     await user.type(
-      screen.getByLabelText("API key"),
+      screen.getByLabelText("OpenRouter API key"),
       "fake-openrouter-discovery-key",
     );
 
@@ -151,7 +151,7 @@ describe("AI provider settings", () => {
     await screen.findByRole("option", { name: "OpenRouter" });
     await user.selectOptions(screen.getByLabelText("Provider"), "openrouter");
     await user.click(screen.getByRole("radio", { name: /Household key/i }));
-    await user.type(screen.getByLabelText("API key"), "fake-key");
+    await user.type(screen.getByLabelText("OpenRouter API key"), "fake-key");
     await user.click(screen.getByRole("button", { name: "Load models" }));
 
     await waitFor(() => {
@@ -179,6 +179,6 @@ describe("AI provider settings", () => {
         credentialSource: "household",
       });
     });
-    expect(screen.getByLabelText("Replace API key")).toHaveValue("");
+    expect(screen.getByLabelText("Replace OpenRouter API key")).toHaveValue("");
   });
 });

@@ -365,7 +365,11 @@ export function AiProviderSettings({
             </StateNotice>
           ) : null}
 
-          <Field label="Provider" htmlFor="ai-provider">
+          <Field
+            label="Provider"
+            htmlFor="ai-provider"
+            hint="API keys and model choices belong to the provider selected here."
+          >
             <select
               id="ai-provider"
               className={selectClass}
@@ -440,7 +444,12 @@ export function AiProviderSettings({
             </div>
           ) : (
             <Field
-              label={settings.credentialSource === "household" ? "Replace API key" : "API key"}
+              label={
+                settings.credentialSource === "household" &&
+                settings.provider === draft.provider
+                  ? `Replace ${providerLabel(draft.provider)} API key`
+                  : `${providerLabel(draft.provider)} API key`
+              }
               htmlFor="ai-api-key"
               hint={
                 householdCredentialNeedsReplacement
