@@ -423,6 +423,10 @@ export type Database = {
         Args: { p_action: string; p_limit: number; p_window_seconds: number };
         Returns: Json;
       };
+      consume_pre_auth_rate_limit: {
+        Args: { p_bucket: string; p_limit: number; p_window_seconds: number };
+        Returns: Json;
+      };
       record_product_event: {
         Args: {
           p_event_name: string;

@@ -4,7 +4,12 @@ import Link from "next/link";
 import { useEffect, useState, type FormEvent } from "react";
 import { ArrowRight, CheckCircle2, LoaderCircle, LockKeyhole, Mail, Users } from "lucide-react";
 import { ApiClientError, acceptHouseholdInvite, bootstrapHousehold } from "@/lib/client/api";
-import { clearFoodtopiaCaches, getAuthenticatedUser, requestMagicLink } from "@/lib/client/auth";
+import {
+  clearFoodtopiaCaches,
+  getAuthenticatedUser,
+  requestAdminPasswordLogin,
+  requestMagicLink,
+} from "@/lib/client/auth";
 import { normalizeInternalPath } from "@/lib/internal-path";
 import { useOfflineInventory } from "./offline-provider";
 import { Button, Card, Field, inputClass, StateNotice } from "./ui";
@@ -67,14 +72,86 @@ function MagicLinkForm({ nextPath = "/", invitation = false }: { nextPath?: stri
   );
 }
 
+function AdminPasswordForm({ nextPath }: { nextPath: string }) {
+  const { clear } = useOfflineInventory();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    setBusy(true);
+    setFailed(false);
+    try {
+      await requestAdminPasswordLogin(username, password);
+      await clear();
+      await clearFoodtopiaCaches();
+      window.location.replace(normalizeInternalPath(nextPath));
+    } catch {
+      setPassword("");
+      setFailed(true);
+      setBusy(false);
+    }
+  }
+
+  return (
+    <form onSubmit={(event) => void submit(event)}>
+      <Field label="Username" htmlFor="admin-username">
+        <input
+          id="admin-username"
+          name="username"
+          type="text"
+          autoComplete="username"
+          required
+          minLength={1}
+          maxLength={64}
+          className={inputClass}
+          value={username}
+          onChange={(event) => setUsername(event.target.value)}
+        />
+      </Field>
+      <div className="mt-4">
+        <Field label="Password" htmlFor="admin-password">
+          <input
+            id="admin-password"
+            name="password"
+            type="password"
+            autoComplete="current-password"
+            required
+            minLength={8}
+            maxLength={256}
+            className={inputClass}
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+          />
+        </Field>
+      </div>
+      {failed ? (
+        <div className="mt-3">
+          <StateNotice title="Admin sign-in failed" tone="error">
+            Invalid username or password.
+          </StateNotice>
+        </div>
+      ) : null}
+      <Button type="submit" className="mt-5 w-full" busy={busy}>
+        Sign in as admin
+        <ArrowRight className="size-4" aria-hidden="true" />
+      </Button>
+    </form>
+  );
+}
+
 export function SignInScreen({
   nextPath = "/",
   householdDeletion,
   authError,
+  adminLoginEnabled = false,
 }: {
   nextPath?: string;
   householdDeletion?: "pending" | "complete";
   authError?: "invalid_link";
+  adminLoginEnabled?: boolean;
 }) {
   return (
     <AuthFrame>
@@ -93,6 +170,25 @@ export function SignInScreen({
             Request a fresh link below. Your invitation and offline household data are unchanged.
           </StateNotice>
         </div>
+      ) : null}
+      {adminLoginEnabled ? (
+        <Card className="mb-4 p-6 sm:p-8">
+          <div className="mb-6 text-center">
+            <span className="mx-auto mb-5 flex size-14 items-center justify-center rounded-2xl bg-[var(--sprout)] text-[var(--leaf)]">
+              <LockKeyhole className="size-6" aria-hidden="true" />
+            </span>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--leaf)]">
+              Testing access
+            </p>
+            <h1 className="mt-2 text-3xl font-extrabold tracking-[-0.045em]">
+              Administrator sign-in
+            </h1>
+            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+              Use the configured administrator username and password.
+            </p>
+          </div>
+          <AdminPasswordForm nextPath={nextPath} />
+        </Card>
       ) : null}
       <Card className="p-6 sm:p-8">
         <div className="mb-6 text-center"><span className="mx-auto mb-5 flex size-14 items-center justify-center rounded-2xl bg-[var(--tomato-soft)] text-[var(--tomato)]"><LockKeyhole className="size-6" aria-hidden="true" /></span><p className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--tomato)]">Private beta</p><h1 className="mt-2 text-3xl font-extrabold tracking-[-0.045em]">Welcome back</h1><p className="mt-2 text-sm leading-6 text-[var(--muted)]">Use the email that was invited to your household.</p></div>

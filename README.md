@@ -15,7 +15,7 @@ The repository is a single TypeScript application built with Next.js App Router,
 - Installable PWA shell with a static, data-free offline fallback; authenticated pages and API responses are network-only.
 - Dexie snapshot/outbox sync on launch, focus, reconnect, and every 15 seconds while foregrounded. Logout clears household rows and Foodtopia caches.
 - 80 original project-owned recipe drafts, 103 normalized food concepts, 304 aliases, deterministic evidence-based matching, prompt parsing, and cooking reconciliation.
-- Passwordless Supabase Auth, beta and household invite gates, one-household membership, RLS, and private raw-image storage policies.
+- Passwordless Supabase Auth for invited households, an optional server-mapped administrator password login for testing, beta and household invite gates, one-household membership, RLS, and private raw-image storage policies.
 - Durable Inngest analysis and purge functions with household-selectable OpenAI/OpenRouter adapters and strict Zod validation.
 - A local demo that needs no cloud account and a fail-closed production mode that requires real credentials.
 
@@ -54,6 +54,11 @@ NEXT_PUBLIC_APP_URL=https://your-foodtopia.example
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
 SUPABASE_SERVICE_ROLE_KEY=...
+# Optional testing-only username alias. Set its password directly on the mapped
+# Supabase Auth user; never store the password in Vercel or this repository.
+FOODTOPIA_ADMIN_LOGIN_ENABLED=true
+FOODTOPIA_ADMIN_USERNAME=Admin
+FOODTOPIA_ADMIN_EMAIL=admin@example.com
 OPENAI_API_KEY=...
 OPENAI_VISION_MODEL=gpt-5.6-terra
 OPENAI_RECIPE_MODEL=gpt-5.6-luna
@@ -67,6 +72,12 @@ INNGEST_SIGNING_KEY=...
 ```
 
 `NEXT_PUBLIC_SUPABASE_ANON_KEY` remains supported as a compatibility alias for the publishable key.
+
+When the administrator login flag is `true` and both mapping variables are
+valid, `/sign-in` exposes a testing-only username/password form. The username
+is resolved to the configured email only on the server; authentication still
+uses the normal Supabase user session and does not grant service-role or
+cross-household access.
 
 Only the provider selected by a household needs a platform key. If the selected
 source is `platform` and that provider key is absent, or the selected source is

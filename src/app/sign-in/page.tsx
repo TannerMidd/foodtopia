@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SignInScreen } from "@/components/auth-screens";
 import { normalizeInternalPath } from "@/lib/internal-path";
+import { isAdminLoginEnabled } from "@/server/auth/admin-login-config";
 
 export const metadata: Metadata = { title: "Sign in" };
 
@@ -17,6 +18,7 @@ export default async function SignInPage({ searchParams }: PageProps<"/sign-in">
       nextPath={nextPath}
       householdDeletion={householdDeletion}
       authError={authError}
+      adminLoginEnabled={isAdminLoginEnabled()}
     />
   );
 }

@@ -26,6 +26,25 @@ export async function requestMagicLink(email: string, next = "/") {
   return { demo: false as const };
 }
 
+export async function requestAdminPasswordLogin(
+  username: string,
+  password: string,
+) {
+  const response = await fetch("/api/v1/auth/admin-login", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    cache: "no-store",
+    body: JSON.stringify({ username, password }),
+  });
+  if (!response.ok) {
+    throw new Error("Invalid username or password.");
+  }
+}
+
 export async function signOut() {
   const supabase = getClient();
   if (supabase) await supabase.auth.signOut();

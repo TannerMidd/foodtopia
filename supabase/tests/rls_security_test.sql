@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = public, extensions;
 
-select plan(54);
+select plan(57);
 
 -- Stable fixture identifiers make failures and Storage paths easy to inspect.
 insert into auth.users (id, email, raw_app_meta_data, raw_user_meta_data)
@@ -554,6 +554,32 @@ select throws_ok(
   '28000',
   'active household session required',
   'quarantined household cannot start new analysis work'
+);
+
+reset role;
+set local role anon;
+select throws_ok(
+  $$select public.consume_pre_auth_rate_limit('admin_password_login', 5, 900)$$,
+  '42501',
+  'permission denied for function consume_pre_auth_rate_limit',
+  'anonymous clients cannot consume or inspect the admin login throttle'
+);
+
+reset role;
+set local role authenticated;
+select throws_ok(
+  $$select public.consume_pre_auth_rate_limit('admin_password_login', 5, 900)$$,
+  '42501',
+  'permission denied for function consume_pre_auth_rate_limit',
+  'authenticated clients cannot bypass the service-only admin login throttle'
+);
+
+reset role;
+set local role service_role;
+select is(
+  (public.consume_pre_auth_rate_limit('admin_password_login', 5, 900) ->> 'allowed')::boolean,
+  true,
+  'the service role can atomically consume the privacy-safe admin login allowance'
 );
 
 select * from finish();

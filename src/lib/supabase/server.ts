@@ -48,6 +48,14 @@ export function createAuthCallbackSupabaseClient(
   request: NextRequest,
   response: NextResponse,
 ): ServerSupabaseClient {
+  return createResponseSupabaseClient(request, response);
+}
+
+/** Creates a user-scoped client whose auth changes are written to `response`. */
+export function createResponseSupabaseClient(
+  request: NextRequest,
+  response: NextResponse,
+): ServerSupabaseClient {
   const { url, publishableKey } = getSupabasePublicConfig();
 
   return createServerClient<Database>(url, publishableKey, {
