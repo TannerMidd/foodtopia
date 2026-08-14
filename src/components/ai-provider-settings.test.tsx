@@ -114,7 +114,7 @@ describe("AI provider settings", () => {
     expect(screen.queryByRole("button", { name: "Save AI provider" })).toBeNull();
   });
 
-  it("automatically loads searchable OpenRouter choices after a household key is entered", async () => {
+  it("automatically loads visible OpenRouter choices after a household key is entered", async () => {
     const user = userEvent.setup();
     render(<AiProviderSettings apiMode="connected" />);
 
@@ -138,10 +138,29 @@ describe("AI provider settings", () => {
     await screen.findByText(/2 structured-output models loaded; 1 accept photos/i);
 
     const visionField = screen.getByLabelText("Vision model");
-    await user.clear(visionField);
-    await user.click(visionField);
-    await user.click(screen.getByRole("option", { name: /Vision Ready/i }));
+    const visionChoices = screen.getByLabelText("Vision model choices");
+    expect(visionChoices).toBeVisible();
+    await user.selectOptions(visionChoices, "vendor/vision-ready");
     expect(visionField).toHaveValue("vendor/vision-ready");
+  });
+
+  it("provides a direct model-load action when automatic loading has not run", async () => {
+    const user = userEvent.setup();
+    render(<AiProviderSettings apiMode="connected" />);
+
+    await screen.findByRole("option", { name: "OpenRouter" });
+    await user.selectOptions(screen.getByLabelText("Provider"), "openrouter");
+    await user.click(screen.getByRole("radio", { name: /Household key/i }));
+    await user.type(screen.getByLabelText("API key"), "fake-key");
+    await user.click(screen.getByRole("button", { name: "Load models" }));
+
+    await waitFor(() => {
+      expect(api.discoverOpenRouterModelChoices).toHaveBeenCalledWith({
+        credentialSource: "household",
+        apiKey: "fake-key",
+      });
+    });
+    expect(await screen.findByLabelText("Recipe model choices")).toBeVisible();
   });
 
   it("uses an already-saved OpenRouter key without asking the browser for it again", async () => {

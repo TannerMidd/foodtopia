@@ -90,82 +90,50 @@ function OpenRouterModelField({
   disabled: boolean;
   onChange: (value: string) => void;
 }) {
-  const [open, setOpen] = useState(false);
-  const query = value.trim().toLocaleLowerCase();
-  const matches = models
-    .filter((model) => {
-      if (!query) return true;
-      return `${model.name} ${model.id}`.toLocaleLowerCase().includes(query);
-    })
-    .slice(0, 12);
-  const listId = `${id}-choices`;
+  const selectedChoice = models.some((model) => model.id === value)
+    ? value
+    : "";
 
   return (
     <Field
       label={label}
       htmlFor={id}
-      hint="Search compatible OpenRouter models by name or ID. Manual IDs are still allowed."
+      hint="Choose a loaded model or enter a custom OpenRouter model ID."
     >
-      <div className="relative">
+      <div className="space-y-2">
+        {models.length > 0 ? (
+          <select
+            id={`${id}-choice`}
+            className={selectClass}
+            aria-label={`${label} choices`}
+            value={selectedChoice}
+            disabled={disabled}
+            onChange={(event) => {
+              if (event.target.value) onChange(event.target.value);
+            }}
+          >
+            <option value="">Choose from {models.length} loaded models</option>
+            {models.map((model) => (
+              <option key={model.id} value={model.id}>
+                {model.name} — {model.id}
+              </option>
+            ))}
+          </select>
+        ) : null}
         <input
           id={id}
           className={inputClass}
-          role="combobox"
-          aria-autocomplete="list"
-          aria-controls={listId}
-          aria-expanded={open && models.length > 0}
           autoComplete="off"
           maxLength={160}
+          placeholder={
+            models.length > 0 ? "Or enter a custom model ID" : "Model ID"
+          }
           required
           spellCheck={false}
           value={value}
           disabled={disabled}
-          onFocus={() => setOpen(true)}
-          onBlur={() => setOpen(false)}
-          onChange={(event) => {
-            onChange(event.target.value);
-            setOpen(true);
-          }}
+          onChange={(event) => onChange(event.target.value)}
         />
-        {open && models.length > 0 ? (
-          <div
-            id={listId}
-            role="listbox"
-            className="absolute inset-x-0 top-full z-20 mt-2 max-h-72 overflow-y-auto rounded-2xl border border-[var(--line)] bg-white p-1 shadow-xl"
-          >
-            {matches.length > 0 ? (
-              matches.map((model) => (
-                <button
-                  key={model.id}
-                  type="button"
-                  role="option"
-                  aria-selected={model.id === value}
-                  className="block w-full rounded-xl px-3 py-2 text-left hover:bg-[var(--cream)] focus:bg-[var(--cream)] focus:outline-none"
-                  onPointerDown={(event) => event.preventDefault()}
-                  onClick={() => {
-                    onChange(model.id);
-                    setOpen(false);
-                  }}
-                >
-                  <span className="block truncate text-sm font-bold">
-                    {model.name}
-                  </span>
-                  <span className="block truncate text-xs text-[var(--muted)]">
-                    {model.id}
-                    {model.contextLength
-                      ? ` · ${model.contextLength.toLocaleString()} tokens`
-                      : ""}
-                  </span>
-                </button>
-              ))
-            ) : (
-              <p className="px-3 py-3 text-xs text-[var(--muted)]">
-                No loaded model matches this text. You can still use the model
-                ID as entered.
-              </p>
-            )}
-          </div>
-        ) : null}
       </div>
     </Field>
   );
@@ -532,23 +500,27 @@ export function AiProviderSettings({
 
               {settings.canEdit ? (
                 <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-3">
-                  <div className="flex items-center justify-between gap-3">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <p className="text-xs leading-5 text-[var(--muted)]" role="status">
                       {modelsLoading
                         ? "Loading compatible models from OpenRouter…"
+                        : modelsError
+                          ? "Model choices did not load."
                         : openRouterModels
-                          ? `${openRouterModels.length} structured-output models loaded; ${openRouterModels.filter((model) => model.supportsVision).length} accept photos.`
+                          ? openRouterModels.length > 0
+                            ? `${openRouterModels.length} structured-output models loaded; ${openRouterModels.filter((model) => model.supportsVision).length} accept photos.`
+                            : "OpenRouter returned no compatible structured-output models for this account."
                           : selectedDiscoveryInput
-                            ? "Model choices will load automatically."
+                            ? "Ready to load model choices from OpenRouter."
                             : "Enter an OpenRouter key to load model choices."}
                     </p>
                     <Button
                       type="button"
-                      size="icon"
-                      variant="ghost"
+                      size="small"
+                      variant="secondary"
+                      className="w-full sm:w-auto"
                       busy={modelsLoading}
                       disabled={!selectedDiscoveryInput || saving}
-                      aria-label="Refresh OpenRouter model choices"
                       onClick={() => {
                         if (selectedDiscoveryInput) {
                           void loadOpenRouterModels(selectedDiscoveryInput);
@@ -556,6 +528,7 @@ export function AiProviderSettings({
                       }}
                     >
                       <RefreshCw className="size-4" aria-hidden="true" />
+                      {openRouterModels ? "Reload models" : "Load models"}
                     </Button>
                   </div>
                   {modelsError ? (
