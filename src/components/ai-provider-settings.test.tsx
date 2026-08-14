@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { AiSettingsResponse } from "@/contracts/api";
 
 const api = vi.hoisted(() => ({
+  discoverOpenRouterModelChoices: vi.fn(),
   getAiSettings: vi.fn(),
   updateAiSettings: vi.fn(),
 }));
@@ -41,6 +42,23 @@ beforeEach(() => {
   localStorage.clear();
   sessionStorage.clear();
   api.getAiSettings.mockResolvedValue(initial);
+  api.discoverOpenRouterModelChoices.mockResolvedValue({
+    models: [
+      {
+        id: "vendor/vision-ready",
+        name: "Vision Ready",
+        contextLength: 131072,
+        supportsVision: true,
+      },
+      {
+        id: "vendor/recipe-ready",
+        name: "Recipe Ready",
+        contextLength: 65536,
+        supportsVision: false,
+      },
+    ],
+    fetchedAt: "2026-08-14T18:00:00.000Z",
+  });
 });
 
 describe("AI provider settings", () => {
@@ -94,5 +112,54 @@ describe("AI provider settings", () => {
     expect(screen.getByLabelText("Provider")).toBeDisabled();
     expect(screen.getByLabelText("Replace API key")).toBeDisabled();
     expect(screen.queryByRole("button", { name: "Save AI provider" })).toBeNull();
+  });
+
+  it("automatically loads searchable OpenRouter choices after a household key is entered", async () => {
+    const user = userEvent.setup();
+    render(<AiProviderSettings apiMode="connected" />);
+
+    await screen.findByRole("option", { name: "OpenRouter" });
+    await user.selectOptions(screen.getByLabelText("Provider"), "openrouter");
+    await user.click(screen.getByRole("radio", { name: /Household key/i }));
+    await user.type(
+      screen.getByLabelText("API key"),
+      "fake-openrouter-discovery-key",
+    );
+
+    await waitFor(
+      () => {
+        expect(api.discoverOpenRouterModelChoices).toHaveBeenCalledWith({
+          credentialSource: "household",
+          apiKey: "fake-openrouter-discovery-key",
+        });
+      },
+      { timeout: 2500 },
+    );
+    await screen.findByText(/2 structured-output models loaded; 1 accept photos/i);
+
+    const visionField = screen.getByLabelText("Vision model");
+    await user.clear(visionField);
+    await user.click(visionField);
+    await user.click(screen.getByRole("option", { name: /Vision Ready/i }));
+    expect(visionField).toHaveValue("vendor/vision-ready");
+  });
+
+  it("uses an already-saved OpenRouter key without asking the browser for it again", async () => {
+    api.getAiSettings.mockResolvedValue({
+      ...initial,
+      provider: "openrouter",
+      visionModelId: "vendor/vision",
+      recipeModelId: "vendor/recipe",
+      credentialSource: "household",
+      credentialConfigured: true,
+    });
+    render(<AiProviderSettings apiMode="connected" />);
+
+    await waitFor(() => {
+      expect(api.discoverOpenRouterModelChoices).toHaveBeenCalledWith({
+        credentialSource: "household",
+      });
+    });
+    expect(screen.getByLabelText("Replace API key")).toHaveValue("");
   });
 });

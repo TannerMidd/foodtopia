@@ -167,6 +167,47 @@ export const aiSettingsUpdateRequestSchema = z
     }
   });
 
+export const openRouterModelDiscoveryRequestSchema = z
+  .object({
+    credentialSource: aiCredentialSourceSchema,
+    apiKey: z
+      .string()
+      .trim()
+      .min(8)
+      .max(1024)
+      .refine(
+        (value) => !/[\u0000-\u001f\u007f]/.test(value),
+        "The API key contains unsupported characters.",
+      )
+      .optional(),
+  })
+  .strict()
+  .superRefine((value, context) => {
+    if (value.credentialSource === "platform" && value.apiKey !== undefined) {
+      context.addIssue({
+        code: "custom",
+        path: ["apiKey"],
+        message: "Platform model discovery uses the deployment credential.",
+      });
+    }
+  });
+
+export const openRouterModelChoiceSchema = z
+  .object({
+    id: aiModelIdSchema,
+    name: z.string().trim().min(1).max(240),
+    contextLength: z.number().int().positive().nullable(),
+    supportsVision: z.boolean(),
+  })
+  .strict();
+
+export const openRouterModelsResponseSchema = z
+  .object({
+    models: z.array(openRouterModelChoiceSchema).max(2000),
+    fetchedAt: z.iso.datetime(),
+  })
+  .strict();
+
 export const householdMemberSchema = z.object({
   userId: z.uuid(),
   displayName: z.string().nullable(),
@@ -317,4 +358,13 @@ export type AiCredentialSource = z.infer<typeof aiCredentialSourceSchema>;
 export type AiSettingsResponse = z.infer<typeof aiSettingsResponseSchema>;
 export type AiSettingsUpdateRequest = z.infer<
   typeof aiSettingsUpdateRequestSchema
+>;
+export type OpenRouterModelDiscoveryRequest = z.infer<
+  typeof openRouterModelDiscoveryRequestSchema
+>;
+export type OpenRouterModelChoice = z.infer<
+  typeof openRouterModelChoiceSchema
+>;
+export type OpenRouterModelsResponse = z.infer<
+  typeof openRouterModelsResponseSchema
 >;

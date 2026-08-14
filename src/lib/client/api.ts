@@ -13,6 +13,7 @@ import {
   inventoryCommandResponseSchema,
   inventorySyncResponseSchema,
   inviteCreateResponseSchema,
+  openRouterModelsResponseSchema,
   recipeSuggestionResponseSchema,
   unfinishedAnalysesResponseSchema,
   visionConsentResponseSchema,
@@ -20,6 +21,8 @@ import {
   type AiSettingsUpdateRequest,
   type AnalysisCreateResponse,
   type InventorySyncResponse,
+  type OpenRouterModelDiscoveryRequest,
+  type OpenRouterModelsResponse,
   type RecipeSuggestionResponse,
 } from "@/contracts/api";
 import type {
@@ -177,6 +180,17 @@ export async function updateAiSettings(
     await request("/api/v1/ai-settings", {
       method: "PUT",
       body: JSON.stringify(settings),
+    }),
+  );
+}
+
+export async function discoverOpenRouterModelChoices(
+  input: OpenRouterModelDiscoveryRequest,
+): Promise<OpenRouterModelsResponse> {
+  return openRouterModelsResponseSchema.parse(
+    await request("/api/v1/ai-settings/openrouter-models", {
+      method: "POST",
+      body: JSON.stringify(input),
     }),
   );
 }

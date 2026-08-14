@@ -1,14 +1,27 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
-import { Cloud, KeyRound, Sparkles } from "lucide-react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FormEvent,
+} from "react";
+import { Cloud, KeyRound, RefreshCw, Sparkles } from "lucide-react";
 
 import type {
   AiCredentialSource,
   AiProvider,
   AiSettingsResponse,
+  OpenRouterModelChoice,
+  OpenRouterModelDiscoveryRequest,
 } from "@/contracts/api";
-import { getAiSettings, updateAiSettings } from "@/lib/client/api";
+import {
+  discoverOpenRouterModelChoices,
+  getAiSettings,
+  updateAiSettings,
+} from "@/lib/client/api";
 import {
   Badge,
   Button,
@@ -39,6 +52,125 @@ function providerLabel(provider: AiProvider) {
   return provider === "openrouter" ? "OpenRouter" : "OpenAI";
 }
 
+function discoveryInput(
+  settings: AiSettingsResponse | null,
+  provider: AiProvider | null,
+  credentialSource: AiCredentialSource | null,
+  apiKey: string,
+): OpenRouterModelDiscoveryRequest | null {
+  if (!settings || provider !== "openrouter" || !credentialSource) return null;
+  if (credentialSource === "platform") {
+    return settings.platformCredentials.openrouter
+      ? { credentialSource: "platform" }
+      : null;
+  }
+  const enteredKey = apiKey.trim();
+  if (enteredKey.length >= 8) {
+    return { credentialSource: "household", apiKey: enteredKey };
+  }
+  const savedHouseholdKey =
+    settings.provider === "openrouter" &&
+    settings.credentialSource === "household" &&
+    settings.credentialConfigured;
+  return savedHouseholdKey ? { credentialSource: "household" } : null;
+}
+
+function OpenRouterModelField({
+  id,
+  label,
+  value,
+  models,
+  disabled,
+  onChange,
+}: {
+  id: string;
+  label: string;
+  value: string;
+  models: OpenRouterModelChoice[];
+  disabled: boolean;
+  onChange: (value: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const query = value.trim().toLocaleLowerCase();
+  const matches = models
+    .filter((model) => {
+      if (!query) return true;
+      return `${model.name} ${model.id}`.toLocaleLowerCase().includes(query);
+    })
+    .slice(0, 12);
+  const listId = `${id}-choices`;
+
+  return (
+    <Field
+      label={label}
+      htmlFor={id}
+      hint="Search compatible OpenRouter models by name or ID. Manual IDs are still allowed."
+    >
+      <div className="relative">
+        <input
+          id={id}
+          className={inputClass}
+          role="combobox"
+          aria-autocomplete="list"
+          aria-controls={listId}
+          aria-expanded={open && models.length > 0}
+          autoComplete="off"
+          maxLength={160}
+          required
+          spellCheck={false}
+          value={value}
+          disabled={disabled}
+          onFocus={() => setOpen(true)}
+          onBlur={() => setOpen(false)}
+          onChange={(event) => {
+            onChange(event.target.value);
+            setOpen(true);
+          }}
+        />
+        {open && models.length > 0 ? (
+          <div
+            id={listId}
+            role="listbox"
+            className="absolute inset-x-0 top-full z-20 mt-2 max-h-72 overflow-y-auto rounded-2xl border border-[var(--line)] bg-white p-1 shadow-xl"
+          >
+            {matches.length > 0 ? (
+              matches.map((model) => (
+                <button
+                  key={model.id}
+                  type="button"
+                  role="option"
+                  aria-selected={model.id === value}
+                  className="block w-full rounded-xl px-3 py-2 text-left hover:bg-[var(--cream)] focus:bg-[var(--cream)] focus:outline-none"
+                  onPointerDown={(event) => event.preventDefault()}
+                  onClick={() => {
+                    onChange(model.id);
+                    setOpen(false);
+                  }}
+                >
+                  <span className="block truncate text-sm font-bold">
+                    {model.name}
+                  </span>
+                  <span className="block truncate text-xs text-[var(--muted)]">
+                    {model.id}
+                    {model.contextLength
+                      ? ` · ${model.contextLength.toLocaleString()} tokens`
+                      : ""}
+                  </span>
+                </button>
+              ))
+            ) : (
+              <p className="px-3 py-3 text-xs text-[var(--muted)]">
+                No loaded model matches this text. You can still use the model
+                ID as entered.
+              </p>
+            )}
+          </div>
+        ) : null}
+      </div>
+    </Field>
+  );
+}
+
 export function AiProviderSettings({
   apiMode,
 }: {
@@ -51,6 +183,12 @@ export function AiProviderSettings({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+  const [openRouterModels, setOpenRouterModels] = useState<
+    OpenRouterModelChoice[] | null
+  >(null);
+  const [modelsLoading, setModelsLoading] = useState(false);
+  const [modelsError, setModelsError] = useState<string | null>(null);
+  const discoveryGeneration = useRef(0);
 
   useEffect(() => {
     if (apiMode !== "connected") return;
@@ -74,6 +212,57 @@ export function AiProviderSettings({
       cancelled = true;
     };
   }, [apiMode]);
+
+  const loadOpenRouterModels = useCallback(
+    async (input: OpenRouterModelDiscoveryRequest) => {
+      const generation = ++discoveryGeneration.current;
+      setModelsLoading(true);
+      setModelsError(null);
+      try {
+        const result = await discoverOpenRouterModelChoices(input);
+        if (generation !== discoveryGeneration.current) return;
+        setOpenRouterModels(result.models);
+      } catch (caught) {
+        if (generation !== discoveryGeneration.current) return;
+        setOpenRouterModels(null);
+        setModelsError(
+          caught instanceof Error
+            ? caught.message
+            : "OpenRouter model choices could not be loaded.",
+        );
+      } finally {
+        if (generation === discoveryGeneration.current) {
+          setModelsLoading(false);
+        }
+      }
+    },
+    [],
+  );
+
+  const selectedDiscoveryInput = useMemo(
+    () =>
+      discoveryInput(
+        settings,
+        draft?.provider ?? null,
+        draft?.credentialSource ?? null,
+        apiKey,
+      ),
+    [apiKey, draft?.credentialSource, draft?.provider, settings],
+  );
+
+  useEffect(() => {
+    if (!settings?.canEdit || draft?.provider !== "openrouter") return;
+    const input = selectedDiscoveryInput;
+    if (!input) return;
+    const delay = input.apiKey ? 700 : 0;
+    const timeout = window.setTimeout(() => {
+      void loadOpenRouterModels(input);
+    }, delay);
+    return () => {
+      window.clearTimeout(timeout);
+      discoveryGeneration.current += 1;
+    };
+  }, [draft?.provider, loadOpenRouterModels, selectedDiscoveryInput, settings?.canEdit]);
 
   if (apiMode !== "connected") {
     return (
@@ -100,6 +289,10 @@ export function AiProviderSettings({
       recipeModelId: defaults.recipeModelId ?? "",
     });
     setApiKey("");
+    setOpenRouterModels(null);
+    setModelsError(null);
+    setModelsLoading(false);
+    discoveryGeneration.current += 1;
     setSaved(false);
   }
 
@@ -219,42 +412,108 @@ export function AiProviderSettings({
             </select>
           </Field>
 
-          <div className="grid gap-3 sm:grid-cols-2">
-            <Field
-              label="Vision model ID"
-              htmlFor="ai-vision-model"
-              hint={draft.provider === "openrouter" ? "For example, provider/model-name." : undefined}
-            >
-              <input
-                id="ai-vision-model"
-                className={inputClass}
-                maxLength={160}
-                required
-                spellCheck={false}
-                value={draft.visionModelId}
-                disabled={!settings.canEdit || saving}
-                onChange={(event) => {
-                  setDraft({ ...draft, visionModelId: event.target.value });
-                  setSaved(false);
-                }}
-              />
-            </Field>
-            <Field label="Recipe model ID" htmlFor="ai-recipe-model">
-              <input
-                id="ai-recipe-model"
-                className={inputClass}
-                maxLength={160}
-                required
-                spellCheck={false}
-                value={draft.recipeModelId}
-                disabled={!settings.canEdit || saving}
-                onChange={(event) => {
-                  setDraft({ ...draft, recipeModelId: event.target.value });
-                  setSaved(false);
-                }}
-              />
-            </Field>
-          </div>
+          {draft.provider === "openrouter" ? (
+            <>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <OpenRouterModelField
+                  id="ai-vision-model"
+                  label="Vision model"
+                  value={draft.visionModelId}
+                  models={
+                    openRouterModels?.filter((model) => model.supportsVision) ??
+                    []
+                  }
+                  disabled={!settings.canEdit || saving}
+                  onChange={(visionModelId) => {
+                    setDraft({ ...draft, visionModelId });
+                    setSaved(false);
+                  }}
+                />
+                <OpenRouterModelField
+                  id="ai-recipe-model"
+                  label="Recipe model"
+                  value={draft.recipeModelId}
+                  models={openRouterModels ?? []}
+                  disabled={!settings.canEdit || saving}
+                  onChange={(recipeModelId) => {
+                    setDraft({ ...draft, recipeModelId });
+                    setSaved(false);
+                  }}
+                />
+              </div>
+
+              {settings.canEdit ? (
+                <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-xs leading-5 text-[var(--muted)]" role="status">
+                      {modelsLoading
+                        ? "Loading compatible models from OpenRouter…"
+                        : openRouterModels
+                          ? `${openRouterModels.length} structured-output models loaded; ${openRouterModels.filter((model) => model.supportsVision).length} accept photos.`
+                          : selectedDiscoveryInput
+                            ? "Model choices will load automatically."
+                            : "Enter an OpenRouter key to load model choices."}
+                    </p>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="ghost"
+                      busy={modelsLoading}
+                      disabled={!selectedDiscoveryInput || saving}
+                      aria-label="Refresh OpenRouter model choices"
+                      onClick={() => {
+                        if (selectedDiscoveryInput) {
+                          void loadOpenRouterModels(selectedDiscoveryInput);
+                        }
+                      }}
+                    >
+                      <RefreshCw className="size-4" aria-hidden="true" />
+                    </Button>
+                  </div>
+                  {modelsError ? (
+                    <div className="mt-2">
+                      <StateNotice title="Model choices unavailable" tone="warning">
+                        {modelsError} You can still enter model IDs manually.
+                      </StateNotice>
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
+            </>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Field label="Vision model ID" htmlFor="ai-vision-model">
+                <input
+                  id="ai-vision-model"
+                  className={inputClass}
+                  maxLength={160}
+                  required
+                  spellCheck={false}
+                  value={draft.visionModelId}
+                  disabled={!settings.canEdit || saving}
+                  onChange={(event) => {
+                    setDraft({ ...draft, visionModelId: event.target.value });
+                    setSaved(false);
+                  }}
+                />
+              </Field>
+              <Field label="Recipe model ID" htmlFor="ai-recipe-model">
+                <input
+                  id="ai-recipe-model"
+                  className={inputClass}
+                  maxLength={160}
+                  required
+                  spellCheck={false}
+                  value={draft.recipeModelId}
+                  disabled={!settings.canEdit || saving}
+                  onChange={(event) => {
+                    setDraft({ ...draft, recipeModelId: event.target.value });
+                    setSaved(false);
+                  }}
+                />
+              </Field>
+            </div>
+          )}
 
           <fieldset disabled={!settings.canEdit || saving}>
             <legend className="text-sm font-bold">Credential source</legend>
@@ -268,6 +527,9 @@ export function AiProviderSettings({
                   onChange={() => {
                     setDraft({ ...draft, credentialSource: "platform" });
                     setApiKey("");
+                    setOpenRouterModels(null);
+                    setModelsError(null);
+                    discoveryGeneration.current += 1;
                     setSaved(false);
                   }}
                 />
@@ -283,6 +545,9 @@ export function AiProviderSettings({
                   disabled={!settings.householdCredentialsAvailable}
                   onChange={() => {
                     setDraft({ ...draft, credentialSource: "household" });
+                    setOpenRouterModels(null);
+                    setModelsError(null);
+                    discoveryGeneration.current += 1;
                     setSaved(false);
                   }}
                 />
@@ -314,8 +579,8 @@ export function AiProviderSettings({
               htmlFor="ai-api-key"
               hint={
                 householdCredentialNeedsReplacement
-                  ? "A new key is required for this provider."
-                  : "Leave blank to retain the encrypted household key. Saved keys are never shown again."
+                  ? "A new key is required for this provider. Compatible model choices load automatically after entry."
+                  : "Leave blank to retain the encrypted household key. Model choices load from the saved key, which is never shown again."
               }
             >
               <input
@@ -329,6 +594,8 @@ export function AiProviderSettings({
                 disabled={!settings.canEdit || saving}
                 onChange={(event) => {
                   setApiKey(event.target.value);
+                  setOpenRouterModels(null);
+                  setModelsError(null);
                   setSaved(false);
                 }}
                 required={householdCredentialNeedsReplacement}
