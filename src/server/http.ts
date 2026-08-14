@@ -59,6 +59,13 @@ export function errorResponse(error: unknown, id: string) {
   }
 
   if (error instanceof ZodError) {
+    console.warn("API validation error", {
+      correlationId: id,
+      issues: error.issues.map((issue) => ({
+        code: issue.code,
+        path: issue.path.map(String).join("."),
+      })),
+    });
     return json(
       {
         code: "VALIDATION_ERROR",

@@ -66,8 +66,8 @@ export function mapInventoryLot(value: unknown): InventoryLot {
     dateLabel: item.dateLabel ?? item.date_label ?? null,
     status: item.status,
     version: integer(item.version),
-    createdAt: item.createdAt ?? item.created_at,
-    updatedAt: item.updatedAt ?? item.updated_at,
+    createdAt: utcDateTime(item.createdAt ?? item.created_at),
+    updatedAt: utcDateTime(item.updatedAt ?? item.updated_at),
   });
 }
 

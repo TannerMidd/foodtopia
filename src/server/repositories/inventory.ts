@@ -88,7 +88,9 @@ export async function getInventorySync(
           id: event.id,
           lotId: event.lotId ?? event.lot_id,
           type: event.type ?? event.event_type,
-          createdAt: event.createdAt ?? event.created_at,
+          createdAt: normalizeInventoryTimestamp(
+            event.createdAt ?? event.created_at,
+          ),
         };
       })
     : [];
@@ -112,6 +114,12 @@ export async function getInventorySync(
           })
         : (cursorValue ?? ""),
   };
+}
+
+function normalizeInventoryTimestamp(value: unknown): unknown {
+  if (typeof value !== "string") return value;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.valueOf()) ? value : parsed.toISOString();
 }
 
 export async function applyInventoryCommand(

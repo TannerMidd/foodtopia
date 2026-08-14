@@ -62,6 +62,31 @@ beforeEach(() => {
 });
 
 describe("AI provider settings", () => {
+  it("hydrates every saved provider selection from GET without exposing the key", async () => {
+    api.getAiSettings.mockResolvedValue({
+      ...initial,
+      provider: "openrouter",
+      visionModelId: "acme/custom-vision-v3",
+      recipeModelId: "acme/custom-recipe-v7",
+      credentialSource: "household",
+      credentialConfigured: true,
+    });
+    render(<AiProviderSettings apiMode="connected" />);
+
+    await screen.findByLabelText("Provider");
+
+    expect(api.getAiSettings).toHaveBeenCalledTimes(1);
+    expect(screen.getByLabelText("Provider")).toHaveValue("openrouter");
+    expect(screen.getByLabelText("Vision model")).toHaveValue(
+      "acme/custom-vision-v3",
+    );
+    expect(screen.getByLabelText("Recipe model")).toHaveValue(
+      "acme/custom-recipe-v7",
+    );
+    expect(screen.getByRole("radio", { name: /Household key/i })).toBeChecked();
+    expect(screen.getByLabelText("Replace OpenRouter API key")).toHaveValue("");
+  });
+
   it("submits a household OpenRouter key once, then clears it from the UI and browser storage", async () => {
     const user = userEvent.setup();
     api.updateAiSettings.mockResolvedValue({

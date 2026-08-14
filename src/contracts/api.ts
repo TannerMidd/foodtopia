@@ -301,6 +301,13 @@ export const analysisApplyCandidateSchema = analysisCandidateBaseSchema
         message: "Estimated and known quantity states require a quantity.",
       });
     }
+    if (value.quantityStatus !== "unknown" && !value.unit?.trim()) {
+      context.addIssue({
+        code: "custom",
+        path: ["unit"],
+        message: "Estimated and known quantity states require a unit.",
+      });
+    }
   });
 
 export const analysisApplyRequestSchema = z.object({

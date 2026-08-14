@@ -238,6 +238,10 @@ export function AnalysisReview({ analysisId }: { analysisId: string }) {
       setError("Enter a positive quantity for every item whose amount is tracked.");
       return;
     }
+    if (accepted.some((candidate) => candidate.quantityStatus !== "unknown" && !candidate.unit?.trim())) {
+      setError("Enter a unit for every item whose amount is tracked.");
+      return;
+    }
     if (!online) {
       setError("Connect before confirming. Nothing has been added yet, and this review is still available.");
       return;
@@ -246,7 +250,7 @@ export function AnalysisReview({ analysisId }: { analysisId: string }) {
     setError(null);
     try {
       await applyAnalysis(analysisId, accepted);
-      await refresh(true);
+      await refresh(true).catch(() => undefined);
       router.replace("/inventory?batch=added");
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "The batch could not be confirmed.");

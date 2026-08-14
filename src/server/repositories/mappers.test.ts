@@ -34,6 +34,30 @@ describe("Supabase DTO mappers", () => {
     });
   });
 
+  it("normalizes Supabase offset timestamps in inventory rows", () => {
+    const lot = mapInventoryLot({
+      id: "33333333-3333-4333-8333-333333333333",
+      household_id: householdId,
+      food_concept_id: null,
+      name: "Seasoning",
+      category: "Pantry",
+      quantity_status: "unknown",
+      quantity: null,
+      unit: null,
+      form: "dried",
+      location: "pantry",
+      date_label_type: null,
+      date_label: null,
+      status: "active",
+      version: 0,
+      created_at: "2026-08-14T21:40:24.132336+00:00",
+      updated_at: "2026-08-14T21:40:24.132336+00:00",
+    });
+
+    expect(lot.createdAt).toBe("2026-08-14T21:40:24.132Z");
+    expect(lot.updatedAt).toBe("2026-08-14T21:40:24.132Z");
+  });
+
   it("maps proposed candidates as preselected review drafts", () => {
     const analysis = mapAnalysis(
       {

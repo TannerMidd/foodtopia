@@ -1,12 +1,14 @@
 import { describe, expect, it } from "vitest";
 
 import type { InventoryCommand } from "@/contracts/domain";
+import { inventorySyncResponseSchema } from "@/contracts/api";
 import { ApiFault } from "@/server/http";
 
 import {
   assertInventoryCommandHousehold,
   decodeInventoryCursor,
   encodeInventoryCursor,
+  getInventorySync,
 } from "./inventory";
 
 describe("inventory cursor", () => {
@@ -25,6 +27,37 @@ describe("inventory cursor", () => {
 
   it("rejects forged or malformed cursors", () => {
     expect(() => decodeInventoryCursor("not-a-cursor")).toThrow(ApiFault);
+  });
+
+  it("normalizes Supabase event timestamps before the sync response is parsed", async () => {
+    const client = {
+      rpc: async () => ({
+        data: {
+          lots: [],
+          events: [
+            {
+              id: "20000000-0000-4000-8000-000000000001",
+              lotId: "20000000-0000-4000-8000-000000000002",
+              type: "added",
+              createdAt: "2026-08-14T21:40:24.132336+00:00",
+            },
+          ],
+          cursor: {
+            createdAt: "2026-08-14T21:40:24.132336+00:00",
+            eventId: "20000000-0000-4000-8000-000000000001",
+          },
+        },
+        error: null,
+      }),
+    };
+
+    const result = await getInventorySync(client as never, null);
+    const parsed = inventorySyncResponseSchema.parse({
+      householdId: "20000000-0000-4000-8000-000000000003",
+      ...result,
+    });
+
+    expect(parsed.events[0]?.createdAt).toBe("2026-08-14T21:40:24.132Z");
   });
 });
 
