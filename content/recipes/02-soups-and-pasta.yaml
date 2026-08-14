@@ -1,0 +1,460 @@
+- id: "recipe-021"
+  slug: "tomato-basil-pantry-soup"
+  title: "Tomato Basil Pantry Soup"
+  description: "A smooth, weeknight tomato soup rounded out with onion, garlic, and basil."
+  servings: 4
+  totalMinutes: 30
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["Italian-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "tomatoes", foodConceptId: "canned-tomato", name: "canned tomatoes", amount: 28, unit: "oz", display: "28 ounces canned tomatoes", required: true, acceptedForms: ["canned", "opened"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 onion, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "garlic", foodConceptId: "garlic", name: "garlic", amount: 2, unit: "count", display: "2 garlic cloves, chopped", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "broth", foodConceptId: "vegetable-broth", name: "vegetable broth", amount: 2, unit: "cup", display: "2 cups vegetable broth", required: true, acceptedForms: ["canned", "opened", "unspecified"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 1, unit: "tbsp", display: "1 tablespoon olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "basil", foodConceptId: "basil", name: "basil", amount: 1, unit: "tsp", display: "1 teaspoon dried basil", required: true, acceptedForms: ["fresh", "dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.5, unit: "tsp", display: "1/2 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Warm the olive oil and cook the onion until translucent, then add the garlic for one minute."
+    - "Add the canned tomatoes, vegetable broth, basil, and salt, simmer for twenty minutes, then blend to the desired texture."
+  rights: &draft-rights
+    owner: "Foodtopia"
+    author: "Foodtopia Editorial"
+    reviewer: null
+    reviewedAt: null
+    status: "draft"
+
+- id: "recipe-022"
+  slug: "lentil-carrot-soup"
+  title: "Lentil Carrot Soup"
+  description: "Earthy lentils simmer with carrots, celery, tomato, and cumin in a hearty broth."
+  servings: 6
+  totalMinutes: 50
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["Mediterranean-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "lentils", foodConceptId: "lentils", name: "lentils", amount: 1.5, unit: "cup", display: "1 1/2 cups dried lentils", required: true, acceptedForms: ["dried"] }
+    - { id: "carrot", foodConceptId: "carrot", name: "carrot", amount: 3, unit: "count", display: "3 carrots, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "celery", foodConceptId: "celery", name: "celery", amount: 2, unit: "count", display: "2 celery stalks, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 onion, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "tomatoes", foodConceptId: "canned-tomato", name: "canned tomatoes", amount: 14.5, unit: "oz", display: "14 1/2 ounces canned tomatoes", required: true, acceptedForms: ["canned", "opened"] }
+    - { id: "broth", foodConceptId: "vegetable-broth", name: "vegetable broth", amount: 6, unit: "cup", display: "6 cups vegetable broth", required: true, acceptedForms: ["canned", "opened", "unspecified"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 2, unit: "tbsp", display: "2 tablespoons olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "cumin", foodConceptId: "cumin", name: "cumin", amount: 1, unit: "tsp", display: "1 teaspoon cumin", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Heat the olive oil and soften the onion, carrot, and celery, then stir in the cumin."
+    - "Add the lentils, canned tomatoes, vegetable broth, and salt, then simmer until the lentils are tender."
+  rights: *draft-rights
+
+- id: "recipe-023"
+  slug: "smoky-black-bean-soup"
+  title: "Smoky Black Bean Soup"
+  description: "Black beans become a thick, smoky soup with tomato, cumin, and chili powder."
+  servings: 4
+  totalMinutes: 30
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["Mexican-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "beans", foodConceptId: "black-beans", name: "black beans", amount: 30, unit: "oz", display: "30 ounces cooked black beans", required: true, acceptedForms: ["canned", "cooked"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 onion, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "tomatoes", foodConceptId: "canned-tomato", name: "canned tomatoes", amount: 14.5, unit: "oz", display: "14 1/2 ounces canned tomatoes", required: true, acceptedForms: ["canned", "opened"] }
+    - { id: "broth", foodConceptId: "vegetable-broth", name: "vegetable broth", amount: 3, unit: "cup", display: "3 cups vegetable broth", required: true, acceptedForms: ["canned", "opened", "unspecified"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 1, unit: "tbsp", display: "1 tablespoon olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "cumin", foodConceptId: "cumin", name: "cumin", amount: 1, unit: "tsp", display: "1 teaspoon cumin", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "chili", foodConceptId: "chili-powder", name: "chili powder", amount: 1, unit: "tsp", display: "1 teaspoon chili powder", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.75, unit: "tsp", display: "3/4 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Cook the onion in the olive oil until soft, then stir in the cumin and chili powder."
+    - "Add the black beans, canned tomatoes, vegetable broth, and salt, simmer for twenty minutes, and mash some beans to thicken the soup."
+  rights: *draft-rights
+
+- id: "recipe-024"
+  slug: "thyme-chicken-rice-soup"
+  title: "Thyme Chicken Rice Soup"
+  description: "A straightforward chicken and rice soup filled with carrots, celery, onion, and thyme."
+  servings: 6
+  totalMinutes: 45
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["American"]
+  dietaryTags: []
+  ingredients:
+    - { id: "chicken", foodConceptId: "chicken-breast", name: "chicken breast", amount: 1, unit: "lb", display: "1 pound chicken breast, diced", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "rice", foodConceptId: "rice", name: "rice", amount: 0.75, unit: "cup", display: "3/4 cup dry rice", required: true, acceptedForms: ["dried"] }
+    - { id: "carrot", foodConceptId: "carrot", name: "carrot", amount: 2, unit: "count", display: "2 carrots, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "celery", foodConceptId: "celery", name: "celery", amount: 2, unit: "count", display: "2 celery stalks, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 onion, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "broth", foodConceptId: "chicken-broth", name: "chicken broth", amount: 8, unit: "cup", display: "8 cups chicken broth", required: true, acceptedForms: ["canned", "opened", "unspecified"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 1, unit: "tbsp", display: "1 tablespoon olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "thyme", foodConceptId: "thyme", name: "thyme", amount: 1, unit: "tsp", display: "1 teaspoon thyme", required: true, acceptedForms: ["fresh", "dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Warm the olive oil and cook the chicken breast until opaque, then add the onion, carrot, and celery."
+    - "Pour in the chicken broth, stir in the rice, thyme, and salt, and simmer until the rice and chicken breast are fully cooked."
+  rights: *draft-rights
+
+- id: "recipe-025"
+  slug: "broccoli-cheddar-soup"
+  title: "Broccoli Cheddar Soup"
+  description: "A cozy broccoli soup thickened lightly with flour and finished with cheddar cheese."
+  servings: 4
+  totalMinutes: 35
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "broccoli", foodConceptId: "broccoli", name: "broccoli", amount: 5, unit: "cup", display: "5 cups chopped broccoli", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 small onion, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "broth", foodConceptId: "vegetable-broth", name: "vegetable broth", amount: 3, unit: "cup", display: "3 cups vegetable broth", required: true, acceptedForms: ["canned", "opened", "unspecified"] }
+    - { id: "milk", foodConceptId: "milk", name: "milk", amount: 2, unit: "cup", display: "2 cups milk", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "cheddar", foodConceptId: "cheddar", name: "cheddar cheese", amount: 6, unit: "oz", display: "6 ounces cheddar cheese", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "butter", foodConceptId: "butter", name: "butter", amount: 2, unit: "tbsp", display: "2 tablespoons butter", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "flour", foodConceptId: "flour", name: "flour", amount: 2, unit: "tbsp", display: "2 tablespoons flour", required: true, acceptedForms: ["dried"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.5, unit: "tsp", display: "1/2 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "pepper", foodConceptId: "black-pepper", name: "black pepper", amount: 0.25, unit: "tsp", display: "1/4 teaspoon black pepper", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Melt the butter, soften the onion, stir in the flour, then gradually whisk in the vegetable broth and milk."
+    - "Add the broccoli, salt, and black pepper, simmer until tender, then remove from heat and stir in the cheddar cheese."
+  rights: *draft-rights
+
+- id: "recipe-026"
+  slug: "white-bean-cabbage-soup"
+  title: "White Bean Cabbage Soup"
+  description: "Tender cabbage and white beans turn a basic broth into a satisfying vegetable soup."
+  servings: 6
+  totalMinutes: 40
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["European-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "beans", foodConceptId: "white-beans", name: "white beans", amount: 30, unit: "oz", display: "30 ounces cooked white beans", required: true, acceptedForms: ["canned", "cooked"] }
+    - { id: "cabbage", foodConceptId: "cabbage", name: "cabbage", amount: 6, unit: "cup", display: "6 cups chopped cabbage", required: true, acceptedForms: ["fresh"] }
+    - { id: "carrot", foodConceptId: "carrot", name: "carrot", amount: 2, unit: "count", display: "2 carrots, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 onion, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "broth", foodConceptId: "vegetable-broth", name: "vegetable broth", amount: 6, unit: "cup", display: "6 cups vegetable broth", required: true, acceptedForms: ["canned", "opened", "unspecified"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 2, unit: "tbsp", display: "2 tablespoons olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "thyme", foodConceptId: "thyme", name: "thyme", amount: 1, unit: "tsp", display: "1 teaspoon thyme", required: true, acceptedForms: ["fresh", "dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Heat the olive oil and soften the onion and carrot, then add the cabbage and cook until it begins to collapse."
+    - "Stir in the white beans, vegetable broth, thyme, and salt, then simmer until the cabbage is tender."
+  rights: *draft-rights
+
+- id: "recipe-027"
+  slug: "paprika-chickpea-tomato-stew"
+  title: "Paprika Chickpea Tomato Stew"
+  description: "Chickpeas simmer in a warmly spiced tomato base for a fast pantry supper."
+  servings: 4
+  totalMinutes: 30
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["Mediterranean-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "chickpeas", foodConceptId: "chickpeas", name: "chickpeas", amount: 30, unit: "oz", display: "30 ounces cooked chickpeas", required: true, acceptedForms: ["canned", "cooked"] }
+    - { id: "tomatoes", foodConceptId: "canned-tomato", name: "canned tomatoes", amount: 28, unit: "oz", display: "28 ounces canned tomatoes", required: true, acceptedForms: ["canned", "opened"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 onion, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "garlic", foodConceptId: "garlic", name: "garlic", amount: 3, unit: "count", display: "3 garlic cloves, chopped", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 2, unit: "tbsp", display: "2 tablespoons olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "cumin", foodConceptId: "cumin", name: "cumin", amount: 1, unit: "tsp", display: "1 teaspoon cumin", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "paprika", foodConceptId: "paprika", name: "paprika", amount: 1, unit: "tsp", display: "1 teaspoon paprika", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.75, unit: "tsp", display: "3/4 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Cook the onion in the olive oil until soft, then add the garlic, cumin, and paprika."
+    - "Stir in the chickpeas, canned tomatoes, and salt, then simmer until the mixture becomes thick and glossy."
+  rights: *draft-rights
+
+- id: "recipe-028"
+  slug: "mushroom-barley-soup"
+  title: "Mushroom Barley Soup"
+  description: "Chewy barley and mushrooms simmer with carrots and thyme in a savory broth."
+  servings: 6
+  totalMinutes: 60
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["European-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "barley", foodConceptId: "barley", name: "barley", amount: 1, unit: "cup", display: "1 cup pearl barley", required: true, acceptedForms: ["dried"] }
+    - { id: "mushrooms", foodConceptId: "mushroom", name: "mushrooms", amount: 12, unit: "oz", display: "12 ounces mushrooms, sliced", required: true, acceptedForms: ["fresh"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 onion, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "carrot", foodConceptId: "carrot", name: "carrot", amount: 2, unit: "count", display: "2 carrots, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "broth", foodConceptId: "vegetable-broth", name: "vegetable broth", amount: 7, unit: "cup", display: "7 cups vegetable broth", required: true, acceptedForms: ["canned", "opened", "unspecified"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 2, unit: "tbsp", display: "2 tablespoons olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "thyme", foodConceptId: "thyme", name: "thyme", amount: 1, unit: "tsp", display: "1 teaspoon thyme", required: true, acceptedForms: ["fresh", "dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Brown the mushrooms in the olive oil, then add the onion and carrot and cook until softened."
+    - "Add the barley, vegetable broth, thyme, and salt, then simmer until the barley is tender and plump."
+  rights: *draft-rights
+
+- id: "recipe-029"
+  slug: "coconut-sweet-potato-lentil-soup"
+  title: "Coconut Sweet Potato Lentil Soup"
+  description: "Red lentils and sweet potato cook into a silky coconut curry soup."
+  servings: 6
+  totalMinutes: 45
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["South Asian-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "sweet-potato", foodConceptId: "sweet-potato", name: "sweet potato", amount: 2, unit: "count", display: "2 sweet potatoes, diced", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "lentils", foodConceptId: "lentils", name: "lentils", amount: 1.5, unit: "cup", display: "1 1/2 cups red lentils", required: true, acceptedForms: ["dried"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 onion, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "broth", foodConceptId: "vegetable-broth", name: "vegetable broth", amount: 4, unit: "cup", display: "4 cups vegetable broth", required: true, acceptedForms: ["canned", "opened", "unspecified"] }
+    - { id: "coconut", foodConceptId: "coconut-milk", name: "coconut milk", amount: 14, unit: "fl-oz", display: "14 fluid ounces coconut milk", required: true, acceptedForms: ["canned", "opened"] }
+    - { id: "curry", foodConceptId: "curry-powder", name: "curry powder", amount: 2, unit: "tsp", display: "2 teaspoons curry powder", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "oil", foodConceptId: "vegetable-oil", name: "vegetable oil", amount: 1, unit: "tbsp", display: "1 tablespoon vegetable oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Cook the onion in the vegetable oil until soft, then stir in the curry powder."
+    - "Add the sweet potato, lentils, vegetable broth, coconut milk, and salt, then simmer until the sweet potato and lentils are very tender."
+  rights: *draft-rights
+
+- id: "recipe-030"
+  slug: "corn-potato-chowder"
+  title: "Corn Potato Chowder"
+  description: "Sweet corn and diced potatoes make a creamy, lightly thickened stovetop chowder."
+  servings: 6
+  totalMinutes: 40
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "corn", foodConceptId: "corn", name: "corn", amount: 3, unit: "cup", display: "3 cups corn", required: true, acceptedForms: ["fresh", "frozen", "canned", "cooked"] }
+    - { id: "potato", foodConceptId: "potato", name: "potato", amount: 3, unit: "count", display: "3 medium potatoes, diced", required: true, acceptedForms: ["fresh"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 onion, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "milk", foodConceptId: "milk", name: "milk", amount: 3, unit: "cup", display: "3 cups milk", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "broth", foodConceptId: "vegetable-broth", name: "vegetable broth", amount: 2, unit: "cup", display: "2 cups vegetable broth", required: true, acceptedForms: ["canned", "opened", "unspecified"] }
+    - { id: "butter", foodConceptId: "butter", name: "butter", amount: 3, unit: "tbsp", display: "3 tablespoons butter", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "flour", foodConceptId: "flour", name: "flour", amount: 3, unit: "tbsp", display: "3 tablespoons flour", required: true, acceptedForms: ["dried"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "pepper", foodConceptId: "black-pepper", name: "black pepper", amount: 0.25, unit: "tsp", display: "1/4 teaspoon black pepper", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Melt the butter, soften the onion, stir in the flour, then slowly add the vegetable broth and milk."
+    - "Add the potato, corn, salt, and black pepper, and simmer until the potato is tender and the chowder thickens."
+  rights: *draft-rights
+
+- id: "recipe-031"
+  slug: "simple-marinara-spaghetti"
+  title: "Simple Marinara Spaghetti"
+  description: "A dependable bowl of spaghetti coated in marinara and finished with parmesan."
+  servings: 4
+  totalMinutes: 25
+  mealTypes: ["dinner"]
+  cuisines: ["Italian-inspired"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "pasta", foodConceptId: "pasta", name: "pasta", amount: 12, unit: "oz", display: "12 ounces spaghetti", required: true, acceptedForms: ["dried"] }
+    - { id: "water", foodConceptId: "water", name: "water", amount: 3, unit: "quart", display: "3 quarts water", required: true, acceptedForms: ["unspecified"] }
+    - { id: "marinara", foodConceptId: "marinara-sauce", name: "marinara sauce", amount: 3, unit: "cup", display: "3 cups marinara sauce", required: true, acceptedForms: ["canned", "opened", "unspecified"] }
+    - { id: "parmesan", foodConceptId: "parmesan", name: "parmesan cheese", amount: 2, unit: "oz", display: "2 ounces parmesan cheese", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 1, unit: "tbsp", display: "1 tablespoon olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Bring the water and salt to a boil, cook the pasta until tender, then drain it."
+    - "Warm the marinara sauce with the olive oil, toss it with the pasta, and finish with parmesan cheese."
+  rights: *draft-rights
+
+- id: "recipe-032"
+  slug: "garlic-butter-parmesan-pasta"
+  title: "Garlic Butter Parmesan Pasta"
+  description: "Hot pasta turns glossy with garlic butter, parmesan, and cracked black pepper."
+  servings: 4
+  totalMinutes: 22
+  mealTypes: ["dinner"]
+  cuisines: ["Italian-inspired"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "pasta", foodConceptId: "pasta", name: "pasta", amount: 12, unit: "oz", display: "12 ounces pasta", required: true, acceptedForms: ["dried"] }
+    - { id: "water", foodConceptId: "water", name: "water", amount: 3, unit: "quart", display: "3 quarts water", required: true, acceptedForms: ["unspecified"] }
+    - { id: "garlic", foodConceptId: "garlic", name: "garlic", amount: 4, unit: "count", display: "4 garlic cloves, minced", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "butter", foodConceptId: "butter", name: "butter", amount: 4, unit: "tbsp", display: "4 tablespoons butter", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "parmesan", foodConceptId: "parmesan", name: "parmesan cheese", amount: 3, unit: "oz", display: "3 ounces parmesan cheese", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "pepper", foodConceptId: "black-pepper", name: "black pepper", amount: 0.5, unit: "tsp", display: "1/2 teaspoon black pepper", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Boil the water with the salt, cook the pasta until tender, reserve a little water, and drain."
+    - "Melt the butter with the garlic, toss in the pasta and parmesan cheese with enough reserved water to coat, then add black pepper."
+  rights: *draft-rights
+
+- id: "recipe-033"
+  slug: "spinach-pesto-pasta"
+  title: "Spinach Pesto Pasta"
+  description: "Pesto-coated pasta gets an extra helping of spinach and a parmesan finish."
+  servings: 4
+  totalMinutes: 20
+  mealTypes: ["dinner"]
+  cuisines: ["Italian-inspired"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "pasta", foodConceptId: "pasta", name: "pasta", amount: 12, unit: "oz", display: "12 ounces pasta", required: true, acceptedForms: ["dried"] }
+    - { id: "water", foodConceptId: "water", name: "water", amount: 3, unit: "quart", display: "3 quarts water", required: true, acceptedForms: ["unspecified"] }
+    - { id: "pesto", foodConceptId: "pesto", name: "pesto", amount: 0.75, unit: "cup", display: "3/4 cup pesto", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "spinach", foodConceptId: "spinach", name: "spinach", amount: 4, unit: "cup", display: "4 cups spinach", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "parmesan", foodConceptId: "parmesan", name: "parmesan cheese", amount: 2, unit: "oz", display: "2 ounces parmesan cheese", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Boil the water with the salt, cook the pasta until nearly tender, and add the spinach for the final minute before draining."
+    - "Toss the hot pasta and spinach with the pesto, then scatter parmesan cheese over each portion."
+  rights: *draft-rights
+
+- id: "recipe-034"
+  slug: "creamy-mushroom-pasta"
+  title: "Creamy Mushroom Pasta"
+  description: "Browned mushrooms and garlic flavor a simple cream sauce for pasta."
+  servings: 4
+  totalMinutes: 30
+  mealTypes: ["dinner"]
+  cuisines: ["Italian-inspired"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "pasta", foodConceptId: "pasta", name: "pasta", amount: 12, unit: "oz", display: "12 ounces pasta", required: true, acceptedForms: ["dried"] }
+    - { id: "water", foodConceptId: "water", name: "water", amount: 3, unit: "quart", display: "3 quarts water", required: true, acceptedForms: ["unspecified"] }
+    - { id: "mushrooms", foodConceptId: "mushroom", name: "mushrooms", amount: 12, unit: "oz", display: "12 ounces mushrooms, sliced", required: true, acceptedForms: ["fresh"] }
+    - { id: "cream", foodConceptId: "heavy-cream", name: "heavy cream", amount: 1, unit: "cup", display: "1 cup heavy cream", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "garlic", foodConceptId: "garlic", name: "garlic", amount: 3, unit: "count", display: "3 garlic cloves, minced", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "butter", foodConceptId: "butter", name: "butter", amount: 2, unit: "tbsp", display: "2 tablespoons butter", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "parmesan", foodConceptId: "parmesan", name: "parmesan cheese", amount: 2, unit: "oz", display: "2 ounces parmesan cheese", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Boil the water with the salt, cook the pasta until tender, and drain."
+    - "Brown the mushrooms in the butter, add the garlic and heavy cream, then toss with the pasta and parmesan cheese."
+  rights: *draft-rights
+
+- id: "recipe-035"
+  slug: "tuna-tomato-pasta"
+  title: "Tuna Tomato Pasta"
+  description: "A pantry pasta with tuna, tomato, onion, and oregano in every forkful."
+  servings: 4
+  totalMinutes: 28
+  mealTypes: ["dinner"]
+  cuisines: ["Mediterranean-inspired"]
+  dietaryTags: []
+  ingredients:
+    - { id: "pasta", foodConceptId: "pasta", name: "pasta", amount: 12, unit: "oz", display: "12 ounces pasta", required: true, acceptedForms: ["dried"] }
+    - { id: "water", foodConceptId: "water", name: "water", amount: 3, unit: "quart", display: "3 quarts water", required: true, acceptedForms: ["unspecified"] }
+    - { id: "tuna", foodConceptId: "tuna", name: "tuna", amount: 10, unit: "oz", display: "10 ounces drained tuna", required: true, acceptedForms: ["canned", "opened"] }
+    - { id: "tomatoes", foodConceptId: "canned-tomato", name: "canned tomatoes", amount: 14.5, unit: "oz", display: "14 1/2 ounces canned tomatoes", required: true, acceptedForms: ["canned", "opened"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 small onion, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 2, unit: "tbsp", display: "2 tablespoons olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "oregano", foodConceptId: "oregano", name: "oregano", amount: 1, unit: "tsp", display: "1 teaspoon oregano", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Boil the water with the salt, cook the pasta until tender, and drain."
+    - "Soften the onion in the olive oil, add the canned tomatoes, oregano, and tuna, then simmer briefly and toss with the pasta."
+  rights: *draft-rights
+
+- id: "recipe-036"
+  slug: "sausage-bell-pepper-pasta"
+  title: "Sausage Bell Pepper Pasta"
+  description: "Savory sausage and sweet bell pepper simmer in marinara before meeting pasta."
+  servings: 5
+  totalMinutes: 35
+  mealTypes: ["dinner"]
+  cuisines: ["Italian-American"]
+  dietaryTags: []
+  ingredients:
+    - { id: "pasta", foodConceptId: "pasta", name: "pasta", amount: 12, unit: "oz", display: "12 ounces pasta", required: true, acceptedForms: ["dried"] }
+    - { id: "water", foodConceptId: "water", name: "water", amount: 3, unit: "quart", display: "3 quarts water", required: true, acceptedForms: ["unspecified"] }
+    - { id: "sausage", foodConceptId: "sausage", name: "sausage", amount: 1, unit: "lb", display: "1 pound sausage", required: true, acceptedForms: ["fresh", "frozen", "cooked"] }
+    - { id: "pepper", foodConceptId: "bell-pepper", name: "bell pepper", amount: 2, unit: "count", display: "2 bell peppers, sliced", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 onion, sliced", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "marinara", foodConceptId: "marinara-sauce", name: "marinara sauce", amount: 3, unit: "cup", display: "3 cups marinara sauce", required: true, acceptedForms: ["canned", "opened", "unspecified"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 1, unit: "tbsp", display: "1 tablespoon olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Boil the water with the salt, cook the pasta until tender, and drain."
+    - "Brown the sausage in the olive oil, soften the bell pepper and onion, add the marinara sauce, then toss with the pasta."
+  rights: *draft-rights
+
+- id: "recipe-037"
+  slug: "lemon-broccoli-pasta"
+  title: "Lemon Broccoli Pasta"
+  description: "Broccoli and pasta share a bright coating of lemon, garlic, olive oil, and parmesan."
+  servings: 4
+  totalMinutes: 25
+  mealTypes: ["dinner"]
+  cuisines: ["Italian-inspired"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "pasta", foodConceptId: "pasta", name: "pasta", amount: 12, unit: "oz", display: "12 ounces pasta", required: true, acceptedForms: ["dried"] }
+    - { id: "water", foodConceptId: "water", name: "water", amount: 3, unit: "quart", display: "3 quarts water", required: true, acceptedForms: ["unspecified"] }
+    - { id: "broccoli", foodConceptId: "broccoli", name: "broccoli", amount: 5, unit: "cup", display: "5 cups broccoli florets", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "lemon", foodConceptId: "lemon", name: "lemon", amount: 1, unit: "count", display: "1 lemon", required: true, acceptedForms: ["fresh"] }
+    - { id: "garlic", foodConceptId: "garlic", name: "garlic", amount: 3, unit: "count", display: "3 garlic cloves, minced", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 3, unit: "tbsp", display: "3 tablespoons olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "parmesan", foodConceptId: "parmesan", name: "parmesan cheese", amount: 3, unit: "oz", display: "3 ounces parmesan cheese", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Boil the water with the salt, add the pasta, and cook the broccoli in the same pot during the final four minutes before draining."
+    - "Warm the garlic in the olive oil, toss with the pasta and broccoli, then add juice from the lemon and the parmesan cheese."
+  rights: *draft-rights
+
+- id: "recipe-038"
+  slug: "fresh-tomato-zucchini-pasta"
+  title: "Fresh Tomato Zucchini Pasta"
+  description: "Quick-cooked tomato and zucchini make a light, basil-scented pasta sauce."
+  servings: 4
+  totalMinutes: 30
+  mealTypes: ["dinner"]
+  cuisines: ["Italian-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "pasta", foodConceptId: "pasta", name: "pasta", amount: 12, unit: "oz", display: "12 ounces pasta", required: true, acceptedForms: ["dried"] }
+    - { id: "water", foodConceptId: "water", name: "water", amount: 3, unit: "quart", display: "3 quarts water", required: true, acceptedForms: ["unspecified"] }
+    - { id: "tomato", foodConceptId: "tomato", name: "tomato", amount: 4, unit: "count", display: "4 tomatoes, chopped", required: true, acceptedForms: ["fresh"] }
+    - { id: "zucchini", foodConceptId: "zucchini", name: "zucchini", amount: 2, unit: "count", display: "2 zucchini, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "garlic", foodConceptId: "garlic", name: "garlic", amount: 3, unit: "count", display: "3 garlic cloves, minced", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 3, unit: "tbsp", display: "3 tablespoons olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "basil", foodConceptId: "basil", name: "basil", amount: 0.5, unit: "cup", display: "1/2 cup basil leaves", required: true, acceptedForms: ["fresh", "dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Boil the water with half the salt, cook the pasta until tender, and drain."
+    - "Cook the zucchini and garlic in the olive oil, add the tomato, basil, and remaining salt, then toss the quick sauce with the pasta."
+  rights: *draft-rights
+
+- id: "recipe-039"
+  slug: "stovetop-cheddar-macaroni"
+  title: "Stovetop Cheddar Macaroni"
+  description: "A smooth cheddar sauce coats tender macaroni without requiring the oven."
+  servings: 5
+  totalMinutes: 28
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "pasta", foodConceptId: "pasta", name: "pasta", amount: 12, unit: "oz", display: "12 ounces macaroni", required: true, acceptedForms: ["dried"] }
+    - { id: "water", foodConceptId: "water", name: "water", amount: 3, unit: "quart", display: "3 quarts water", required: true, acceptedForms: ["unspecified"] }
+    - { id: "milk", foodConceptId: "milk", name: "milk", amount: 2, unit: "cup", display: "2 cups milk", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "cheddar", foodConceptId: "cheddar", name: "cheddar cheese", amount: 8, unit: "oz", display: "8 ounces cheddar cheese", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "butter", foodConceptId: "butter", name: "butter", amount: 3, unit: "tbsp", display: "3 tablespoons butter", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "flour", foodConceptId: "flour", name: "flour", amount: 3, unit: "tbsp", display: "3 tablespoons flour", required: true, acceptedForms: ["dried"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Boil the water with half the salt, cook the pasta until tender, and drain."
+    - "Melt the butter, whisk in the flour, slowly add the milk, then melt in the cheddar cheese and toss with the pasta and remaining salt."
+  rights: *draft-rights
+
+- id: "recipe-040"
+  slug: "peanut-sesame-noodles"
+  title: "Peanut Sesame Noodles"
+  description: "Noodles and carrots are tossed in a savory peanut, soy, sesame, and lime sauce."
+  servings: 4
+  totalMinutes: 22
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["Asian-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "noodles", foodConceptId: "noodles", name: "noodles", amount: 12, unit: "oz", display: "12 ounces noodles", required: true, acceptedForms: ["dried"] }
+    - { id: "water", foodConceptId: "water", name: "water", amount: 3, unit: "quart", display: "3 quarts water", required: true, acceptedForms: ["unspecified"] }
+    - { id: "peanut", foodConceptId: "peanut-butter", name: "peanut butter", amount: 0.5, unit: "cup", display: "1/2 cup peanut butter", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "soy", foodConceptId: "soy-sauce", name: "soy sauce", amount: 3, unit: "tbsp", display: "3 tablespoons soy sauce", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "sesame", foodConceptId: "sesame-oil", name: "sesame oil", amount: 1, unit: "tbsp", display: "1 tablespoon sesame oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "lime", foodConceptId: "lime", name: "lime", amount: 1, unit: "count", display: "1 lime", required: true, acceptedForms: ["fresh"] }
+    - { id: "carrot", foodConceptId: "carrot", name: "carrot", amount: 2, unit: "count", display: "2 carrots, shredded", required: true, acceptedForms: ["fresh"] }
+  steps:
+    - "Boil the water, cook the noodles until tender, drain, and rinse briefly."
+    - "Whisk the peanut butter, soy sauce, sesame oil, and juice from the lime, then toss with the noodles and carrot."
+  rights: *draft-rights

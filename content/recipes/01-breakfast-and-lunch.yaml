@@ -1,0 +1,422 @@
+- id: "recipe-001"
+  slug: "maple-cinnamon-oatmeal"
+  title: "Maple Cinnamon Oatmeal"
+  description: "Creamy stovetop oats lightly sweetened with maple and warmed with cinnamon."
+  servings: 2
+  totalMinutes: 12
+  mealTypes: ["breakfast"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "oats", foodConceptId: "oats", name: "oats", amount: 1, unit: "cup", display: "1 cup rolled oats", required: true, acceptedForms: ["dried"] }
+    - { id: "milk", foodConceptId: "milk", name: "milk", amount: 2, unit: "cup", display: "2 cups milk", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "maple", foodConceptId: "maple-syrup", name: "maple syrup", amount: 2, unit: "tbsp", display: "2 tablespoons maple syrup", required: true, acceptedForms: ["unspecified", "opened"] }
+    - { id: "cinnamon", foodConceptId: "cinnamon", name: "cinnamon", amount: 0.5, unit: "tsp", display: "1/2 teaspoon cinnamon", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.125, unit: "tsp", display: "1/8 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Bring the milk to a gentle simmer, then stir in the oats and salt."
+    - "Cook until the oats are creamy, then fold in the maple syrup and cinnamon before serving."
+  rights: &draft-rights
+    owner: "Foodtopia"
+    author: "Foodtopia Editorial"
+    reviewer: null
+    reviewedAt: null
+    status: "draft"
+
+- id: "recipe-002"
+  slug: "banana-peanut-butter-oats"
+  title: "Banana Peanut Butter Oats"
+  description: "A filling bowl of soft oats with mashed banana and a savory-sweet peanut swirl."
+  servings: 2
+  totalMinutes: 12
+  mealTypes: ["breakfast"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "oats", foodConceptId: "oats", name: "oats", amount: 1, unit: "cup", display: "1 cup rolled oats", required: true, acceptedForms: ["dried"] }
+    - { id: "milk", foodConceptId: "milk", name: "milk", amount: 2, unit: "cup", display: "2 cups milk", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "banana", foodConceptId: "banana", name: "banana", amount: 1, unit: "count", display: "1 ripe banana", required: true, acceptedForms: ["fresh"] }
+    - { id: "peanut-butter", foodConceptId: "peanut-butter", name: "peanut butter", amount: 2, unit: "tbsp", display: "2 tablespoons peanut butter", required: true, acceptedForms: ["unspecified", "opened"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.125, unit: "tsp", display: "1/8 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Simmer the oats, milk, and salt until the oats soften and the mixture thickens."
+    - "Mash the banana into the oats, divide between bowls, and swirl peanut butter through each portion."
+  rights: *draft-rights
+
+- id: "recipe-003"
+  slug: "berry-yogurt-crunch-bowls"
+  title: "Berry Yogurt Crunch Bowls"
+  description: "Cool yogurt bowls layered with juicy berries, toasted-tasting oats, and honey."
+  servings: 2
+  totalMinutes: 5
+  mealTypes: ["breakfast", "snack"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "yogurt", foodConceptId: "yogurt", name: "yogurt", amount: 2, unit: "cup", display: "2 cups plain yogurt", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "berries", foodConceptId: "berries", name: "berries", amount: 1, unit: "cup", display: "1 cup mixed berries", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "oats", foodConceptId: "oats", name: "oats", amount: 0.5, unit: "cup", display: "1/2 cup rolled oats", required: true, acceptedForms: ["dried"] }
+    - { id: "honey", foodConceptId: "honey", name: "honey", amount: 2, unit: "tbsp", display: "2 tablespoons honey", required: true, acceptedForms: ["unspecified", "opened"] }
+  steps:
+    - "Spoon the yogurt into two bowls and scatter the berries evenly over the top."
+    - "Finish each bowl with the oats and a thin ribbon of honey."
+  rights: *draft-rights
+
+- id: "recipe-004"
+  slug: "spinach-tomato-scrambled-eggs"
+  title: "Spinach Tomato Scrambled Eggs"
+  description: "Soft scrambled eggs folded with tender spinach and bright fresh tomato."
+  servings: 2
+  totalMinutes: 15
+  mealTypes: ["breakfast", "lunch"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "eggs", foodConceptId: "eggs", name: "eggs", amount: 4, unit: "count", display: "4 large eggs", required: true, acceptedForms: ["fresh"] }
+    - { id: "spinach", foodConceptId: "spinach", name: "spinach", amount: 2, unit: "cup", display: "2 cups baby spinach", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "tomato", foodConceptId: "tomato", name: "tomato", amount: 1, unit: "count", display: "1 medium tomato, chopped", required: true, acceptedForms: ["fresh"] }
+    - { id: "butter", foodConceptId: "butter", name: "butter", amount: 1, unit: "tbsp", display: "1 tablespoon butter", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.25, unit: "tsp", display: "1/4 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "pepper", foodConceptId: "black-pepper", name: "black pepper", amount: 0.125, unit: "tsp", display: "1/8 teaspoon black pepper", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Melt the butter in a skillet and wilt the spinach with the tomato for two minutes."
+    - "Beat the eggs with the salt and black pepper, pour them into the skillet, and stir gently until softly set."
+  rights: *draft-rights
+
+- id: "recipe-005"
+  slug: "spinach-cheddar-omelet"
+  title: "Spinach Cheddar Omelet"
+  description: "A folded breakfast omelet with leafy spinach and melted cheddar cheese."
+  servings: 1
+  totalMinutes: 12
+  mealTypes: ["breakfast", "lunch"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "eggs", foodConceptId: "eggs", name: "eggs", amount: 3, unit: "count", display: "3 large eggs", required: true, acceptedForms: ["fresh"] }
+    - { id: "spinach", foodConceptId: "spinach", name: "spinach", amount: 1, unit: "cup", display: "1 cup spinach", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "cheddar", foodConceptId: "cheddar", name: "cheddar cheese", amount: 2, unit: "oz", display: "2 ounces cheddar cheese", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "butter", foodConceptId: "butter", name: "butter", amount: 1, unit: "tsp", display: "1 teaspoon butter", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.125, unit: "tsp", display: "1/8 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Melt the butter, wilt the spinach, and transfer the spinach to a small plate."
+    - "Whisk the eggs with salt, cook until nearly set, add the spinach and cheddar cheese to one side, then fold the omelet closed."
+  rights: *draft-rights
+
+- id: "recipe-006"
+  slug: "egg-and-salsa-breakfast-quesadilla"
+  title: "Egg and Salsa Breakfast Quesadilla"
+  description: "Crisp tortillas hold fluffy eggs, cheddar, and a lively spoonful of salsa."
+  servings: 2
+  totalMinutes: 18
+  mealTypes: ["breakfast", "lunch"]
+  cuisines: ["Mexican-inspired"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "tortillas", foodConceptId: "tortillas", name: "tortillas", amount: 2, unit: "count", display: "2 large tortillas", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "eggs", foodConceptId: "eggs", name: "eggs", amount: 3, unit: "count", display: "3 large eggs", required: true, acceptedForms: ["fresh"] }
+    - { id: "cheddar", foodConceptId: "cheddar", name: "cheddar cheese", amount: 3, unit: "oz", display: "3 ounces cheddar cheese", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "salsa", foodConceptId: "salsa", name: "salsa", amount: 0.25, unit: "cup", display: "1/4 cup salsa", required: true, acceptedForms: ["fresh", "opened", "canned", "unspecified"] }
+    - { id: "butter", foodConceptId: "butter", name: "butter", amount: 1, unit: "tsp", display: "1 teaspoon butter", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+  steps:
+    - "Melt the butter and scramble the eggs just until set, then move the eggs to a plate."
+    - "Fill the tortillas with the eggs, cheddar cheese, and salsa, then brown both sides in the skillet and cut into wedges."
+  rights: *draft-rights
+
+- id: "recipe-007"
+  slug: "cinnamon-maple-french-toast"
+  title: "Cinnamon Maple French Toast"
+  description: "Golden slices of custardy bread seasoned with cinnamon and finished with maple syrup."
+  servings: 2
+  totalMinutes: 20
+  mealTypes: ["breakfast"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "bread", foodConceptId: "bread", name: "bread", amount: 4, unit: "count", display: "4 slices bread", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "eggs", foodConceptId: "eggs", name: "eggs", amount: 2, unit: "count", display: "2 large eggs", required: true, acceptedForms: ["fresh"] }
+    - { id: "milk", foodConceptId: "milk", name: "milk", amount: 0.5, unit: "cup", display: "1/2 cup milk", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "cinnamon", foodConceptId: "cinnamon", name: "cinnamon", amount: 0.5, unit: "tsp", display: "1/2 teaspoon cinnamon", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "butter", foodConceptId: "butter", name: "butter", amount: 1, unit: "tbsp", display: "1 tablespoon butter", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "maple", foodConceptId: "maple-syrup", name: "maple syrup", amount: 3, unit: "tbsp", display: "3 tablespoons maple syrup", required: true, acceptedForms: ["unspecified", "opened"] }
+  steps:
+    - "Whisk the eggs, milk, and cinnamon in a shallow dish, then soak each piece of bread briefly on both sides."
+    - "Melt the butter in a skillet, cook the bread until browned on both sides, and serve with maple syrup."
+  rights: *draft-rights
+
+- id: "recipe-008"
+  slug: "banana-oat-blender-pancakes"
+  title: "Banana Oat Blender Pancakes"
+  description: "Tender little pancakes built from oats and banana with no separate flour mixture."
+  servings: 2
+  totalMinutes: 20
+  mealTypes: ["breakfast"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "banana", foodConceptId: "banana", name: "banana", amount: 1, unit: "count", display: "1 ripe banana", required: true, acceptedForms: ["fresh"] }
+    - { id: "oats", foodConceptId: "oats", name: "oats", amount: 1, unit: "cup", display: "1 cup rolled oats", required: true, acceptedForms: ["dried"] }
+    - { id: "eggs", foodConceptId: "eggs", name: "eggs", amount: 2, unit: "count", display: "2 large eggs", required: true, acceptedForms: ["fresh"] }
+    - { id: "milk", foodConceptId: "milk", name: "milk", amount: 0.25, unit: "cup", display: "1/4 cup milk", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "baking-powder", foodConceptId: "baking-powder", name: "baking powder", amount: 1, unit: "tsp", display: "1 teaspoon baking powder", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "oil", foodConceptId: "vegetable-oil", name: "vegetable oil", amount: 1, unit: "tbsp", display: "1 tablespoon vegetable oil", required: true, acceptedForms: ["unspecified", "opened"] }
+  steps:
+    - "Blend the banana, oats, eggs, milk, and baking powder until a thick, mostly smooth batter forms."
+    - "Brush a skillet with vegetable oil and cook small pancakes until bubbles appear, then flip and brown the second side."
+  rights: *draft-rights
+
+- id: "recipe-009"
+  slug: "apple-brown-sugar-oats"
+  title: "Apple Brown Sugar Oats"
+  description: "Warm oats simmered with diced apple and a modest spoonful of brown sugar."
+  servings: 2
+  totalMinutes: 15
+  mealTypes: ["breakfast"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "oats", foodConceptId: "oats", name: "oats", amount: 1, unit: "cup", display: "1 cup rolled oats", required: true, acceptedForms: ["dried"] }
+    - { id: "apple", foodConceptId: "apple", name: "apple", amount: 1, unit: "count", display: "1 apple, diced", required: true, acceptedForms: ["fresh"] }
+    - { id: "milk", foodConceptId: "milk", name: "milk", amount: 2, unit: "cup", display: "2 cups milk", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "brown-sugar", foodConceptId: "brown-sugar", name: "brown sugar", amount: 1, unit: "tbsp", display: "1 tablespoon brown sugar", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "cinnamon", foodConceptId: "cinnamon", name: "cinnamon", amount: 0.5, unit: "tsp", display: "1/2 teaspoon cinnamon", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.125, unit: "tsp", display: "1/8 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Simmer the apple in the milk for three minutes, then add the oats and salt."
+    - "Cook until the oats soften, then stir in the brown sugar and cinnamon."
+  rights: *draft-rights
+
+- id: "recipe-010"
+  slug: "paprika-potato-egg-skillet"
+  title: "Paprika Potato Egg Skillet"
+  description: "Crisp-edged potatoes and onion topped with eggs for a sturdy one-pan breakfast."
+  servings: 2
+  totalMinutes: 30
+  mealTypes: ["breakfast", "dinner"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "potato", foodConceptId: "potato", name: "potato", amount: 2, unit: "count", display: "2 medium potatoes, diced", required: true, acceptedForms: ["fresh"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 small onion, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "eggs", foodConceptId: "eggs", name: "eggs", amount: 4, unit: "count", display: "4 large eggs", required: true, acceptedForms: ["fresh"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 2, unit: "tbsp", display: "2 tablespoons olive oil", required: true, acceptedForms: ["unspecified", "opened"] }
+    - { id: "paprika", foodConceptId: "paprika", name: "paprika", amount: 1, unit: "tsp", display: "1 teaspoon paprika", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.5, unit: "tsp", display: "1/2 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "pepper", foodConceptId: "black-pepper", name: "black pepper", amount: 0.25, unit: "tsp", display: "1/4 teaspoon black pepper", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Heat the olive oil and cook the potato with the onion, paprika, salt, and black pepper until browned and tender."
+    - "Make four spaces among the potatoes, crack in the eggs, cover, and cook until the egg whites set."
+  rights: *draft-rights
+
+- id: "recipe-011"
+  slug: "lemon-chickpea-chopped-salad"
+  title: "Lemon Chickpea Chopped Salad"
+  description: "A crisp no-cook salad of chickpeas, cucumber, tomato, and sharp lemon dressing."
+  servings: 3
+  totalMinutes: 15
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["Mediterranean-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "chickpeas", foodConceptId: "chickpeas", name: "chickpeas", amount: 15, unit: "oz", display: "15 ounces cooked chickpeas", required: true, acceptedForms: ["canned", "cooked"] }
+    - { id: "cucumber", foodConceptId: "cucumber", name: "cucumber", amount: 1, unit: "count", display: "1 cucumber, chopped", required: true, acceptedForms: ["fresh"] }
+    - { id: "tomato", foodConceptId: "tomato", name: "tomato", amount: 2, unit: "count", display: "2 tomatoes, chopped", required: true, acceptedForms: ["fresh"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 0.5, unit: "count", display: "1/2 small onion, finely chopped", required: true, acceptedForms: ["fresh"] }
+    - { id: "lemon", foodConceptId: "lemon", name: "lemon", amount: 1, unit: "count", display: "1 lemon", required: true, acceptedForms: ["fresh"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 2, unit: "tbsp", display: "2 tablespoons olive oil", required: true, acceptedForms: ["unspecified", "opened"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.5, unit: "tsp", display: "1/2 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Combine the chickpeas, cucumber, tomato, and onion in a wide bowl."
+    - "Juice the lemon over the salad, add the olive oil and salt, and toss thoroughly."
+  rights: *draft-rights
+
+- id: "recipe-012"
+  slug: "crunchy-tuna-salad-sandwiches"
+  title: "Crunchy Tuna Salad Sandwiches"
+  description: "Classic tuna salad gains extra crunch from celery and a gentle mustard bite."
+  servings: 2
+  totalMinutes: 10
+  mealTypes: ["lunch"]
+  cuisines: ["American"]
+  dietaryTags: []
+  ingredients:
+    - { id: "tuna", foodConceptId: "tuna", name: "tuna", amount: 10, unit: "oz", display: "10 ounces drained tuna", required: true, acceptedForms: ["canned", "opened"] }
+    - { id: "mayo", foodConceptId: "mayonnaise", name: "mayonnaise", amount: 3, unit: "tbsp", display: "3 tablespoons mayonnaise", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "mustard", foodConceptId: "mustard", name: "mustard", amount: 1, unit: "tsp", display: "1 teaspoon mustard", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "celery", foodConceptId: "celery", name: "celery", amount: 1, unit: "count", display: "1 celery stalk, finely chopped", required: true, acceptedForms: ["fresh"] }
+    - { id: "bread", foodConceptId: "bread", name: "bread", amount: 4, unit: "count", display: "4 slices bread", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "pepper", foodConceptId: "black-pepper", name: "black pepper", amount: 0.125, unit: "tsp", display: "1/8 teaspoon black pepper", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Mix the tuna with the mayonnaise, mustard, celery, and black pepper until evenly dressed."
+    - "Divide the tuna mixture between two pieces of bread and close each sandwich with the remaining bread."
+  rights: *draft-rights
+
+- id: "recipe-013"
+  slug: "mustardy-egg-salad-sandwiches"
+  title: "Mustardy Egg Salad Sandwiches"
+  description: "Chopped eggs in a tangy, creamy dressing make a quick and familiar lunch."
+  servings: 2
+  totalMinutes: 20
+  mealTypes: ["lunch"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "eggs", foodConceptId: "eggs", name: "eggs", amount: 4, unit: "count", display: "4 hard-cooked eggs", required: true, acceptedForms: ["cooked"] }
+    - { id: "mayo", foodConceptId: "mayonnaise", name: "mayonnaise", amount: 3, unit: "tbsp", display: "3 tablespoons mayonnaise", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "mustard", foodConceptId: "mustard", name: "mustard", amount: 2, unit: "tsp", display: "2 teaspoons mustard", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "bread", foodConceptId: "bread", name: "bread", amount: 4, unit: "count", display: "4 slices bread", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.25, unit: "tsp", display: "1/4 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "pepper", foodConceptId: "black-pepper", name: "black pepper", amount: 0.125, unit: "tsp", display: "1/8 teaspoon black pepper", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Chop the eggs and fold them together with the mayonnaise, mustard, salt, and black pepper."
+    - "Spread the egg salad over two pieces of bread and top with the remaining bread."
+  rights: *draft-rights
+
+- id: "recipe-014"
+  slug: "avocado-chickpea-toast"
+  title: "Avocado Chickpea Toast"
+  description: "Creamy avocado and chickpeas make a substantial, lemony topping for crisp bread."
+  servings: 2
+  totalMinutes: 12
+  mealTypes: ["breakfast", "lunch"]
+  cuisines: ["American"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "bread", foodConceptId: "bread", name: "bread", amount: 4, unit: "count", display: "4 slices bread", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "avocado", foodConceptId: "avocado", name: "avocado", amount: 1, unit: "count", display: "1 ripe avocado", required: true, acceptedForms: ["fresh"] }
+    - { id: "chickpeas", foodConceptId: "chickpeas", name: "chickpeas", amount: 1, unit: "cup", display: "1 cup cooked chickpeas", required: true, acceptedForms: ["canned", "cooked"] }
+    - { id: "lemon", foodConceptId: "lemon", name: "lemon", amount: 0.5, unit: "count", display: "1/2 lemon", required: true, acceptedForms: ["fresh"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.25, unit: "tsp", display: "1/4 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "pepper", foodConceptId: "black-pepper", name: "black pepper", amount: 0.125, unit: "tsp", display: "1/8 teaspoon black pepper", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Mash the avocado and chickpeas with the lemon, salt, and black pepper, leaving some chickpeas chunky."
+    - "Toast the bread until crisp and spoon the avocado-chickpea mixture over each piece."
+  rights: *draft-rights
+
+- id: "recipe-015"
+  slug: "tomato-cucumber-chickpea-salad"
+  title: "Tomato Cucumber Chickpea Salad"
+  description: "A simple vinegar-dressed combination of juicy tomato, cucumber, and chickpeas."
+  servings: 4
+  totalMinutes: 15
+  mealTypes: ["lunch", "side"]
+  cuisines: ["Mediterranean-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "tomato", foodConceptId: "tomato", name: "tomato", amount: 3, unit: "count", display: "3 tomatoes, cut into chunks", required: true, acceptedForms: ["fresh"] }
+    - { id: "cucumber", foodConceptId: "cucumber", name: "cucumber", amount: 1, unit: "count", display: "1 cucumber, cut into chunks", required: true, acceptedForms: ["fresh"] }
+    - { id: "chickpeas", foodConceptId: "chickpeas", name: "chickpeas", amount: 15, unit: "oz", display: "15 ounces cooked chickpeas", required: true, acceptedForms: ["canned", "cooked"] }
+    - { id: "vinegar", foodConceptId: "vinegar", name: "vinegar", amount: 2, unit: "tbsp", display: "2 tablespoons vinegar", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 2, unit: "tbsp", display: "2 tablespoons olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "oregano", foodConceptId: "oregano", name: "oregano", amount: 0.5, unit: "tsp", display: "1/2 teaspoon oregano", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.5, unit: "tsp", display: "1/2 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Place the tomato, cucumber, and chickpeas in a serving bowl."
+    - "Whisk the vinegar, olive oil, oregano, and salt, pour the dressing over the salad, and toss."
+  rights: *draft-rights
+
+- id: "recipe-016"
+  slug: "kale-apple-cheddar-salad"
+  title: "Kale Apple Cheddar Salad"
+  description: "Tart apple and savory cheddar soften the edges of a massaged kale salad."
+  servings: 3
+  totalMinutes: 15
+  mealTypes: ["lunch", "side"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "kale", foodConceptId: "kale", name: "kale", amount: 5, unit: "cup", display: "5 cups chopped kale", required: true, acceptedForms: ["fresh"] }
+    - { id: "apple", foodConceptId: "apple", name: "apple", amount: 1, unit: "count", display: "1 crisp apple, sliced", required: true, acceptedForms: ["fresh"] }
+    - { id: "cheddar", foodConceptId: "cheddar", name: "cheddar cheese", amount: 3, unit: "oz", display: "3 ounces cheddar cheese, cubed", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "vinegar", foodConceptId: "vinegar", name: "vinegar", amount: 1, unit: "tbsp", display: "1 tablespoon vinegar", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 2, unit: "tbsp", display: "2 tablespoons olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "honey", foodConceptId: "honey", name: "honey", amount: 1, unit: "tsp", display: "1 teaspoon honey", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.25, unit: "tsp", display: "1/4 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Massage the kale with the olive oil and salt until the leaves become darker and more tender."
+    - "Whisk the vinegar with the honey, toss it with the kale, and fold in the apple and cheddar cheese."
+  rights: *draft-rights
+
+- id: "recipe-017"
+  slug: "lime-black-bean-corn-salad"
+  title: "Lime Black Bean Corn Salad"
+  description: "A bright pantry-friendly salad with black beans, sweet corn, tomato, and lime."
+  servings: 4
+  totalMinutes: 15
+  mealTypes: ["lunch", "side"]
+  cuisines: ["Mexican-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "beans", foodConceptId: "black-beans", name: "black beans", amount: 15, unit: "oz", display: "15 ounces cooked black beans", required: true, acceptedForms: ["canned", "cooked"] }
+    - { id: "corn", foodConceptId: "corn", name: "corn", amount: 1.5, unit: "cup", display: "1 1/2 cups corn", required: true, acceptedForms: ["fresh", "frozen", "canned", "cooked"] }
+    - { id: "tomato", foodConceptId: "tomato", name: "tomato", amount: 2, unit: "count", display: "2 tomatoes, chopped", required: true, acceptedForms: ["fresh"] }
+    - { id: "lime", foodConceptId: "lime", name: "lime", amount: 1, unit: "count", display: "1 lime", required: true, acceptedForms: ["fresh"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 2, unit: "tbsp", display: "2 tablespoons olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "cumin", foodConceptId: "cumin", name: "cumin", amount: 0.5, unit: "tsp", display: "1/2 teaspoon cumin", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.5, unit: "tsp", display: "1/2 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Combine the black beans, corn, and tomato in a large bowl."
+    - "Juice the lime over the bowl, add the olive oil, cumin, and salt, and toss until evenly coated."
+  rights: *draft-rights
+
+- id: "recipe-018"
+  slug: "lemon-tuna-rice-salad"
+  title: "Lemon Tuna Rice Salad"
+  description: "Chilled rice, tuna, and cucumber come together in a light lemon-mayonnaise dressing."
+  servings: 3
+  totalMinutes: 15
+  mealTypes: ["lunch"]
+  cuisines: ["American"]
+  dietaryTags: []
+  ingredients:
+    - { id: "rice", foodConceptId: "rice", name: "rice", amount: 2, unit: "cup", display: "2 cups cooked rice", required: true, acceptedForms: ["cooked"] }
+    - { id: "tuna", foodConceptId: "tuna", name: "tuna", amount: 10, unit: "oz", display: "10 ounces drained tuna", required: true, acceptedForms: ["canned", "opened"] }
+    - { id: "cucumber", foodConceptId: "cucumber", name: "cucumber", amount: 1, unit: "count", display: "1 cucumber, diced", required: true, acceptedForms: ["fresh"] }
+    - { id: "mayo", foodConceptId: "mayonnaise", name: "mayonnaise", amount: 3, unit: "tbsp", display: "3 tablespoons mayonnaise", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "lemon", foodConceptId: "lemon", name: "lemon", amount: 1, unit: "count", display: "1 lemon", required: true, acceptedForms: ["fresh"] }
+    - { id: "pepper", foodConceptId: "black-pepper", name: "black pepper", amount: 0.25, unit: "tsp", display: "1/4 teaspoon black pepper", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Fluff the rice in a bowl, then fold in the tuna and cucumber."
+    - "Stir the mayonnaise with juice from the lemon and the black pepper, then toss the dressing through the rice salad."
+  rights: *draft-rights
+
+- id: "recipe-019"
+  slug: "warm-lentil-spinach-salad"
+  title: "Warm Lentil Spinach Salad"
+  description: "Warm lentils gently wilt spinach beneath a sharp onion and vinegar dressing."
+  servings: 3
+  totalMinutes: 20
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["European-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "lentils", foodConceptId: "lentils", name: "lentils", amount: 3, unit: "cup", display: "3 cups cooked lentils", required: true, acceptedForms: ["cooked", "canned"] }
+    - { id: "spinach", foodConceptId: "spinach", name: "spinach", amount: 5, unit: "cup", display: "5 cups spinach", required: true, acceptedForms: ["fresh"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 0.5, unit: "count", display: "1/2 onion, thinly sliced", required: true, acceptedForms: ["fresh"] }
+    - { id: "vinegar", foodConceptId: "vinegar", name: "vinegar", amount: 2, unit: "tbsp", display: "2 tablespoons vinegar", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 2, unit: "tbsp", display: "2 tablespoons olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "mustard", foodConceptId: "mustard", name: "mustard", amount: 1, unit: "tsp", display: "1 teaspoon mustard", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.5, unit: "tsp", display: "1/2 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Warm the lentils with the onion and olive oil until the onion softens slightly."
+    - "Whisk the vinegar, mustard, and salt, pour it over the lentils, then toss the warm mixture with the spinach."
+  rights: *draft-rights
+
+- id: "recipe-020"
+  slug: "skillet-cheddar-tomato-sandwiches"
+  title: "Skillet Cheddar Tomato Sandwiches"
+  description: "Buttery grilled sandwiches pair melted cheddar with slices of fresh tomato."
+  servings: 2
+  totalMinutes: 15
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "bread", foodConceptId: "bread", name: "bread", amount: 4, unit: "count", display: "4 slices bread", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "cheddar", foodConceptId: "cheddar", name: "cheddar cheese", amount: 4, unit: "oz", display: "4 ounces cheddar cheese", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "tomato", foodConceptId: "tomato", name: "tomato", amount: 1, unit: "count", display: "1 tomato, thinly sliced", required: true, acceptedForms: ["fresh"] }
+    - { id: "butter", foodConceptId: "butter", name: "butter", amount: 1, unit: "tbsp", display: "1 tablespoon softened butter", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+  steps:
+    - "Layer the cheddar cheese and tomato between pairs of bread, then spread butter over the outer bread surfaces."
+    - "Cook the sandwiches in a covered skillet until the bread is browned and the cheddar cheese has melted."
+  rights: *draft-rights

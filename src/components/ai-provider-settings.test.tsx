@@ -1,0 +1,98 @@
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import type { AiSettingsResponse } from "@/contracts/api";
+
+const api = vi.hoisted(() => ({
+  getAiSettings: vi.fn(),
+  updateAiSettings: vi.fn(),
+}));
+
+vi.mock("@/lib/client/api", () => api);
+
+import { AiProviderSettings } from "./ai-provider-settings";
+
+const initial: AiSettingsResponse = {
+  provider: "openai",
+  visionModelId: "gpt-vision",
+  recipeModelId: "gpt-recipes",
+  credentialSource: "platform",
+  credentialConfigured: true,
+  platformCredentials: { openai: true, openrouter: false },
+  modelDefaults: {
+    openai: {
+      visionModelId: "gpt-vision",
+      recipeModelId: "gpt-recipes",
+    },
+    openrouter: {
+      visionModelId: "vendor/vision",
+      recipeModelId: "vendor/recipes",
+    },
+  },
+  householdCredentialsAvailable: true,
+  canEdit: true,
+  updatedAt: "2026-08-14T12:00:00.000Z",
+  version: 1,
+};
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  localStorage.clear();
+  sessionStorage.clear();
+  api.getAiSettings.mockResolvedValue(initial);
+});
+
+describe("AI provider settings", () => {
+  it("submits a household OpenRouter key once, then clears it from the UI and browser storage", async () => {
+    const user = userEvent.setup();
+    api.updateAiSettings.mockResolvedValue({
+      ...initial,
+      provider: "openrouter",
+      visionModelId: "vendor/vision",
+      recipeModelId: "vendor/recipes",
+      credentialSource: "household",
+      credentialConfigured: true,
+      version: 2,
+    });
+
+    render(<AiProviderSettings apiMode="connected" />);
+    await screen.findByRole("option", { name: "OpenRouter" });
+    await user.selectOptions(screen.getByLabelText("Provider"), "openrouter");
+    await user.click(screen.getByRole("radio", { name: /Household key/i }));
+    const secret = "fake-openrouter-household-key";
+    await user.type(screen.getByLabelText("API key"), secret);
+    await user.click(screen.getByRole("button", { name: "Save AI provider" }));
+
+    await waitFor(() => {
+      expect(api.updateAiSettings).toHaveBeenCalledWith({
+        provider: "openrouter",
+        visionModelId: "vendor/vision",
+        recipeModelId: "vendor/recipes",
+        credentialSource: "household",
+        credentialAction: "replace",
+        expectedVersion: 1,
+        apiKey: secret,
+      });
+    });
+    expect(screen.getByLabelText("Replace API key")).toHaveValue("");
+    expect(document.body.textContent).not.toContain(secret);
+    expect(JSON.stringify(localStorage)).not.toContain(secret);
+    expect(JSON.stringify(sessionStorage)).not.toContain(secret);
+  });
+
+  it("shows members the route without rendering an editable secret", async () => {
+    api.getAiSettings.mockResolvedValue({
+      ...initial,
+      credentialSource: "household",
+      credentialConfigured: true,
+      canEdit: false,
+    });
+    render(<AiProviderSettings apiMode="connected" />);
+
+    await screen.findByText("Owner-managed setting");
+    expect(screen.getByLabelText("Provider")).toBeDisabled();
+    expect(screen.getByLabelText("Replace API key")).toBeDisabled();
+    expect(screen.queryByRole("button", { name: "Save AI provider" })).toBeNull();
+  });
+});

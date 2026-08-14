@@ -1,0 +1,447 @@
+- id: "recipe-061"
+  slug: "lemon-garlic-salmon-and-broccoli"
+  title: "Lemon Garlic Salmon and Broccoli"
+  description: "Salmon and broccoli roast together with lemon, garlic, olive oil, and black pepper."
+  servings: 4
+  totalMinutes: 30
+  mealTypes: ["dinner"]
+  cuisines: ["American"]
+  dietaryTags: ["dairy-free"]
+  ingredients:
+    - { id: "salmon", foodConceptId: "salmon", name: "salmon", amount: 1.5, unit: "lb", display: "1 1/2 pounds salmon fillets", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "broccoli", foodConceptId: "broccoli", name: "broccoli", amount: 6, unit: "cup", display: "6 cups broccoli florets", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "lemon", foodConceptId: "lemon", name: "lemon", amount: 1, unit: "count", display: "1 lemon", required: true, acceptedForms: ["fresh"] }
+    - { id: "garlic", foodConceptId: "garlic", name: "garlic", amount: 3, unit: "count", display: "3 garlic cloves, minced", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 3, unit: "tbsp", display: "3 tablespoons olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.75, unit: "tsp", display: "3/4 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "pepper", foodConceptId: "black-pepper", name: "black pepper", amount: 0.5, unit: "tsp", display: "1/2 teaspoon black pepper", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Toss the broccoli with half the olive oil, garlic, salt, and black pepper, then spread it on a sheet pan."
+    - "Add the salmon, brush it with the remaining olive oil and juice from the lemon, and roast until the broccoli is tender and the salmon is cooked through."
+  rights: &draft-rights
+    owner: "Foodtopia"
+    author: "Foodtopia Editorial"
+    reviewer: null
+    reviewedAt: null
+    status: "draft"
+
+- id: "recipe-062"
+  slug: "paprika-salmon-sweet-potato-plates"
+  title: "Paprika Salmon Sweet Potato Plates"
+  description: "Paprika-seasoned salmon roasts beside sweet potatoes and is served over spinach."
+  servings: 4
+  totalMinutes: 45
+  mealTypes: ["dinner"]
+  cuisines: ["American"]
+  dietaryTags: ["dairy-free"]
+  ingredients:
+    - { id: "salmon", foodConceptId: "salmon", name: "salmon", amount: 1.5, unit: "lb", display: "1 1/2 pounds salmon fillets", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "sweet-potato", foodConceptId: "sweet-potato", name: "sweet potato", amount: 2, unit: "count", display: "2 sweet potatoes, cubed", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "spinach", foodConceptId: "spinach", name: "spinach", amount: 5, unit: "cup", display: "5 cups spinach", required: true, acceptedForms: ["fresh"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 3, unit: "tbsp", display: "3 tablespoons olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "paprika", foodConceptId: "paprika", name: "paprika", amount: 2, unit: "tsp", display: "2 teaspoons paprika", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Toss the sweet potato with two tablespoons olive oil, half the paprika, and half the salt, then roast until nearly tender."
+    - "Season the salmon with the remaining olive oil, paprika, and salt, roast until cooked through, and serve the salmon and sweet potato over the spinach."
+  rights: *draft-rights
+
+- id: "recipe-063"
+  slug: "lemon-paprika-shrimp-pasta"
+  title: "Lemon Paprika Shrimp Pasta"
+  description: "Shrimp and pasta are coated in a quick garlic butter sauce with lemon and paprika."
+  servings: 4
+  totalMinutes: 25
+  mealTypes: ["dinner"]
+  cuisines: ["Mediterranean-inspired"]
+  dietaryTags: []
+  ingredients:
+    - { id: "shrimp", foodConceptId: "shrimp", name: "shrimp", amount: 1, unit: "lb", display: "1 pound peeled shrimp", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "pasta", foodConceptId: "pasta", name: "pasta", amount: 12, unit: "oz", display: "12 ounces pasta", required: true, acceptedForms: ["dried"] }
+    - { id: "water", foodConceptId: "water", name: "water", amount: 3, unit: "quart", display: "3 quarts water", required: true, acceptedForms: ["unspecified"] }
+    - { id: "garlic", foodConceptId: "garlic", name: "garlic", amount: 4, unit: "count", display: "4 garlic cloves, minced", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "butter", foodConceptId: "butter", name: "butter", amount: 3, unit: "tbsp", display: "3 tablespoons butter", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "lemon", foodConceptId: "lemon", name: "lemon", amount: 1, unit: "count", display: "1 lemon", required: true, acceptedForms: ["fresh"] }
+    - { id: "paprika", foodConceptId: "paprika", name: "paprika", amount: 1, unit: "tsp", display: "1 teaspoon paprika", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Boil the water with the salt, cook the pasta until tender, reserve a little water, and drain."
+    - "Melt the butter with the garlic and paprika, cook the shrimp until opaque, then toss with the pasta, juice from the lemon, and enough reserved water to coat."
+  rights: *draft-rights
+
+- id: "recipe-064"
+  slug: "mustard-tuna-potato-patties"
+  title: "Mustard Tuna Potato Patties"
+  description: "Mashed potato binds tuna, egg, onion, and mustard into crisp skillet patties."
+  servings: 4
+  totalMinutes: 35
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["American"]
+  dietaryTags: ["dairy-free"]
+  ingredients:
+    - { id: "tuna", foodConceptId: "tuna", name: "tuna", amount: 10, unit: "oz", display: "10 ounces drained tuna", required: true, acceptedForms: ["canned", "opened"] }
+    - { id: "potato", foodConceptId: "potato", name: "potato", amount: 1, unit: "lb", display: "1 pound potatoes", required: true, acceptedForms: ["fresh", "cooked"] }
+    - { id: "eggs", foodConceptId: "eggs", name: "eggs", amount: 1, unit: "count", display: "1 large egg", required: true, acceptedForms: ["fresh"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 0.5, unit: "count", display: "1/2 small onion, finely chopped", required: true, acceptedForms: ["fresh"] }
+    - { id: "mustard", foodConceptId: "mustard", name: "mustard", amount: 1, unit: "tbsp", display: "1 tablespoon mustard", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "oil", foodConceptId: "vegetable-oil", name: "vegetable oil", amount: 3, unit: "tbsp", display: "3 tablespoons vegetable oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.5, unit: "tsp", display: "1/2 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "pepper", foodConceptId: "black-pepper", name: "black pepper", amount: 0.25, unit: "tsp", display: "1/4 teaspoon black pepper", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Cook the potato until tender, mash it, then mix in the tuna, egg, onion, mustard, salt, and black pepper and shape into patties."
+    - "Heat the vegetable oil and cook the tuna-potato patties until firm and browned on both sides."
+  rights: *draft-rights
+
+- id: "recipe-065"
+  slug: "sesame-tofu-cabbage-stir-fry"
+  title: "Sesame Tofu Cabbage Stir-Fry"
+  description: "Tofu, cabbage, and carrots are tossed with garlic, soy sauce, and sesame oil."
+  servings: 4
+  totalMinutes: 30
+  mealTypes: ["dinner"]
+  cuisines: ["Asian-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "tofu", foodConceptId: "tofu", name: "tofu", amount: 14, unit: "oz", display: "14 ounces firm tofu, cubed", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "cabbage", foodConceptId: "cabbage", name: "cabbage", amount: 6, unit: "cup", display: "6 cups sliced cabbage", required: true, acceptedForms: ["fresh"] }
+    - { id: "carrot", foodConceptId: "carrot", name: "carrot", amount: 2, unit: "count", display: "2 carrots, thinly sliced", required: true, acceptedForms: ["fresh"] }
+    - { id: "garlic", foodConceptId: "garlic", name: "garlic", amount: 3, unit: "count", display: "3 garlic cloves, minced", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "soy", foodConceptId: "soy-sauce", name: "soy sauce", amount: 3, unit: "tbsp", display: "3 tablespoons soy sauce", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "oil", foodConceptId: "vegetable-oil", name: "vegetable oil", amount: 2, unit: "tbsp", display: "2 tablespoons vegetable oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "sesame", foodConceptId: "sesame-oil", name: "sesame oil", amount: 1, unit: "tsp", display: "1 teaspoon sesame oil", required: true, acceptedForms: ["opened", "unspecified"] }
+  steps:
+    - "Brown the tofu in the vegetable oil, then transfer the tofu to a plate."
+    - "Stir-fry the cabbage, carrot, and garlic, return the tofu, and toss everything with the soy sauce and sesame oil."
+  rights: *draft-rights
+
+- id: "recipe-066"
+  slug: "avocado-black-bean-tacos"
+  title: "Avocado Black Bean Tacos"
+  description: "Cumin black beans fill tortillas with crunchy cabbage, salsa, avocado, and lime."
+  servings: 4
+  totalMinutes: 25
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["Mexican-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "beans", foodConceptId: "black-beans", name: "black beans", amount: 15, unit: "oz", display: "15 ounces cooked black beans", required: true, acceptedForms: ["canned", "cooked"] }
+    - { id: "tortillas", foodConceptId: "tortillas", name: "tortillas", amount: 8, unit: "count", display: "8 tortillas", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "cabbage", foodConceptId: "cabbage", name: "cabbage", amount: 2, unit: "cup", display: "2 cups shredded cabbage", required: true, acceptedForms: ["fresh"] }
+    - { id: "salsa", foodConceptId: "salsa", name: "salsa", amount: 1, unit: "cup", display: "1 cup salsa", required: true, acceptedForms: ["fresh", "canned", "opened", "unspecified"] }
+    - { id: "avocado", foodConceptId: "avocado", name: "avocado", amount: 1, unit: "count", display: "1 avocado, sliced", required: true, acceptedForms: ["fresh"] }
+    - { id: "lime", foodConceptId: "lime", name: "lime", amount: 1, unit: "count", display: "1 lime", required: true, acceptedForms: ["fresh"] }
+    - { id: "cumin", foodConceptId: "cumin", name: "cumin", amount: 1, unit: "tsp", display: "1 teaspoon cumin", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 1, unit: "tbsp", display: "1 tablespoon olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.5, unit: "tsp", display: "1/2 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Warm the black beans in the olive oil with the cumin and salt, lightly mashing a few beans."
+    - "Fill the tortillas with the black beans, cabbage, salsa, and avocado, then finish with juice from the lime."
+  rights: *draft-rights
+
+- id: "recipe-067"
+  slug: "lentil-sloppy-sandwiches"
+  title: "Lentil Sloppy Sandwiches"
+  description: "Cooked lentils simmer in a tangy tomato and bell pepper filling for soft sandwiches."
+  servings: 4
+  totalMinutes: 30
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["American"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "lentils", foodConceptId: "lentils", name: "lentils", amount: 3, unit: "cup", display: "3 cups cooked lentils", required: true, acceptedForms: ["cooked", "canned"] }
+    - { id: "bread", foodConceptId: "bread", name: "bread", amount: 8, unit: "count", display: "8 slices bread", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 small onion, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "pepper", foodConceptId: "bell-pepper", name: "bell pepper", amount: 1, unit: "count", display: "1 bell pepper, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "tomatoes", foodConceptId: "canned-tomato", name: "canned tomatoes", amount: 14.5, unit: "oz", display: "14 1/2 ounces canned tomatoes", required: true, acceptedForms: ["canned", "opened"] }
+    - { id: "paste", foodConceptId: "tomato-paste", name: "tomato paste", amount: 2, unit: "tbsp", display: "2 tablespoons tomato paste", required: true, acceptedForms: ["canned", "opened"] }
+    - { id: "mustard", foodConceptId: "mustard", name: "mustard", amount: 1, unit: "tbsp", display: "1 tablespoon mustard", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "chili", foodConceptId: "chili-powder", name: "chili powder", amount: 1, unit: "tsp", display: "1 teaspoon chili powder", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 1, unit: "tbsp", display: "1 tablespoon olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.75, unit: "tsp", display: "3/4 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Cook the onion and bell pepper in the olive oil, then stir in the tomato paste, mustard, chili powder, and salt."
+    - "Add the lentils and canned tomatoes, simmer until thick, then spoon the lentil filling between pairs of bread."
+  rights: *draft-rights
+
+- id: "recipe-068"
+  slug: "cauliflower-chickpea-coconut-curry"
+  title: "Cauliflower Chickpea Coconut Curry"
+  description: "Cauliflower and chickpeas simmer in a tomato-coconut curry that needs only one pot."
+  servings: 5
+  totalMinutes: 40
+  mealTypes: ["dinner"]
+  cuisines: ["South Asian-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "cauliflower", foodConceptId: "cauliflower", name: "cauliflower", amount: 6, unit: "cup", display: "6 cups cauliflower florets", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "chickpeas", foodConceptId: "chickpeas", name: "chickpeas", amount: 15, unit: "oz", display: "15 ounces cooked chickpeas", required: true, acceptedForms: ["canned", "cooked"] }
+    - { id: "coconut", foodConceptId: "coconut-milk", name: "coconut milk", amount: 14, unit: "fl-oz", display: "14 fluid ounces coconut milk", required: true, acceptedForms: ["canned", "opened"] }
+    - { id: "tomatoes", foodConceptId: "canned-tomato", name: "canned tomatoes", amount: 14.5, unit: "oz", display: "14 1/2 ounces canned tomatoes", required: true, acceptedForms: ["canned", "opened"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 onion, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "curry", foodConceptId: "curry-powder", name: "curry powder", amount: 2, unit: "tsp", display: "2 teaspoons curry powder", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "oil", foodConceptId: "vegetable-oil", name: "vegetable oil", amount: 1, unit: "tbsp", display: "1 tablespoon vegetable oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Soften the onion in the vegetable oil, then stir in the curry powder."
+    - "Add the cauliflower, chickpeas, coconut milk, canned tomatoes, and salt, then simmer until the cauliflower is tender."
+  rights: *draft-rights
+
+- id: "recipe-069"
+  slug: "zucchini-white-bean-spinach-skillet"
+  title: "Zucchini White Bean Spinach Skillet"
+  description: "Zucchini, tomato, white beans, and spinach form a quick oregano-scented skillet meal."
+  servings: 4
+  totalMinutes: 28
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["Mediterranean-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "zucchini", foodConceptId: "zucchini", name: "zucchini", amount: 2, unit: "count", display: "2 zucchini, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "beans", foodConceptId: "white-beans", name: "white beans", amount: 15, unit: "oz", display: "15 ounces cooked white beans", required: true, acceptedForms: ["canned", "cooked"] }
+    - { id: "tomato", foodConceptId: "tomato", name: "tomato", amount: 3, unit: "count", display: "3 tomatoes, chopped", required: true, acceptedForms: ["fresh"] }
+    - { id: "spinach", foodConceptId: "spinach", name: "spinach", amount: 4, unit: "cup", display: "4 cups spinach", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "garlic", foodConceptId: "garlic", name: "garlic", amount: 3, unit: "count", display: "3 garlic cloves, minced", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 2, unit: "tbsp", display: "2 tablespoons olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "oregano", foodConceptId: "oregano", name: "oregano", amount: 1, unit: "tsp", display: "1 teaspoon oregano", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.75, unit: "tsp", display: "3/4 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Brown the zucchini in the olive oil, then add the garlic, tomato, oregano, and salt."
+    - "Fold in the white beans and spinach and cook until the white beans are hot and the spinach has wilted."
+  rights: *draft-rights
+
+- id: "recipe-070"
+  slug: "black-bean-corn-stuffed-sweet-potatoes"
+  title: "Black Bean Corn Stuffed Sweet Potatoes"
+  description: "Baked sweet potatoes are split and piled with black beans, corn, salsa, and cheddar."
+  servings: 4
+  totalMinutes: 55
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["Mexican-inspired"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "sweet-potato", foodConceptId: "sweet-potato", name: "sweet potato", amount: 4, unit: "count", display: "4 medium sweet potatoes", required: true, acceptedForms: ["fresh"] }
+    - { id: "beans", foodConceptId: "black-beans", name: "black beans", amount: 15, unit: "oz", display: "15 ounces cooked black beans", required: true, acceptedForms: ["canned", "cooked"] }
+    - { id: "corn", foodConceptId: "corn", name: "corn", amount: 1, unit: "cup", display: "1 cup corn", required: true, acceptedForms: ["fresh", "frozen", "canned", "cooked"] }
+    - { id: "salsa", foodConceptId: "salsa", name: "salsa", amount: 1, unit: "cup", display: "1 cup salsa", required: true, acceptedForms: ["fresh", "canned", "opened", "unspecified"] }
+    - { id: "cheddar", foodConceptId: "cheddar", name: "cheddar cheese", amount: 4, unit: "oz", display: "4 ounces cheddar cheese", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.5, unit: "tsp", display: "1/2 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Bake the sweet potatoes until soft, then split them and season their centers with the salt."
+    - "Warm the black beans and corn, spoon them into the sweet potatoes with the salsa, add the cheddar cheese, and bake until melted."
+  rights: *draft-rights
+
+- id: "recipe-071"
+  slug: "lentil-spinach-loaded-potatoes"
+  title: "Lentil Spinach Loaded Potatoes"
+  description: "Baked potatoes hold warm lentils, wilted spinach, cheddar, and a spoonful of yogurt."
+  servings: 4
+  totalMinutes: 60
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "potato", foodConceptId: "potato", name: "potato", amount: 4, unit: "count", display: "4 large potatoes", required: true, acceptedForms: ["fresh"] }
+    - { id: "lentils", foodConceptId: "lentils", name: "lentils", amount: 2, unit: "cup", display: "2 cups cooked lentils", required: true, acceptedForms: ["cooked", "canned"] }
+    - { id: "spinach", foodConceptId: "spinach", name: "spinach", amount: 4, unit: "cup", display: "4 cups spinach", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "cheddar", foodConceptId: "cheddar", name: "cheddar cheese", amount: 4, unit: "oz", display: "4 ounces cheddar cheese", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "yogurt", foodConceptId: "yogurt", name: "yogurt", amount: 0.5, unit: "cup", display: "1/2 cup plain yogurt", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 1, unit: "tbsp", display: "1 tablespoon olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.75, unit: "tsp", display: "3/4 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "pepper", foodConceptId: "black-pepper", name: "black pepper", amount: 0.25, unit: "tsp", display: "1/4 teaspoon black pepper", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Bake the potatoes until tender, while warming the lentils and wilting the spinach in the olive oil with the salt and black pepper."
+    - "Split the potatoes, add the lentils and spinach, melt the cheddar cheese over the tops, and finish with the yogurt."
+  rights: *draft-rights
+
+- id: "recipe-072"
+  slug: "banana-oat-breakfast-bites"
+  title: "Banana Oat Breakfast Bites"
+  description: "Soft baked oat bites use banana, peanut butter, cinnamon, and honey for flavor."
+  servings: 6
+  totalMinutes: 28
+  mealTypes: ["breakfast", "snack"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "banana", foodConceptId: "banana", name: "banana", amount: 2, unit: "count", display: "2 ripe bananas", required: true, acceptedForms: ["fresh"] }
+    - { id: "oats", foodConceptId: "oats", name: "oats", amount: 2, unit: "cup", display: "2 cups rolled oats", required: true, acceptedForms: ["dried"] }
+    - { id: "peanut", foodConceptId: "peanut-butter", name: "peanut butter", amount: 0.5, unit: "cup", display: "1/2 cup peanut butter", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "honey", foodConceptId: "honey", name: "honey", amount: 2, unit: "tbsp", display: "2 tablespoons honey", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "cinnamon", foodConceptId: "cinnamon", name: "cinnamon", amount: 1, unit: "tsp", display: "1 teaspoon cinnamon", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.25, unit: "tsp", display: "1/4 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Mash the banana, then mix it thoroughly with the oats, peanut butter, honey, cinnamon, and salt."
+    - "Scoop the oat mixture onto a lined pan, flatten each bite slightly, and bake until set at the edges."
+  rights: *draft-rights
+
+- id: "recipe-073"
+  slug: "brown-sugar-apple-crisp"
+  title: "Brown Sugar Apple Crisp"
+  description: "Sliced apples bake beneath a crumbly oat, flour, butter, and brown sugar topping."
+  servings: 6
+  totalMinutes: 50
+  mealTypes: ["dessert"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "apple", foodConceptId: "apple", name: "apple", amount: 6, unit: "count", display: "6 apples, sliced", required: true, acceptedForms: ["fresh"] }
+    - { id: "oats", foodConceptId: "oats", name: "oats", amount: 1, unit: "cup", display: "1 cup rolled oats", required: true, acceptedForms: ["dried"] }
+    - { id: "flour", foodConceptId: "flour", name: "flour", amount: 0.5, unit: "cup", display: "1/2 cup flour", required: true, acceptedForms: ["dried"] }
+    - { id: "brown-sugar", foodConceptId: "brown-sugar", name: "brown sugar", amount: 0.75, unit: "cup", display: "3/4 cup brown sugar", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "butter", foodConceptId: "butter", name: "butter", amount: 6, unit: "tbsp", display: "6 tablespoons butter, softened", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "cinnamon", foodConceptId: "cinnamon", name: "cinnamon", amount: 1.5, unit: "tsp", display: "1 1/2 teaspoons cinnamon", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.25, unit: "tsp", display: "1/4 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Spread the apple in a baking dish and toss it with half the cinnamon and a spoonful of the brown sugar."
+    - "Rub the oats, flour, butter, salt, remaining cinnamon, and remaining brown sugar into crumbs, scatter over the apple, and bake until bubbling."
+  rights: *draft-rights
+
+- id: "recipe-074"
+  slug: "berry-yogurt-freezer-pops"
+  title: "Berry Yogurt Freezer Pops"
+  description: "Berries, yogurt, honey, and vanilla freeze into simple homemade pops."
+  servings: 6
+  totalMinutes: 250
+  mealTypes: ["dessert", "snack"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "berries", foodConceptId: "berries", name: "berries", amount: 2, unit: "cup", display: "2 cups berries", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "yogurt", foodConceptId: "yogurt", name: "yogurt", amount: 2, unit: "cup", display: "2 cups plain yogurt", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "honey", foodConceptId: "honey", name: "honey", amount: 3, unit: "tbsp", display: "3 tablespoons honey", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "vanilla", foodConceptId: "vanilla", name: "vanilla extract", amount: 1, unit: "tsp", display: "1 teaspoon vanilla extract", required: true, acceptedForms: ["opened", "unspecified"] }
+  steps:
+    - "Blend the berries, yogurt, honey, and vanilla extract until mostly smooth."
+    - "Pour the berry-yogurt mixture into pop molds and freeze until solid."
+  rights: *draft-rights
+
+- id: "recipe-075"
+  slug: "peanut-butter-oat-energy-bites"
+  title: "Peanut Butter Oat Energy Bites"
+  description: "No-bake oat bites hold together with peanut butter and honey and a pinch of cinnamon."
+  servings: 8
+  totalMinutes: 20
+  mealTypes: ["snack"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "oats", foodConceptId: "oats", name: "oats", amount: 2, unit: "cup", display: "2 cups rolled oats", required: true, acceptedForms: ["dried"] }
+    - { id: "peanut", foodConceptId: "peanut-butter", name: "peanut butter", amount: 0.75, unit: "cup", display: "3/4 cup peanut butter", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "honey", foodConceptId: "honey", name: "honey", amount: 0.5, unit: "cup", display: "1/2 cup honey", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "cinnamon", foodConceptId: "cinnamon", name: "cinnamon", amount: 0.5, unit: "tsp", display: "1/2 teaspoon cinnamon", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.25, unit: "tsp", display: "1/4 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Stir the oats, peanut butter, honey, cinnamon, and salt until no dry oats remain."
+    - "Chill the oat mixture briefly, then roll it into small, firm bites."
+  rights: *draft-rights
+
+- id: "recipe-076"
+  slug: "apple-cinnamon-baked-oatmeal"
+  title: "Apple Cinnamon Baked Oatmeal"
+  description: "A sliceable breakfast bake with oats, apple, maple syrup, eggs, and cinnamon."
+  servings: 6
+  totalMinutes: 45
+  mealTypes: ["breakfast"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "oats", foodConceptId: "oats", name: "oats", amount: 3, unit: "cup", display: "3 cups rolled oats", required: true, acceptedForms: ["dried"] }
+    - { id: "apple", foodConceptId: "apple", name: "apple", amount: 2, unit: "count", display: "2 apples, diced", required: true, acceptedForms: ["fresh"] }
+    - { id: "milk", foodConceptId: "milk", name: "milk", amount: 2, unit: "cup", display: "2 cups milk", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "eggs", foodConceptId: "eggs", name: "eggs", amount: 2, unit: "count", display: "2 large eggs", required: true, acceptedForms: ["fresh"] }
+    - { id: "maple", foodConceptId: "maple-syrup", name: "maple syrup", amount: 0.5, unit: "cup", display: "1/2 cup maple syrup", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "cinnamon", foodConceptId: "cinnamon", name: "cinnamon", amount: 2, unit: "tsp", display: "2 teaspoons cinnamon", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "baking-powder", foodConceptId: "baking-powder", name: "baking powder", amount: 1, unit: "tsp", display: "1 teaspoon baking powder", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "butter", foodConceptId: "butter", name: "butter", amount: 1, unit: "tbsp", display: "1 tablespoon butter", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.5, unit: "tsp", display: "1/2 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Coat a baking dish with the butter, then combine the oats, apple, cinnamon, baking powder, and salt in the dish."
+    - "Whisk the milk, eggs, and maple syrup, pour over the oats and apple, and bake until the center is set."
+  rights: *draft-rights
+
+- id: "recipe-077"
+  slug: "classic-cinnamon-banana-bread"
+  title: "Classic Cinnamon Banana Bread"
+  description: "A tender banana loaf made with butter, eggs, flour, sugar, and cinnamon."
+  servings: 10
+  totalMinutes: 75
+  mealTypes: ["breakfast", "snack"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "banana", foodConceptId: "banana", name: "banana", amount: 3, unit: "count", display: "3 ripe bananas", required: true, acceptedForms: ["fresh"] }
+    - { id: "flour", foodConceptId: "flour", name: "flour", amount: 2, unit: "cup", display: "2 cups flour", required: true, acceptedForms: ["dried"] }
+    - { id: "sugar", foodConceptId: "sugar", name: "sugar", amount: 0.75, unit: "cup", display: "3/4 cup sugar", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "eggs", foodConceptId: "eggs", name: "eggs", amount: 2, unit: "count", display: "2 large eggs", required: true, acceptedForms: ["fresh"] }
+    - { id: "butter", foodConceptId: "butter", name: "butter", amount: 0.5, unit: "cup", display: "1/2 cup melted butter", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "soda", foodConceptId: "baking-soda", name: "baking soda", amount: 1, unit: "tsp", display: "1 teaspoon baking soda", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "cinnamon", foodConceptId: "cinnamon", name: "cinnamon", amount: 1, unit: "tsp", display: "1 teaspoon cinnamon", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.5, unit: "tsp", display: "1/2 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Mash the banana, whisk in the sugar, eggs, and butter, then fold in the flour, baking soda, cinnamon, and salt."
+    - "Spread the banana batter in a lined loaf pan and bake until the center is set and a tester comes out clean."
+  rights: *draft-rights
+
+- id: "recipe-078"
+  slug: "berry-oat-crumble"
+  title: "Berry Oat Crumble"
+  description: "Juicy berries bake under a rustic oat, flour, brown sugar, butter, and cinnamon topping."
+  servings: 6
+  totalMinutes: 45
+  mealTypes: ["dessert"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "berries", foodConceptId: "berries", name: "berries", amount: 5, unit: "cup", display: "5 cups berries", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "oats", foodConceptId: "oats", name: "oats", amount: 1, unit: "cup", display: "1 cup rolled oats", required: true, acceptedForms: ["dried"] }
+    - { id: "flour", foodConceptId: "flour", name: "flour", amount: 0.5, unit: "cup", display: "1/2 cup flour", required: true, acceptedForms: ["dried"] }
+    - { id: "brown-sugar", foodConceptId: "brown-sugar", name: "brown sugar", amount: 0.75, unit: "cup", display: "3/4 cup brown sugar", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "butter", foodConceptId: "butter", name: "butter", amount: 6, unit: "tbsp", display: "6 tablespoons butter, softened", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "cinnamon", foodConceptId: "cinnamon", name: "cinnamon", amount: 1, unit: "tsp", display: "1 teaspoon cinnamon", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Spread the berries in a baking dish and sprinkle them with one quarter of the brown sugar."
+    - "Rub the oats, flour, butter, cinnamon, and remaining brown sugar into crumbs, scatter over the berries, and bake until bubbling."
+  rights: *draft-rights
+
+- id: "recipe-079"
+  slug: "maple-cinnamon-baked-apples"
+  title: "Maple Cinnamon Baked Apples"
+  description: "Whole apples are filled with oats, maple syrup, butter, and cinnamon before baking."
+  servings: 4
+  totalMinutes: 45
+  mealTypes: ["dessert", "snack"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "apple", foodConceptId: "apple", name: "apple", amount: 4, unit: "count", display: "4 apples", required: true, acceptedForms: ["fresh"] }
+    - { id: "oats", foodConceptId: "oats", name: "oats", amount: 0.5, unit: "cup", display: "1/2 cup rolled oats", required: true, acceptedForms: ["dried"] }
+    - { id: "maple", foodConceptId: "maple-syrup", name: "maple syrup", amount: 3, unit: "tbsp", display: "3 tablespoons maple syrup", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "butter", foodConceptId: "butter", name: "butter", amount: 2, unit: "tbsp", display: "2 tablespoons softened butter", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "cinnamon", foodConceptId: "cinnamon", name: "cinnamon", amount: 1, unit: "tsp", display: "1 teaspoon cinnamon", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Core the apples without cutting through the bottoms, then mix the oats, maple syrup, butter, and cinnamon."
+    - "Pack the oat mixture into the apples and bake until the apples are tender but still hold their shape."
+  rights: *draft-rights
+
+- id: "recipe-080"
+  slug: "cheddar-cornmeal-muffins"
+  title: "Cheddar Cornmeal Muffins"
+  description: "Savory cornmeal muffins carry cheddar cheese and a tender butter-enriched crumb."
+  servings: 12
+  totalMinutes: 32
+  mealTypes: ["breakfast", "side", "snack"]
+  cuisines: ["American"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "cornmeal", foodConceptId: "cornmeal", name: "cornmeal", amount: 1, unit: "cup", display: "1 cup cornmeal", required: true, acceptedForms: ["dried"] }
+    - { id: "flour", foodConceptId: "flour", name: "flour", amount: 1, unit: "cup", display: "1 cup flour", required: true, acceptedForms: ["dried"] }
+    - { id: "milk", foodConceptId: "milk", name: "milk", amount: 1, unit: "cup", display: "1 cup milk", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "eggs", foodConceptId: "eggs", name: "eggs", amount: 2, unit: "count", display: "2 large eggs", required: true, acceptedForms: ["fresh"] }
+    - { id: "cheddar", foodConceptId: "cheddar", name: "cheddar cheese", amount: 6, unit: "oz", display: "6 ounces cheddar cheese", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "baking-powder", foodConceptId: "baking-powder", name: "baking powder", amount: 1, unit: "tbsp", display: "1 tablespoon baking powder", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "butter", foodConceptId: "butter", name: "butter", amount: 5, unit: "tbsp", display: "5 tablespoons melted butter", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.75, unit: "tsp", display: "3/4 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Whisk the cornmeal, flour, baking powder, and salt, then stir in the milk, eggs, butter, and cheddar cheese just until combined."
+    - "Divide the cornmeal batter among muffin cups and bake until the tops are golden and the centers are set."
+  rights: *draft-rights

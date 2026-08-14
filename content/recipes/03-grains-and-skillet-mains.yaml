@@ -1,0 +1,466 @@
+- id: "recipe-041"
+  slug: "black-bean-corn-rice-bowls"
+  title: "Black Bean Corn Rice Bowls"
+  description: "Warm rice bowls layered with black beans, corn, salsa, avocado, and lime."
+  servings: 4
+  totalMinutes: 35
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["Mexican-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "rice", foodConceptId: "rice", name: "rice", amount: 1.5, unit: "cup", display: "1 1/2 cups dry rice", required: true, acceptedForms: ["dried"] }
+    - { id: "water", foodConceptId: "water", name: "water", amount: 3, unit: "cup", display: "3 cups water", required: true, acceptedForms: ["unspecified"] }
+    - { id: "beans", foodConceptId: "black-beans", name: "black beans", amount: 15, unit: "oz", display: "15 ounces cooked black beans", required: true, acceptedForms: ["canned", "cooked"] }
+    - { id: "corn", foodConceptId: "corn", name: "corn", amount: 1.5, unit: "cup", display: "1 1/2 cups corn", required: true, acceptedForms: ["fresh", "frozen", "canned", "cooked"] }
+    - { id: "salsa", foodConceptId: "salsa", name: "salsa", amount: 1, unit: "cup", display: "1 cup salsa", required: true, acceptedForms: ["fresh", "canned", "opened", "unspecified"] }
+    - { id: "avocado", foodConceptId: "avocado", name: "avocado", amount: 1, unit: "count", display: "1 avocado, sliced", required: true, acceptedForms: ["fresh"] }
+    - { id: "lime", foodConceptId: "lime", name: "lime", amount: 1, unit: "count", display: "1 lime", required: true, acceptedForms: ["fresh"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.75, unit: "tsp", display: "3/4 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Simmer the rice with the water and salt until tender, then let it rest covered for five minutes."
+    - "Warm the black beans and corn, divide them over the rice, and top each bowl with salsa, avocado, and juice from the lime."
+  rights: &draft-rights
+    owner: "Foodtopia"
+    author: "Foodtopia Editorial"
+    reviewer: null
+    reviewedAt: null
+    status: "draft"
+
+- id: "recipe-042"
+  slug: "chicken-vegetable-fried-rice"
+  title: "Chicken Vegetable Fried Rice"
+  description: "Cooked rice becomes a fast skillet meal with chicken, eggs, peas, and carrots."
+  servings: 4
+  totalMinutes: 30
+  mealTypes: ["dinner"]
+  cuisines: ["Chinese-inspired"]
+  dietaryTags: []
+  ingredients:
+    - { id: "rice", foodConceptId: "rice", name: "rice", amount: 4, unit: "cup", display: "4 cups chilled cooked rice", required: true, acceptedForms: ["cooked"] }
+    - { id: "chicken", foodConceptId: "chicken-breast", name: "chicken breast", amount: 1, unit: "lb", display: "1 pound chicken breast, diced", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "eggs", foodConceptId: "eggs", name: "eggs", amount: 2, unit: "count", display: "2 large eggs", required: true, acceptedForms: ["fresh"] }
+    - { id: "peas", foodConceptId: "peas", name: "peas", amount: 1, unit: "cup", display: "1 cup peas", required: true, acceptedForms: ["fresh", "frozen", "canned", "cooked"] }
+    - { id: "carrot", foodConceptId: "carrot", name: "carrot", amount: 2, unit: "count", display: "2 carrots, diced", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "soy", foodConceptId: "soy-sauce", name: "soy sauce", amount: 3, unit: "tbsp", display: "3 tablespoons soy sauce", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "oil", foodConceptId: "vegetable-oil", name: "vegetable oil", amount: 2, unit: "tbsp", display: "2 tablespoons vegetable oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "sesame", foodConceptId: "sesame-oil", name: "sesame oil", amount: 1, unit: "tsp", display: "1 teaspoon sesame oil", required: true, acceptedForms: ["opened", "unspecified"] }
+  steps:
+    - "Heat half the vegetable oil and cook the chicken breast completely, then add the carrot and peas and move everything to one side."
+    - "Add the remaining vegetable oil, scramble the eggs, then fold in the rice, soy sauce, sesame oil, chicken breast, carrot, and peas until hot."
+  rights: *draft-rights
+
+- id: "recipe-043"
+  slug: "corn-pea-vegetable-fried-rice"
+  title: "Corn Pea Vegetable Fried Rice"
+  description: "A colorful fried rice with eggs, peas, corn, carrots, soy sauce, and sesame oil."
+  servings: 4
+  totalMinutes: 22
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["Chinese-inspired"]
+  dietaryTags: ["vegetarian"]
+  ingredients:
+    - { id: "rice", foodConceptId: "rice", name: "rice", amount: 4, unit: "cup", display: "4 cups chilled cooked rice", required: true, acceptedForms: ["cooked"] }
+    - { id: "eggs", foodConceptId: "eggs", name: "eggs", amount: 3, unit: "count", display: "3 large eggs", required: true, acceptedForms: ["fresh"] }
+    - { id: "peas", foodConceptId: "peas", name: "peas", amount: 1, unit: "cup", display: "1 cup peas", required: true, acceptedForms: ["fresh", "frozen", "canned", "cooked"] }
+    - { id: "corn", foodConceptId: "corn", name: "corn", amount: 1, unit: "cup", display: "1 cup corn", required: true, acceptedForms: ["fresh", "frozen", "canned", "cooked"] }
+    - { id: "carrot", foodConceptId: "carrot", name: "carrot", amount: 2, unit: "count", display: "2 carrots, diced", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "soy", foodConceptId: "soy-sauce", name: "soy sauce", amount: 3, unit: "tbsp", display: "3 tablespoons soy sauce", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "oil", foodConceptId: "vegetable-oil", name: "vegetable oil", amount: 2, unit: "tbsp", display: "2 tablespoons vegetable oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "sesame", foodConceptId: "sesame-oil", name: "sesame oil", amount: 1, unit: "tsp", display: "1 teaspoon sesame oil", required: true, acceptedForms: ["opened", "unspecified"] }
+  steps:
+    - "Heat half the vegetable oil and cook the carrot, peas, and corn until hot, then move the vegetables aside and scramble the eggs."
+    - "Add the remaining vegetable oil, rice, soy sauce, and sesame oil, and toss with the eggs, carrot, peas, and corn until evenly heated."
+  rights: *draft-rights
+
+- id: "recipe-044"
+  slug: "chickpea-coconut-curry-rice"
+  title: "Chickpea Coconut Curry Rice"
+  description: "A tomato-coconut chickpea curry served over simple steamed rice."
+  servings: 5
+  totalMinutes: 40
+  mealTypes: ["dinner"]
+  cuisines: ["South Asian-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "rice", foodConceptId: "rice", name: "rice", amount: 1.5, unit: "cup", display: "1 1/2 cups dry rice", required: true, acceptedForms: ["dried"] }
+    - { id: "water", foodConceptId: "water", name: "water", amount: 3, unit: "cup", display: "3 cups water", required: true, acceptedForms: ["unspecified"] }
+    - { id: "chickpeas", foodConceptId: "chickpeas", name: "chickpeas", amount: 30, unit: "oz", display: "30 ounces cooked chickpeas", required: true, acceptedForms: ["canned", "cooked"] }
+    - { id: "coconut", foodConceptId: "coconut-milk", name: "coconut milk", amount: 14, unit: "fl-oz", display: "14 fluid ounces coconut milk", required: true, acceptedForms: ["canned", "opened"] }
+    - { id: "tomatoes", foodConceptId: "canned-tomato", name: "canned tomatoes", amount: 14.5, unit: "oz", display: "14 1/2 ounces canned tomatoes", required: true, acceptedForms: ["canned", "opened"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 onion, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "curry", foodConceptId: "curry-powder", name: "curry powder", amount: 2, unit: "tsp", display: "2 teaspoons curry powder", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "oil", foodConceptId: "vegetable-oil", name: "vegetable oil", amount: 1, unit: "tbsp", display: "1 tablespoon vegetable oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Simmer the rice with the water and half the salt until tender, then rest it covered."
+    - "Soften the onion in the vegetable oil, add the curry powder, chickpeas, canned tomatoes, coconut milk, and remaining salt, and simmer before serving over the rice."
+  rights: *draft-rights
+
+- id: "recipe-045"
+  slug: "tofu-broccoli-rice-plates"
+  title: "Tofu Broccoli Rice Plates"
+  description: "Crisp tofu and broccoli are glazed with garlic, soy, and sesame over rice."
+  servings: 4
+  totalMinutes: 40
+  mealTypes: ["dinner"]
+  cuisines: ["Asian-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "rice", foodConceptId: "rice", name: "rice", amount: 1.5, unit: "cup", display: "1 1/2 cups dry rice", required: true, acceptedForms: ["dried"] }
+    - { id: "water", foodConceptId: "water", name: "water", amount: 3, unit: "cup", display: "3 cups water", required: true, acceptedForms: ["unspecified"] }
+    - { id: "tofu", foodConceptId: "tofu", name: "tofu", amount: 14, unit: "oz", display: "14 ounces firm tofu, cubed", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "broccoli", foodConceptId: "broccoli", name: "broccoli", amount: 5, unit: "cup", display: "5 cups broccoli florets", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "soy", foodConceptId: "soy-sauce", name: "soy sauce", amount: 3, unit: "tbsp", display: "3 tablespoons soy sauce", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "garlic", foodConceptId: "garlic", name: "garlic", amount: 3, unit: "count", display: "3 garlic cloves, minced", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "oil", foodConceptId: "vegetable-oil", name: "vegetable oil", amount: 2, unit: "tbsp", display: "2 tablespoons vegetable oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "sesame", foodConceptId: "sesame-oil", name: "sesame oil", amount: 1, unit: "tsp", display: "1 teaspoon sesame oil", required: true, acceptedForms: ["opened", "unspecified"] }
+  steps:
+    - "Simmer the rice with the water until tender, while browning the tofu in the vegetable oil."
+    - "Add the broccoli and garlic to the tofu, cover until the broccoli is tender, then toss with soy sauce and sesame oil and serve over the rice."
+  rights: *draft-rights
+
+- id: "recipe-046"
+  slug: "lime-shrimp-corn-rice-bowls"
+  title: "Lime Shrimp Corn Rice Bowls"
+  description: "Cumin shrimp, sweet corn, and bell pepper sit over rice with fresh lime."
+  servings: 4
+  totalMinutes: 35
+  mealTypes: ["dinner"]
+  cuisines: ["Mexican-inspired"]
+  dietaryTags: ["dairy-free"]
+  ingredients:
+    - { id: "rice", foodConceptId: "rice", name: "rice", amount: 1.5, unit: "cup", display: "1 1/2 cups dry rice", required: true, acceptedForms: ["dried"] }
+    - { id: "water", foodConceptId: "water", name: "water", amount: 3, unit: "cup", display: "3 cups water", required: true, acceptedForms: ["unspecified"] }
+    - { id: "shrimp", foodConceptId: "shrimp", name: "shrimp", amount: 1, unit: "lb", display: "1 pound peeled shrimp", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "corn", foodConceptId: "corn", name: "corn", amount: 1.5, unit: "cup", display: "1 1/2 cups corn", required: true, acceptedForms: ["fresh", "frozen", "canned", "cooked"] }
+    - { id: "pepper", foodConceptId: "bell-pepper", name: "bell pepper", amount: 1, unit: "count", display: "1 bell pepper, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "lime", foodConceptId: "lime", name: "lime", amount: 1, unit: "count", display: "1 lime", required: true, acceptedForms: ["fresh"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 2, unit: "tbsp", display: "2 tablespoons olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "cumin", foodConceptId: "cumin", name: "cumin", amount: 1, unit: "tsp", display: "1 teaspoon cumin", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Simmer the rice with the water and half the salt until tender, then rest it covered."
+    - "Cook the bell pepper and corn in the olive oil, add the shrimp, cumin, and remaining salt until the shrimp is opaque, then finish with the lime and serve over rice."
+  rights: *draft-rights
+
+- id: "recipe-047"
+  slug: "quinoa-chickpea-lemon-bowls"
+  title: "Quinoa Chickpea Lemon Bowls"
+  description: "Fluffy quinoa supports chickpeas, cucumber, tomato, and a lemon-olive oil dressing."
+  servings: 4
+  totalMinutes: 30
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["Mediterranean-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "quinoa", foodConceptId: "quinoa", name: "quinoa", amount: 1.5, unit: "cup", display: "1 1/2 cups dry quinoa", required: true, acceptedForms: ["dried"] }
+    - { id: "water", foodConceptId: "water", name: "water", amount: 3, unit: "cup", display: "3 cups water", required: true, acceptedForms: ["unspecified"] }
+    - { id: "chickpeas", foodConceptId: "chickpeas", name: "chickpeas", amount: 15, unit: "oz", display: "15 ounces cooked chickpeas", required: true, acceptedForms: ["canned", "cooked"] }
+    - { id: "cucumber", foodConceptId: "cucumber", name: "cucumber", amount: 1, unit: "count", display: "1 cucumber, chopped", required: true, acceptedForms: ["fresh"] }
+    - { id: "tomato", foodConceptId: "tomato", name: "tomato", amount: 2, unit: "count", display: "2 tomatoes, chopped", required: true, acceptedForms: ["fresh"] }
+    - { id: "lemon", foodConceptId: "lemon", name: "lemon", amount: 1, unit: "count", display: "1 lemon", required: true, acceptedForms: ["fresh"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 3, unit: "tbsp", display: "3 tablespoons olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.75, unit: "tsp", display: "3/4 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Simmer the quinoa with the water and half the salt until the grains open, then cool for five minutes."
+    - "Divide the quinoa into bowls, add the chickpeas, cucumber, and tomato, then dress with the lemon, olive oil, and remaining salt."
+  rights: *draft-rights
+
+- id: "recipe-048"
+  slug: "cumin-vegetable-couscous"
+  title: "Cumin Vegetable Couscous"
+  description: "Quick couscous is folded with sautéed zucchini, bell pepper, chickpeas, and cumin."
+  servings: 4
+  totalMinutes: 28
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["North African-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "couscous", foodConceptId: "couscous", name: "couscous", amount: 1.5, unit: "cup", display: "1 1/2 cups dry couscous", required: true, acceptedForms: ["dried"] }
+    - { id: "water", foodConceptId: "water", name: "water", amount: 1.5, unit: "cup", display: "1 1/2 cups water", required: true, acceptedForms: ["unspecified"] }
+    - { id: "zucchini", foodConceptId: "zucchini", name: "zucchini", amount: 1, unit: "count", display: "1 zucchini, diced", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "pepper", foodConceptId: "bell-pepper", name: "bell pepper", amount: 1, unit: "count", display: "1 bell pepper, diced", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "chickpeas", foodConceptId: "chickpeas", name: "chickpeas", amount: 15, unit: "oz", display: "15 ounces cooked chickpeas", required: true, acceptedForms: ["canned", "cooked"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 2, unit: "tbsp", display: "2 tablespoons olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "cumin", foodConceptId: "cumin", name: "cumin", amount: 1, unit: "tsp", display: "1 teaspoon cumin", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.75, unit: "tsp", display: "3/4 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Bring the water and half the salt to a boil, stir in the couscous, cover, remove from heat, and let it stand."
+    - "Cook the zucchini and bell pepper in the olive oil with the cumin, add the chickpeas and remaining salt, then fold everything into the couscous."
+  rights: *draft-rights
+
+- id: "recipe-049"
+  slug: "lentil-onion-rice-pilaf"
+  title: "Lentil Onion Rice Pilaf"
+  description: "Lentils and rice simmer together beneath deeply softened cumin-scented onion."
+  servings: 6
+  totalMinutes: 50
+  mealTypes: ["lunch", "dinner"]
+  cuisines: ["Middle Eastern-inspired"]
+  dietaryTags: ["vegan", "vegetarian", "dairy-free"]
+  ingredients:
+    - { id: "rice", foodConceptId: "rice", name: "rice", amount: 1.5, unit: "cup", display: "1 1/2 cups dry rice", required: true, acceptedForms: ["dried"] }
+    - { id: "lentils", foodConceptId: "lentils", name: "lentils", amount: 1, unit: "cup", display: "1 cup dried lentils", required: true, acceptedForms: ["dried"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 2, unit: "count", display: "2 onions, thinly sliced", required: true, acceptedForms: ["fresh"] }
+    - { id: "broth", foodConceptId: "vegetable-broth", name: "vegetable broth", amount: 5, unit: "cup", display: "5 cups vegetable broth", required: true, acceptedForms: ["canned", "opened", "unspecified"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 3, unit: "tbsp", display: "3 tablespoons olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "cumin", foodConceptId: "cumin", name: "cumin", amount: 1, unit: "tsp", display: "1 teaspoon cumin", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Cook the onion slowly in the olive oil until deeply golden, then reserve half and stir the cumin into the rest."
+    - "Add the rice, lentils, vegetable broth, and salt, simmer until tender, and finish the pilaf with the reserved onion."
+  rights: *draft-rights
+
+- id: "recipe-050"
+  slug: "stuffed-bell-pepper-skillet"
+  title: "Stuffed Bell Pepper Skillet"
+  description: "The flavors of stuffed peppers become a one-pan beef, rice, tomato, and cheddar meal."
+  servings: 5
+  totalMinutes: 45
+  mealTypes: ["dinner"]
+  cuisines: ["American"]
+  dietaryTags: []
+  ingredients:
+    - { id: "beef", foodConceptId: "ground-beef", name: "ground beef", amount: 1, unit: "lb", display: "1 pound ground beef", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "rice", foodConceptId: "rice", name: "rice", amount: 1, unit: "cup", display: "1 cup dry rice", required: true, acceptedForms: ["dried"] }
+    - { id: "pepper", foodConceptId: "bell-pepper", name: "bell pepper", amount: 3, unit: "count", display: "3 bell peppers, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "tomatoes", foodConceptId: "canned-tomato", name: "canned tomatoes", amount: 14.5, unit: "oz", display: "14 1/2 ounces canned tomatoes", required: true, acceptedForms: ["canned", "opened"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 onion, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "broth", foodConceptId: "beef-broth", name: "beef broth", amount: 2, unit: "cup", display: "2 cups beef broth", required: true, acceptedForms: ["canned", "opened", "unspecified"] }
+    - { id: "cheddar", foodConceptId: "cheddar", name: "cheddar cheese", amount: 4, unit: "oz", display: "4 ounces cheddar cheese", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 1, unit: "tbsp", display: "1 tablespoon olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "chili", foodConceptId: "chili-powder", name: "chili powder", amount: 1, unit: "tsp", display: "1 teaspoon chili powder", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Brown the ground beef in the olive oil, then add the onion, bell pepper, chili powder, and salt."
+    - "Stir in the rice, canned tomatoes, and beef broth, cover until the rice is tender, then melt the cheddar cheese over the skillet."
+  rights: *draft-rights
+
+- id: "recipe-051"
+  slug: "paprika-chicken-thighs-and-potatoes"
+  title: "Paprika Chicken Thighs and Potatoes"
+  description: "A sheet-pan dinner of paprika chicken thighs, potatoes, carrots, and onion."
+  servings: 4
+  totalMinutes: 50
+  mealTypes: ["dinner"]
+  cuisines: ["American"]
+  dietaryTags: ["dairy-free"]
+  ingredients:
+    - { id: "chicken", foodConceptId: "chicken-thigh", name: "chicken thigh", amount: 2, unit: "lb", display: "2 pounds chicken thighs", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "potato", foodConceptId: "potato", name: "potato", amount: 1.5, unit: "lb", display: "1 1/2 pounds potatoes, cubed", required: true, acceptedForms: ["fresh"] }
+    - { id: "carrot", foodConceptId: "carrot", name: "carrot", amount: 4, unit: "count", display: "4 carrots, cut into chunks", required: true, acceptedForms: ["fresh"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 onion, cut into wedges", required: true, acceptedForms: ["fresh"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 3, unit: "tbsp", display: "3 tablespoons olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "paprika", foodConceptId: "paprika", name: "paprika", amount: 2, unit: "tsp", display: "2 teaspoons paprika", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "thyme", foodConceptId: "thyme", name: "thyme", amount: 1, unit: "tsp", display: "1 teaspoon thyme", required: true, acceptedForms: ["fresh", "dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "pepper", foodConceptId: "black-pepper", name: "black pepper", amount: 0.5, unit: "tsp", display: "1/2 teaspoon black pepper", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Toss the potato, carrot, and onion with the olive oil, paprika, thyme, salt, and black pepper on a sheet pan."
+    - "Nestle the chicken thighs among the vegetables and roast until the vegetables are tender and the chicken thighs are fully cooked."
+  rights: *draft-rights
+
+- id: "recipe-052"
+  slug: "lemon-garlic-chicken-and-broccoli"
+  title: "Lemon Garlic Chicken and Broccoli"
+  description: "A bright skillet of chicken breast and broccoli with lemon and plenty of garlic."
+  servings: 4
+  totalMinutes: 30
+  mealTypes: ["dinner"]
+  cuisines: ["American"]
+  dietaryTags: ["dairy-free"]
+  ingredients:
+    - { id: "chicken", foodConceptId: "chicken-breast", name: "chicken breast", amount: 1.5, unit: "lb", display: "1 1/2 pounds chicken breast, sliced", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "broccoli", foodConceptId: "broccoli", name: "broccoli", amount: 5, unit: "cup", display: "5 cups broccoli florets", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "lemon", foodConceptId: "lemon", name: "lemon", amount: 1, unit: "count", display: "1 lemon", required: true, acceptedForms: ["fresh"] }
+    - { id: "garlic", foodConceptId: "garlic", name: "garlic", amount: 4, unit: "count", display: "4 garlic cloves, minced", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 2, unit: "tbsp", display: "2 tablespoons olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.75, unit: "tsp", display: "3/4 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "pepper", foodConceptId: "black-pepper", name: "black pepper", amount: 0.5, unit: "tsp", display: "1/2 teaspoon black pepper", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Season the chicken breast with the salt and black pepper, then cook it completely in the olive oil and move it to a plate."
+    - "Cook the broccoli and garlic in the skillet, return the chicken breast, and finish everything with juice from the lemon."
+  rights: *draft-rights
+
+- id: "recipe-053"
+  slug: "lime-chicken-fajitas"
+  title: "Lime Chicken Fajitas"
+  description: "Sizzling chicken breast, bell peppers, and onion are tucked into warm tortillas."
+  servings: 4
+  totalMinutes: 35
+  mealTypes: ["dinner"]
+  cuisines: ["Mexican-inspired"]
+  dietaryTags: ["dairy-free"]
+  ingredients:
+    - { id: "chicken", foodConceptId: "chicken-breast", name: "chicken breast", amount: 1.5, unit: "lb", display: "1 1/2 pounds chicken breast, sliced", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "tortillas", foodConceptId: "tortillas", name: "tortillas", amount: 8, unit: "count", display: "8 tortillas", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "pepper", foodConceptId: "bell-pepper", name: "bell pepper", amount: 3, unit: "count", display: "3 bell peppers, sliced", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 onion, sliced", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "lime", foodConceptId: "lime", name: "lime", amount: 1, unit: "count", display: "1 lime", required: true, acceptedForms: ["fresh"] }
+    - { id: "oil", foodConceptId: "vegetable-oil", name: "vegetable oil", amount: 2, unit: "tbsp", display: "2 tablespoons vegetable oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "cumin", foodConceptId: "cumin", name: "cumin", amount: 1, unit: "tsp", display: "1 teaspoon cumin", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "chili", foodConceptId: "chili-powder", name: "chili powder", amount: 1, unit: "tsp", display: "1 teaspoon chili powder", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Cook the bell pepper and onion in half the vegetable oil until browned, then transfer them to a plate."
+    - "Cook the chicken breast completely in the remaining vegetable oil with the cumin, chili powder, and salt, return the vegetables, add the lime, and serve in tortillas."
+  rights: *draft-rights
+
+- id: "recipe-054"
+  slug: "tomato-spinach-chicken-thigh-skillet"
+  title: "Tomato Spinach Chicken Thigh Skillet"
+  description: "Chicken thighs simmer in an oregano tomato sauce with a final handful of spinach."
+  servings: 4
+  totalMinutes: 40
+  mealTypes: ["dinner"]
+  cuisines: ["Mediterranean-inspired"]
+  dietaryTags: ["dairy-free"]
+  ingredients:
+    - { id: "chicken", foodConceptId: "chicken-thigh", name: "chicken thigh", amount: 1.5, unit: "lb", display: "1 1/2 pounds chicken thighs", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "tomatoes", foodConceptId: "canned-tomato", name: "canned tomatoes", amount: 28, unit: "oz", display: "28 ounces canned tomatoes", required: true, acceptedForms: ["canned", "opened"] }
+    - { id: "spinach", foodConceptId: "spinach", name: "spinach", amount: 5, unit: "cup", display: "5 cups spinach", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 onion, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "garlic", foodConceptId: "garlic", name: "garlic", amount: 3, unit: "count", display: "3 garlic cloves, minced", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 2, unit: "tbsp", display: "2 tablespoons olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "oregano", foodConceptId: "oregano", name: "oregano", amount: 1, unit: "tsp", display: "1 teaspoon oregano", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Brown the chicken thighs in the olive oil, then add the onion and garlic around them."
+    - "Add the canned tomatoes, oregano, and salt, simmer until the chicken thighs are fully cooked, then wilt in the spinach."
+  rights: *draft-rights
+
+- id: "recipe-055"
+  slug: "skillet-beef-tacos"
+  title: "Skillet Beef Tacos"
+  description: "Seasoned ground beef fills tortillas with salsa, cheddar, and crisp onion."
+  servings: 4
+  totalMinutes: 25
+  mealTypes: ["dinner"]
+  cuisines: ["Mexican-inspired"]
+  dietaryTags: []
+  ingredients:
+    - { id: "beef", foodConceptId: "ground-beef", name: "ground beef", amount: 1, unit: "lb", display: "1 pound ground beef", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "tortillas", foodConceptId: "tortillas", name: "tortillas", amount: 8, unit: "count", display: "8 tortillas", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 0.5, unit: "count", display: "1/2 onion, chopped", required: true, acceptedForms: ["fresh"] }
+    - { id: "salsa", foodConceptId: "salsa", name: "salsa", amount: 1, unit: "cup", display: "1 cup salsa", required: true, acceptedForms: ["fresh", "canned", "opened", "unspecified"] }
+    - { id: "cheddar", foodConceptId: "cheddar", name: "cheddar cheese", amount: 4, unit: "oz", display: "4 ounces cheddar cheese", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "cumin", foodConceptId: "cumin", name: "cumin", amount: 1, unit: "tsp", display: "1 teaspoon cumin", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "chili", foodConceptId: "chili-powder", name: "chili powder", amount: 1, unit: "tsp", display: "1 teaspoon chili powder", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "oil", foodConceptId: "vegetable-oil", name: "vegetable oil", amount: 1, unit: "tbsp", display: "1 tablespoon vegetable oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.75, unit: "tsp", display: "3/4 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Brown the ground beef in the vegetable oil with the cumin, chili powder, and salt until completely cooked."
+    - "Fill the tortillas with the ground beef, onion, salsa, and cheddar cheese."
+  rights: *draft-rights
+
+- id: "recipe-056"
+  slug: "beef-potato-pea-skillet"
+  title: "Beef Potato Pea Skillet"
+  description: "Ground beef, browned potatoes, and peas cook together in a paprika broth."
+  servings: 5
+  totalMinutes: 40
+  mealTypes: ["dinner"]
+  cuisines: ["American"]
+  dietaryTags: ["dairy-free"]
+  ingredients:
+    - { id: "beef", foodConceptId: "ground-beef", name: "ground beef", amount: 1, unit: "lb", display: "1 pound ground beef", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "potato", foodConceptId: "potato", name: "potato", amount: 1.5, unit: "lb", display: "1 1/2 pounds potatoes, diced", required: true, acceptedForms: ["fresh"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 onion, chopped", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "peas", foodConceptId: "peas", name: "peas", amount: 1.5, unit: "cup", display: "1 1/2 cups peas", required: true, acceptedForms: ["fresh", "frozen", "canned", "cooked"] }
+    - { id: "broth", foodConceptId: "beef-broth", name: "beef broth", amount: 1, unit: "cup", display: "1 cup beef broth", required: true, acceptedForms: ["canned", "opened", "unspecified"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 1, unit: "tbsp", display: "1 tablespoon olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "paprika", foodConceptId: "paprika", name: "paprika", amount: 1, unit: "tsp", display: "1 teaspoon paprika", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 1, unit: "tsp", display: "1 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "pepper", foodConceptId: "black-pepper", name: "black pepper", amount: 0.5, unit: "tsp", display: "1/2 teaspoon black pepper", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Brown the potato in the olive oil, then add the onion and ground beef and cook the ground beef completely."
+    - "Stir in the peas, beef broth, paprika, salt, and black pepper, cover, and cook until the potato is tender."
+  rights: *draft-rights
+
+- id: "recipe-057"
+  slug: "apple-onion-pork-chops"
+  title: "Apple Onion Pork Chops"
+  description: "Pan-cooked pork chops are paired with soft apples, onion, butter, and thyme."
+  servings: 4
+  totalMinutes: 35
+  mealTypes: ["dinner"]
+  cuisines: ["American"]
+  dietaryTags: []
+  ingredients:
+    - { id: "pork", foodConceptId: "pork-chop", name: "pork chop", amount: 4, unit: "count", display: "4 pork chops", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "apple", foodConceptId: "apple", name: "apple", amount: 2, unit: "count", display: "2 apples, sliced", required: true, acceptedForms: ["fresh"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 onion, sliced", required: true, acceptedForms: ["fresh"] }
+    - { id: "butter", foodConceptId: "butter", name: "butter", amount: 2, unit: "tbsp", display: "2 tablespoons butter", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "thyme", foodConceptId: "thyme", name: "thyme", amount: 1, unit: "tsp", display: "1 teaspoon thyme", required: true, acceptedForms: ["fresh", "dried", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.75, unit: "tsp", display: "3/4 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "pepper", foodConceptId: "black-pepper", name: "black pepper", amount: 0.5, unit: "tsp", display: "1/2 teaspoon black pepper", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Season the pork chops with the salt and black pepper, then cook them in half the butter until done and rest them on a plate."
+    - "Cook the apple and onion in the remaining butter with the thyme until tender, then spoon them over the pork chops."
+  rights: *draft-rights
+
+- id: "recipe-058"
+  slug: "mustard-sausage-cabbage-skillet"
+  title: "Mustard Sausage Cabbage Skillet"
+  description: "Sausage and cabbage cook down with onion, mustard, and black pepper in one pan."
+  servings: 4
+  totalMinutes: 35
+  mealTypes: ["dinner"]
+  cuisines: ["European-inspired"]
+  dietaryTags: ["dairy-free"]
+  ingredients:
+    - { id: "sausage", foodConceptId: "sausage", name: "sausage", amount: 1, unit: "lb", display: "1 pound sausage, sliced", required: true, acceptedForms: ["fresh", "frozen", "cooked"] }
+    - { id: "cabbage", foodConceptId: "cabbage", name: "cabbage", amount: 8, unit: "cup", display: "8 cups sliced cabbage", required: true, acceptedForms: ["fresh"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 onion, sliced", required: true, acceptedForms: ["fresh"] }
+    - { id: "mustard", foodConceptId: "mustard", name: "mustard", amount: 2, unit: "tbsp", display: "2 tablespoons mustard", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "oil", foodConceptId: "vegetable-oil", name: "vegetable oil", amount: 1, unit: "tbsp", display: "1 tablespoon vegetable oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.5, unit: "tsp", display: "1/2 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+    - { id: "pepper", foodConceptId: "black-pepper", name: "black pepper", amount: 0.5, unit: "tsp", display: "1/2 teaspoon black pepper", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Brown the sausage in the vegetable oil, then add the onion and cook until soft."
+    - "Add the cabbage, salt, and black pepper, cover until tender, then stir the mustard through the sausage and cabbage."
+  rights: *draft-rights
+
+- id: "recipe-059"
+  slug: "soy-beef-bell-pepper-rice"
+  title: "Soy Beef Bell Pepper Rice"
+  description: "Thin beef steak and bell pepper are glazed with garlic and soy sauce over rice."
+  servings: 4
+  totalMinutes: 35
+  mealTypes: ["dinner"]
+  cuisines: ["Asian-inspired"]
+  dietaryTags: ["dairy-free"]
+  ingredients:
+    - { id: "beef", foodConceptId: "beef-steak", name: "beef steak", amount: 1.25, unit: "lb", display: "1 1/4 pounds beef steak, thinly sliced", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "rice", foodConceptId: "rice", name: "rice", amount: 1.5, unit: "cup", display: "1 1/2 cups dry rice", required: true, acceptedForms: ["dried"] }
+    - { id: "water", foodConceptId: "water", name: "water", amount: 3, unit: "cup", display: "3 cups water", required: true, acceptedForms: ["unspecified"] }
+    - { id: "pepper", foodConceptId: "bell-pepper", name: "bell pepper", amount: 2, unit: "count", display: "2 bell peppers, sliced", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "onion", foodConceptId: "onion", name: "onion", amount: 1, unit: "count", display: "1 onion, sliced", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "soy", foodConceptId: "soy-sauce", name: "soy sauce", amount: 4, unit: "tbsp", display: "4 tablespoons soy sauce", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "garlic", foodConceptId: "garlic", name: "garlic", amount: 3, unit: "count", display: "3 garlic cloves, minced", required: true, acceptedForms: ["fresh", "opened"] }
+    - { id: "oil", foodConceptId: "vegetable-oil", name: "vegetable oil", amount: 2, unit: "tbsp", display: "2 tablespoons vegetable oil", required: true, acceptedForms: ["opened", "unspecified"] }
+  steps:
+    - "Simmer the rice with the water until tender, while searing the beef steak in half the vegetable oil."
+    - "Cook the bell pepper, onion, and garlic in the remaining vegetable oil, return the beef steak, add the soy sauce, and serve over the rice."
+  rights: *draft-rights
+
+- id: "recipe-060"
+  slug: "pesto-tomato-chicken-bake"
+  title: "Pesto Tomato Chicken Bake"
+  description: "Chicken breast bakes beneath pesto, fresh tomato, and a layer of mozzarella."
+  servings: 4
+  totalMinutes: 40
+  mealTypes: ["dinner"]
+  cuisines: ["Italian-inspired"]
+  dietaryTags: []
+  ingredients:
+    - { id: "chicken", foodConceptId: "chicken-breast", name: "chicken breast", amount: 1.5, unit: "lb", display: "1 1/2 pounds chicken breast", required: true, acceptedForms: ["fresh", "frozen"] }
+    - { id: "pesto", foodConceptId: "pesto", name: "pesto", amount: 0.5, unit: "cup", display: "1/2 cup pesto", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "tomato", foodConceptId: "tomato", name: "tomato", amount: 2, unit: "count", display: "2 tomatoes, sliced", required: true, acceptedForms: ["fresh"] }
+    - { id: "mozzarella", foodConceptId: "mozzarella", name: "mozzarella cheese", amount: 6, unit: "oz", display: "6 ounces mozzarella cheese", required: true, acceptedForms: ["fresh", "opened", "unspecified"] }
+    - { id: "oil", foodConceptId: "olive-oil", name: "olive oil", amount: 1, unit: "tbsp", display: "1 tablespoon olive oil", required: true, acceptedForms: ["opened", "unspecified"] }
+    - { id: "salt", foodConceptId: "salt", name: "salt", amount: 0.75, unit: "tsp", display: "3/4 teaspoon salt", required: true, acceptedForms: ["dried", "unspecified"] }
+  steps:
+    - "Coat a baking dish with the olive oil, arrange the chicken breast, season with salt, and spread the pesto over it."
+    - "Layer the tomato and mozzarella cheese over the chicken breast and bake until the chicken breast is fully cooked and the mozzarella cheese is browned."
+  rights: *draft-rights

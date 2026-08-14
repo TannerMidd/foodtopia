@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "batches": [
+    {
+      "id": "staged-001",
+      "imagePaths": ["private/staged-001-a.jpg"],
+      "expectedConceptIds": ["tomato", "eggs"],
+      "tags": ["produce", "packaged", "good-light"]
+    }
+  ]
+}
+
