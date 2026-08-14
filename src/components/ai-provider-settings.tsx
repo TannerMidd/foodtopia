@@ -412,6 +412,94 @@ export function AiProviderSettings({
             </select>
           </Field>
 
+          <fieldset disabled={!settings.canEdit || saving}>
+            <legend className="text-sm font-bold">Credential source</legend>
+            <div className="mt-2 grid gap-2 sm:grid-cols-2">
+              <label className="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-[var(--line)] bg-white px-3 text-sm font-bold">
+                <input
+                  type="radio"
+                  name="ai-credential-source"
+                  value="platform"
+                  checked={draft.credentialSource === "platform"}
+                  onChange={() => {
+                    setDraft({ ...draft, credentialSource: "platform" });
+                    setApiKey("");
+                    setOpenRouterModels(null);
+                    setModelsError(null);
+                    discoveryGeneration.current += 1;
+                    setSaved(false);
+                  }}
+                />
+                <Cloud className="size-4 text-[var(--leaf)]" aria-hidden="true" />
+                Platform key
+              </label>
+              <label className="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-[var(--line)] bg-white px-3 text-sm font-bold">
+                <input
+                  type="radio"
+                  name="ai-credential-source"
+                  value="household"
+                  checked={draft.credentialSource === "household"}
+                  disabled={!settings.householdCredentialsAvailable}
+                  onChange={() => {
+                    setDraft({ ...draft, credentialSource: "household" });
+                    setOpenRouterModels(null);
+                    setModelsError(null);
+                    discoveryGeneration.current += 1;
+                    setSaved(false);
+                  }}
+                />
+                <KeyRound className="size-4 text-[var(--leaf)]" aria-hidden="true" />
+                Household key
+              </label>
+            </div>
+          </fieldset>
+
+          {draft.credentialSource === "platform" ? (
+            <div className="space-y-2">
+              <StateNotice
+                title={`${providerLabel(draft.provider)} platform key ${selectedPlatformAvailable ? "available" : "missing"}`}
+                tone={selectedPlatformAvailable ? "success" : "warning"}
+              >
+                The deployment operator manages this key. It is never sent to
+                the browser.
+              </StateNotice>
+              {settings.credentialSource === "household" ? (
+                <StateNotice title="Household key will be cleared" tone="warning">
+                  Saving this platform route permanently removes the encrypted
+                  household credential.
+                </StateNotice>
+              ) : null}
+            </div>
+          ) : (
+            <Field
+              label={settings.credentialSource === "household" ? "Replace API key" : "API key"}
+              htmlFor="ai-api-key"
+              hint={
+                householdCredentialNeedsReplacement
+                  ? "A new key is required for this provider. Compatible model choices load automatically after entry."
+                  : "Leave blank to retain the encrypted household key. Model choices load from the saved key, which is never shown again."
+              }
+            >
+              <input
+                id="ai-api-key"
+                className={inputClass}
+                type="password"
+                autoComplete="new-password"
+                maxLength={1024}
+                spellCheck={false}
+                value={apiKey}
+                disabled={!settings.canEdit || saving}
+                onChange={(event) => {
+                  setApiKey(event.target.value);
+                  setOpenRouterModels(null);
+                  setModelsError(null);
+                  setSaved(false);
+                }}
+                required={householdCredentialNeedsReplacement}
+              />
+            </Field>
+          )}
+
           {draft.provider === "openrouter" ? (
             <>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -513,94 +601,6 @@ export function AiProviderSettings({
                 />
               </Field>
             </div>
-          )}
-
-          <fieldset disabled={!settings.canEdit || saving}>
-            <legend className="text-sm font-bold">Credential source</legend>
-            <div className="mt-2 grid gap-2 sm:grid-cols-2">
-              <label className="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-[var(--line)] bg-white px-3 text-sm font-bold">
-                <input
-                  type="radio"
-                  name="ai-credential-source"
-                  value="platform"
-                  checked={draft.credentialSource === "platform"}
-                  onChange={() => {
-                    setDraft({ ...draft, credentialSource: "platform" });
-                    setApiKey("");
-                    setOpenRouterModels(null);
-                    setModelsError(null);
-                    discoveryGeneration.current += 1;
-                    setSaved(false);
-                  }}
-                />
-                <Cloud className="size-4 text-[var(--leaf)]" aria-hidden="true" />
-                Platform key
-              </label>
-              <label className="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-[var(--line)] bg-white px-3 text-sm font-bold">
-                <input
-                  type="radio"
-                  name="ai-credential-source"
-                  value="household"
-                  checked={draft.credentialSource === "household"}
-                  disabled={!settings.householdCredentialsAvailable}
-                  onChange={() => {
-                    setDraft({ ...draft, credentialSource: "household" });
-                    setOpenRouterModels(null);
-                    setModelsError(null);
-                    discoveryGeneration.current += 1;
-                    setSaved(false);
-                  }}
-                />
-                <KeyRound className="size-4 text-[var(--leaf)]" aria-hidden="true" />
-                Household key
-              </label>
-            </div>
-          </fieldset>
-
-          {draft.credentialSource === "platform" ? (
-            <div className="space-y-2">
-              <StateNotice
-                title={`${providerLabel(draft.provider)} platform key ${selectedPlatformAvailable ? "available" : "missing"}`}
-                tone={selectedPlatformAvailable ? "success" : "warning"}
-              >
-                The deployment operator manages this key. It is never sent to
-                the browser.
-              </StateNotice>
-              {settings.credentialSource === "household" ? (
-                <StateNotice title="Household key will be cleared" tone="warning">
-                  Saving this platform route permanently removes the encrypted
-                  household credential.
-                </StateNotice>
-              ) : null}
-            </div>
-          ) : (
-            <Field
-              label={settings.credentialSource === "household" ? "Replace API key" : "API key"}
-              htmlFor="ai-api-key"
-              hint={
-                householdCredentialNeedsReplacement
-                  ? "A new key is required for this provider. Compatible model choices load automatically after entry."
-                  : "Leave blank to retain the encrypted household key. Model choices load from the saved key, which is never shown again."
-              }
-            >
-              <input
-                id="ai-api-key"
-                className={inputClass}
-                type="password"
-                autoComplete="new-password"
-                maxLength={1024}
-                spellCheck={false}
-                value={apiKey}
-                disabled={!settings.canEdit || saving}
-                onChange={(event) => {
-                  setApiKey(event.target.value);
-                  setOpenRouterModels(null);
-                  setModelsError(null);
-                  setSaved(false);
-                }}
-                required={householdCredentialNeedsReplacement}
-              />
-            </Field>
           )}
 
           <p className="text-xs leading-5 text-[var(--muted)]">
