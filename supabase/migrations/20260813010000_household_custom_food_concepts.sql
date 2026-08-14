@@ -24,7 +24,7 @@ create index household_custom_food_concepts_household_idx
 
 create trigger household_custom_food_concepts_touch
 before update on public.household_custom_food_concepts
-for each row execute function private.touch_row();
+for each row execute function private.touch_versioned_row();
 
 create function private.normalize_custom_food_name(p_name text)
 returns text
