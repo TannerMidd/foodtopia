@@ -2,6 +2,7 @@ import "server-only";
 
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import type { NextRequest, NextResponse } from "next/server";
 
 import { getSupabasePublicConfig } from "./config";
 import type { Database } from "@/types/database";
@@ -33,6 +34,30 @@ export async function createServerSupabaseClient(): Promise<ServerSupabaseClient
           // Functions can write here. Supabase's SSR guidance intentionally
           // ignores this write-only failure because getAll still supplies the
           // request session; a proxy is responsible for durable refreshes.
+        }
+      },
+    },
+  });
+}
+
+/**
+ * Creates a callback client against an explicit redirect response so a newly
+ * exchanged session leaves the Route Handler as Set-Cookie headers.
+ */
+export function createAuthCallbackSupabaseClient(
+  request: NextRequest,
+  response: NextResponse,
+): ServerSupabaseClient {
+  const { url, publishableKey } = getSupabasePublicConfig();
+
+  return createServerClient<Database>(url, publishableKey, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet) {
+        for (const { name, value, options } of cookiesToSet) {
+          response.cookies.set(name, value, options);
         }
       },
     },

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState, type FormEvent } from "react";
 import { ArrowRight, CheckCircle2, LoaderCircle, LockKeyhole, Mail, Users } from "lucide-react";
 import { ApiClientError, acceptHouseholdInvite, bootstrapHousehold } from "@/lib/client/api";
-import { clearFoodtopiaCaches, exchangeAuthCode, getAuthenticatedUser, requestMagicLink } from "@/lib/client/auth";
+import { clearFoodtopiaCaches, getAuthenticatedUser, requestMagicLink } from "@/lib/client/auth";
 import { normalizeInternalPath } from "@/lib/internal-path";
 import { useOfflineInventory } from "./offline-provider";
 import { Button, Card, Field, inputClass, StateNotice } from "./ui";
@@ -70,9 +70,11 @@ function MagicLinkForm({ nextPath = "/", invitation = false }: { nextPath?: stri
 export function SignInScreen({
   nextPath = "/",
   householdDeletion,
+  authError,
 }: {
   nextPath?: string;
   householdDeletion?: "pending" | "complete";
+  authError?: "invalid_link";
 }) {
   return (
     <AuthFrame>
@@ -82,6 +84,13 @@ export function SignInScreen({
             {householdDeletion === "pending"
               ? "Access is quarantined now. Private data will be permanently removed after outstanding upload links expire."
               : "The household and its private application data were removed."}
+          </StateNotice>
+        </div>
+      ) : null}
+      {authError ? (
+        <div className="mb-4">
+          <StateNotice title="That sign-in link could not be completed" tone="error">
+            Request a fresh link below. Your invitation and offline household data are unchanged.
           </StateNotice>
         </div>
       ) : null}
@@ -175,38 +184,31 @@ export function OnboardingScreen({ token }: { token: string }) {
   );
 }
 
-export function AuthCallback({ code, nextPath }: { code: string; nextPath: string }) {
+export function AuthCompletion({ nextPath }: { nextPath: string }) {
   const { clear } = useOfflineInventory();
-  const [error, setError] = useState(false);
+
   useEffect(() => {
     let cancelled = false;
     async function finish() {
-      if (!code) {
-        setError(true);
-        return;
-      }
       try {
-        const result = await exchangeAuthCode(code);
-        if (result.demo) throw new Error("Auth is not configured.");
         await clear();
         await clearFoodtopiaCaches();
-        if (!cancelled) {
-          window.location.replace(normalizeInternalPath(nextPath));
-        }
-      } catch {
-        if (!cancelled) setError(true);
+      } finally {
+        if (!cancelled) window.location.replace(normalizeInternalPath(nextPath));
       }
     }
     void finish();
     return () => {
       cancelled = true;
     };
-  }, [clear, code, nextPath]);
+  }, [clear, nextPath]);
 
   return (
     <AuthFrame>
       <Card className="p-8 text-center">
-        {error ? <><h1 className="text-2xl font-extrabold">This sign-in link didn’t work</h1><p className="mt-2 text-sm leading-6 text-[var(--muted)]">It may have expired or already been used. Request a fresh link without changing any offline household data.</p><Link href="/sign-in" className="mt-6 inline-flex min-h-12 items-center rounded-full bg-[var(--leaf)] px-5 font-bold text-white">Request another link</Link></> : <><LoaderCircle className="mx-auto size-9 animate-spin text-[var(--leaf)]" aria-hidden="true" /><h1 className="mt-5 text-2xl font-extrabold">Opening your kitchen</h1><p className="mt-2 text-sm text-[var(--muted)]">Verifying the one-time link and preparing a clean offline store.</p></>}
+        <LoaderCircle className="mx-auto size-9 animate-spin text-[var(--leaf)]" aria-hidden="true" />
+        <h1 className="mt-5 text-2xl font-extrabold">Opening your kitchen</h1>
+        <p className="mt-2 text-sm text-[var(--muted)]">Preparing a clean offline store for this account.</p>
       </Card>
     </AuthFrame>
   );

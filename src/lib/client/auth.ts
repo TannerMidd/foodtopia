@@ -31,14 +31,6 @@ export async function signOut() {
   if (supabase) await supabase.auth.signOut();
 }
 
-export async function exchangeAuthCode(code: string) {
-  const supabase = getClient();
-  if (!supabase) return { demo: true as const };
-  const { error } = await supabase.auth.exchangeCodeForSession(code);
-  if (error) throw error;
-  return { demo: false as const };
-}
-
 export async function getAuthenticatedUser() {
   const supabase = getClient();
   if (!supabase) return { demo: true as const, user: null };

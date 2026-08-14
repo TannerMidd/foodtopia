@@ -11,10 +11,12 @@ export default async function SignInPage({ searchParams }: PageProps<"/sign-in">
     query.householdDeletion === "complete"
     ? query.householdDeletion
     : undefined;
+  const authError = query.authError === "invalid_link" ? "invalid_link" : undefined;
   return (
     <SignInScreen
       nextPath={nextPath}
       householdDeletion={householdDeletion}
+      authError={authError}
     />
   );
 }
