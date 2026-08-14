@@ -25,16 +25,21 @@ const navItems = [
   { href: "/household", label: "Household", icon: CircleUserRound },
 ];
 
-function ShellChrome({ children }: { children: ReactNode }) {
-  const pathname = usePathname();
-  const { online, syncState, syncError, conflicts, outbox } = useOfflineInventory();
-  const publicRoute =
+export function isPublicAppRoute(pathname: string) {
+  return (
     pathname.startsWith("/sign-in") ||
     pathname.startsWith("/invite/") ||
     pathname.startsWith("/onboarding/") ||
     pathname.startsWith("/auth/") ||
     pathname === "/privacy" ||
-    pathname === "/~offline";
+    pathname === "/~offline"
+  );
+}
+
+function ShellChrome({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const { online, syncState, syncError, conflicts, outbox } = useOfflineInventory();
+  const publicRoute = isPublicAppRoute(pathname);
 
   if (publicRoute) {
     return (
@@ -122,8 +127,10 @@ function ShellChrome({ children }: { children: ReactNode }) {
 }
 
 export function AppShell({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+
   return (
-    <OfflineProvider>
+    <OfflineProvider syncEnabled={!isPublicAppRoute(pathname)}>
       <ServiceWorkerRegistration />
       <ShellChrome>{children}</ShellChrome>
     </OfflineProvider>

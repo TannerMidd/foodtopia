@@ -46,7 +46,13 @@ type OfflineContextValue = {
 
 const OfflineContext = createContext<OfflineContextValue | null>(null);
 
-export function OfflineProvider({ children }: { children: ReactNode }) {
+export function OfflineProvider({
+  children,
+  syncEnabled = true,
+}: {
+  children: ReactNode;
+  syncEnabled?: boolean;
+}) {
   const [activeHouseholdId, setActiveHousehold] = useState("");
   const [lots, setLots] = useState<InventoryLot[]>([]);
   const [outbox, setOutbox] = useState<OutboxRecord[]>([]);
@@ -63,10 +69,22 @@ export function OfflineProvider({ children }: { children: ReactNode }) {
   const queueDisabled = useRef(true);
   const syncGeneration = useRef(0);
   const householdRef = useRef(activeHouseholdId);
+  const previousSyncEnabled = useRef(syncEnabled);
 
   useEffect(() => {
     householdRef.current = activeHouseholdId;
   }, [activeHouseholdId]);
+
+  useEffect(() => {
+    if (previousSyncEnabled.current && !syncEnabled) {
+      // A request may already be in flight when navigation enters onboarding
+      // or another public route. Invalidate its completion before it can bind
+      // or evict household data in the new route context.
+      syncGeneration.current += 1;
+      queueDisabled.current = true;
+    }
+    previousSyncEnabled.current = syncEnabled;
+  }, [syncEnabled]);
 
   useEffect(() => {
     let cancelled = false;
@@ -165,7 +183,7 @@ export function OfflineProvider({ children }: { children: ReactNode }) {
   }, [handleSyncFailure]);
 
   const runSync = useCallback(async (forceFull = false): Promise<void> => {
-    if (syncSuppressed.current) return;
+    if (!syncEnabled || syncSuppressed.current) return;
     if (!navigator.onLine) {
       setOnline(false);
       setSyncState("offline");
@@ -191,10 +209,10 @@ export function OfflineProvider({ children }: { children: ReactNode }) {
     } finally {
       if (inFlight.current === task) inFlight.current = null;
     }
-  }, [performSync]);
+  }, [performSync, syncEnabled]);
 
   useEffect(() => {
-    if (!hydrated) return;
+    if (!hydrated || !syncEnabled) return;
     const initialSync = window.setTimeout(() => void runSync(), 0);
     const onOnline = () => {
       setOnline(true);
@@ -223,22 +241,25 @@ export function OfflineProvider({ children }: { children: ReactNode }) {
       document.removeEventListener("visibilitychange", onVisibility);
       window.clearInterval(interval);
     };
-  }, [hydrated, runSync]);
+  }, [hydrated, runSync, syncEnabled]);
 
   const queueCommand = useCallback(
     async (command: InventoryCommand) => {
-      if (queueDisabled.current || !householdRef.current) {
+      if (!syncEnabled || queueDisabled.current || !householdRef.current) {
         throw new Error("Reconnect to verify your household before editing inventory.");
       }
       await enqueueInventoryCommand(command);
       if (navigator.onLine) void runSync();
       else setSyncState("offline");
     },
-    [runSync],
+    [runSync, syncEnabled],
   );
 
   const resolveConflict = useCallback(
     async (record: OutboxRecord, strategy: "retry" | "discard") => {
+      if (!syncEnabled) {
+        throw new Error("Reconnect to verify your household before editing inventory.");
+      }
       try {
         const result = await resolveOutboxConflict(record, strategy);
         if (result.householdId !== householdRef.current) {
@@ -252,7 +273,7 @@ export function OfflineProvider({ children }: { children: ReactNode }) {
         throw error;
       }
     },
-    [handleSyncFailure, runSync],
+    [handleSyncFailure, runSync, syncEnabled],
   );
 
   const clear = useCallback(async () => {
@@ -279,9 +300,9 @@ export function OfflineProvider({ children }: { children: ReactNode }) {
         conflicts: outbox.filter((record) => record.status === "conflict"),
         online,
         hydrated,
-        syncState,
+        syncState: syncEnabled ? syncState : "idle",
         lastSyncedAt,
-        syncError,
+        syncError: syncEnabled ? syncError : null,
         apiMode,
         queueCommand,
         refresh: runSync,
