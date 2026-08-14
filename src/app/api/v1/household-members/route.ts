@@ -50,14 +50,18 @@ export async function GET(request: Request) {
             userId: z.uuid(),
             displayName: z.string().nullable(),
             role: z.enum(["owner", "member"]),
-            joinedAt: z.iso.datetime(),
+            joinedAt: z.iso.datetime({ offset: true }),
           }),
         ),
       })
       .parse(data).members;
     return json(
       responseSchema.parse({
-        members: members.map((member) => ({ ...member, email: null })),
+        members: members.map((member) => ({
+          ...member,
+          email: null,
+          joinedAt: new Date(member.joinedAt).toISOString(),
+        })),
       }),
     );
   } catch (error) {
