@@ -20,7 +20,10 @@ const storedSettingsSchema = z
     recipeModelId: aiModelIdSchema,
     credentialSource: aiCredentialSourceSchema,
     householdCredentialConfigured: z.boolean(),
-    updatedAt: z.iso.datetime(),
+    // PostgreSQL JSON encodes timestamptz values with an explicit +00:00
+    // offset. Accept offsets at the storage boundary, then normalize the
+    // public DTO to canonical UTC in the presentation service.
+    updatedAt: z.iso.datetime({ offset: true }),
     version: z.number().int().positive(),
   })
   .strict();

@@ -142,4 +142,21 @@ describe("household AI runtime resolution", () => {
     expect(result.canEdit).toBe(true);
     expect(JSON.stringify(result)).not.toMatch(/apiKey|encrypted|keyId|secret/i);
   });
+
+  it("normalizes PostgreSQL timestamp offsets at the public API boundary", () => {
+    const result = presentHouseholdAiSettings(
+      {
+        provider: "openai",
+        visionModelId: "vision-custom",
+        recipeModelId: "recipe-custom",
+        credentialSource: "platform",
+        householdCredentialConfigured: false,
+        updatedAt: "2026-08-14T12:00:00+00:00",
+        version: 2,
+      },
+      true,
+    );
+
+    expect(result.updatedAt).toBe("2026-08-14T12:00:00.000Z");
+  });
 });

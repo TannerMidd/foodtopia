@@ -3,14 +3,23 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = public, extensions;
 
-select plan(57);
+select plan(65);
 
 -- Stable fixture identifiers make failures and Storage paths easy to inspect.
 insert into auth.users (id, email, raw_app_meta_data, raw_user_meta_data)
 values
   ('a0000000-0000-0000-0000-000000000001', 'alpha@example.test', '{}'::jsonb, '{}'::jsonb),
   ('b0000000-0000-0000-0000-000000000002', 'bravo@example.test', '{}'::jsonb, '{}'::jsonb),
-  ('c0000000-0000-0000-0000-000000000003', 'charlie@example.test', '{}'::jsonb, '{}'::jsonb);
+  ('c0000000-0000-0000-0000-000000000003', 'charlie@example.test', '{}'::jsonb, '{}'::jsonb),
+  ('d0000000-0000-0000-0000-000000000004', 'delta@example.test', '{}'::jsonb, '{}'::jsonb);
+
+insert into public.beta_invites (id, email, token_hash, expires_at)
+values (
+  'd1000000-0000-0000-0000-000000000004',
+  'delta@example.test',
+  encode(extensions.digest('delta-bootstrap-token-1234567890', 'sha256'), 'hex'),
+  now() + interval '1 day'
+);
 
 insert into public.households (id, name, created_by)
 values
@@ -580,6 +589,72 @@ select is(
   (public.consume_pre_auth_rate_limit('admin_password_login', 5, 900) ->> 'allowed')::boolean,
   true,
   'the service role can atomically consume the privacy-safe admin login allowance'
+);
+
+reset role;
+select set_config(
+  'request.jwt.claims',
+  '{"sub":"d0000000-0000-0000-0000-000000000004","email":"delta@example.test","role":"authenticated"}',
+  true
+);
+select set_config('request.jwt.claim.sub', 'd0000000-0000-0000-0000-000000000004', true);
+set local role authenticated;
+
+select lives_ok(
+  $$select public.bootstrap_household('Delta household', 'delta-bootstrap-token-1234567890')$$,
+  'authenticated beta onboarding can create a household after the deferred AI invariant fires'
+);
+select lives_ok(
+  $$set constraints all immediate$$,
+  'deferred AI credential invariants can run after authenticated owner RPCs return'
+);
+select is(
+  (select count(*) from public.household_members where user_id = auth.uid() and role = 'owner'),
+  1::bigint,
+  'household bootstrap grants the invited user owner membership'
+);
+select is(
+  (
+    select count(*)
+      from public.household_ai_settings as settings
+      join public.household_members as member
+        on member.household_id = settings.household_id
+     where member.user_id = auth.uid()
+  ),
+  1::bigint,
+  'household bootstrap creates the required secret-free AI settings row'
+);
+select is(
+  (
+    select p.prosecdef
+      from pg_proc as p
+      join pg_namespace as n on n.oid = p.pronamespace
+     where n.nspname = 'private'
+       and p.proname = 'create_household_ai_settings'
+       and p.pronargs = 0
+  ),
+  true,
+  'the default household AI settings trigger runs as its locked-down owner'
+);
+select is(
+  (
+    select p.prosecdef
+      from pg_proc as p
+      join pg_namespace as n on n.oid = p.pronamespace
+     where n.nspname = 'private'
+       and p.proname = 'enforce_household_ai_credential_shape'
+       and p.pronargs = 0
+  ),
+  true,
+  'the deferred AI credential invariant runs as its locked-down owner'
+);
+select ok(
+  not has_function_privilege('authenticated', 'private.create_household_ai_settings()', 'EXECUTE'),
+  'authenticated users cannot directly execute the default AI settings trigger function'
+);
+select ok(
+  not has_function_privilege('authenticated', 'private.enforce_household_ai_credential_shape()', 'EXECUTE'),
+  'authenticated users cannot directly execute the deferred AI credential invariant'
 );
 
 select * from finish();

@@ -97,7 +97,7 @@ export function presentHouseholdAiSettings(
     },
     householdCredentialsAvailable: keyring.available,
     canEdit,
-    updatedAt: settings.updatedAt,
+    updatedAt: new Date(settings.updatedAt).toISOString(),
     version: settings.version,
   };
 }
