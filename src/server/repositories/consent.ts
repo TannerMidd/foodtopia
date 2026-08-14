@@ -8,6 +8,12 @@ export const VISION_CONSENT_VERSION = "vision-v2" as const;
 
 let demoConsentedAt: string | null = null;
 
+const databaseTimestampSchema = z.iso.datetime({ offset: true });
+
+function canonicalTimestamp(value: string) {
+  return new Date(databaseTimestampSchema.parse(value)).toISOString();
+}
+
 export function getDemoVisionConsent() {
   return {
     version: VISION_CONSENT_VERSION,
@@ -36,7 +42,7 @@ export async function getVisionConsent(
   return {
     version: VISION_CONSENT_VERSION,
     consented: Boolean(data),
-    consentedAt: data?.consented_at ?? null,
+    consentedAt: data ? canonicalTimestamp(data.consented_at) : null,
   };
 }
 
@@ -48,13 +54,13 @@ export async function recordVisionConsent(client: UserClient) {
   const recorded = z
     .object({
       consentVersion: z.literal(VISION_CONSENT_VERSION),
-      consentedAt: z.iso.datetime(),
+      consentedAt: databaseTimestampSchema,
       replayed: z.boolean(),
     })
     .parse(data);
   return {
     version: VISION_CONSENT_VERSION,
     consented: true,
-    consentedAt: recorded.consentedAt,
+    consentedAt: canonicalTimestamp(recorded.consentedAt),
   };
 }
