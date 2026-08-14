@@ -39,6 +39,12 @@ function integer(value: unknown): number {
   return parsed === null ? Number.NaN : Math.trunc(parsed);
 }
 
+function utcDateTime(value: unknown): unknown {
+  if (typeof value !== "string") return value;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.valueOf()) ? value : parsed.toISOString();
+}
+
 function stringArray(value: unknown): string[] {
   return array(value).filter((item): item is string => typeof item === "string");
 }
@@ -101,8 +107,8 @@ export function mapAnalysis(
     status: analysis.status,
     candidates,
     errorCode: analysis.errorCode ?? analysis.error_code ?? null,
-    createdAt: analysis.createdAt ?? analysis.created_at,
-    updatedAt: analysis.updatedAt ?? analysis.updated_at,
+    createdAt: utcDateTime(analysis.createdAt ?? analysis.created_at),
+    updatedAt: utcDateTime(analysis.updatedAt ?? analysis.updated_at),
   });
 }
 

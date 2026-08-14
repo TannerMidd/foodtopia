@@ -69,6 +69,20 @@ describe("Supabase DTO mappers", () => {
     expect(analysis.candidates[0].accepted).toBe(true);
   });
 
+  it("normalizes PostgreSQL timestamp offsets in analysis responses", () => {
+    const analysis = mapAnalysis({
+      id: analysisId,
+      household_id: householdId,
+      status: "queued",
+      error_code: null,
+      created_at: "2026-08-14T18:20:00+00:00",
+      updated_at: "2026-08-14T18:21:00+00:00",
+    });
+
+    expect(analysis.createdAt).toBe("2026-08-14T18:20:00.000Z");
+    expect(analysis.updatedAt).toBe("2026-08-14T18:21:00.000Z");
+  });
+
   it("orders ingredients and maps reviewed recipe rights", () => {
     const recipe = mapRecipe({
       id: "quick-tomatoes",
