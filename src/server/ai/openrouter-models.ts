@@ -30,7 +30,7 @@ const openRouterModelSchema = z
 
 const openRouterModelsPayloadSchema = z
   .object({
-    data: z.array(openRouterModelSchema).max(2000),
+    data: z.array(z.unknown()).max(2000),
   })
   .passthrough();
 
@@ -114,7 +114,20 @@ export async function discoverOpenRouterModels(
     );
   }
 
-  const models = parsed.data.data
+  const parsedModels = parsed.data.data.flatMap((entry) => {
+    const model = openRouterModelSchema.safeParse(entry);
+    return model.success ? [model.data] : [];
+  });
+  if (parsed.data.data.length > 0 && parsedModels.length === 0) {
+    throw new ApiFault(
+      "OPENROUTER_MODELS_INVALID",
+      "OpenRouter returned an invalid model list.",
+      502,
+      true,
+    );
+  }
+
+  const models = parsedModels
     .filter((model) => {
       const inputs = model.architecture.input_modalities;
       const outputs = model.architecture.output_modalities;

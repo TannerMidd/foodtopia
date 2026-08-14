@@ -36,6 +36,16 @@ describe("OpenRouter model discovery", () => {
               supported_parameters: ["response_format"],
             },
             {
+              id: "~vendor/latest-vision",
+              name: "Account vision alias",
+              context_length: 32768,
+              architecture: {
+                input_modalities: ["text", "image"],
+                output_modalities: ["text"],
+              },
+              supported_parameters: ["structured_outputs"],
+            },
+            {
               id: "vendor/no-schema",
               name: "No schema support",
               context_length: 32768,
@@ -44,6 +54,9 @@ describe("OpenRouter model discovery", () => {
                 output_modalities: ["text"],
               },
               supported_parameters: ["temperature"],
+            },
+            {
+              name: "Malformed entry without an ID",
             },
           ],
         }),
@@ -66,6 +79,12 @@ describe("OpenRouter model discovery", () => {
           name: "Recipe Ready",
           contextLength: 65536,
           supportsVision: false,
+        },
+        {
+          id: "~vendor/latest-vision",
+          name: "Account vision alias",
+          contextLength: 32768,
+          supportsVision: true,
         },
       ],
       fetchedAt: expect.any(String),

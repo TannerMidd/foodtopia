@@ -87,7 +87,7 @@ export const aiModelIdSchema = z
   .min(1)
   .max(160)
   .regex(
-    /^[A-Za-z0-9][A-Za-z0-9._:/-]*$/,
+    /^[A-Za-z0-9~][A-Za-z0-9._:/~-]*$/,
     "Use the provider's model ID without spaces or query parameters.",
   );
 
