@@ -3,6 +3,16 @@ import { expect, test } from "@playwright/test";
 const appUrl = process.env.FOODTOPIA_E2E_URL ?? "";
 
 test("static offline fallback reads Dexie and queues an edit", async ({ context, page }) => {
+  // Prime the device snapshot first. ~offline is a public route, so sync is
+  // disabled there and the fallback only ever reads IndexedDB — a browser that
+  // has never run the app online has nothing for it to show.
+  await page.goto(`${appUrl}/inventory`);
+  await expect(
+    page
+      .locator("#lot-10000000-0000-4000-8000-000000000001")
+      .getByRole("heading", { name: "Tomatoes" }),
+  ).toBeVisible();
+
   await page.goto(`${appUrl}/~offline`);
   await expect(page.getByText("device-only offline kitchen")).toBeVisible();
   await expect(page.locator("#lot-10000000-0000-4000-8000-000000000001").getByRole("heading", { name: "Tomatoes" })).toBeVisible();

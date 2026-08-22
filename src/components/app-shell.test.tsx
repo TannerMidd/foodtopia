@@ -53,6 +53,16 @@ describe("AppShell sync errors", () => {
     },
   );
 
+  it("keeps sync enabled on the offline fallback so it can still queue edits", () => {
+    // The fallback renders without app chrome, but it is reached by a device
+    // that is already signed in. Pausing sync there leaves it unable to notice
+    // that the connection dropped, or to queue an edit until it returns.
+    pathname.mockReturnValue("/~offline");
+    render(<AppShell>Offline content</AppShell>);
+
+    expect(offline.syncEnabled).toEqual([true]);
+  });
+
   it("shows the access-revocation banner on an authenticated household route", () => {
     render(<AppShell>Household content</AppShell>);
 

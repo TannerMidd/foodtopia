@@ -174,8 +174,11 @@ export function OfflineProvider({
       setActiveHousehold(result.householdId);
       setLastSyncedAt(result.refreshedAt);
       setApiMode(getObservedApiMode());
-      setOnline(true);
-      setSyncState("idle");
+      // A sync that started before the connection dropped can still land after
+      // it. Trust the browser over the fact that this request happened to
+      // succeed, so a queued edit is not reported as already sent.
+      setOnline(navigator.onLine);
+      setSyncState(navigator.onLine ? "idle" : "offline");
     } catch (error) {
       if (generation !== syncGeneration.current) return;
       await handleSyncFailure(error);

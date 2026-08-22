@@ -15,6 +15,7 @@ const navItems = [
   { href: "/household", label: "household" },
 ];
 
+/** Routes that render without the nav rail or the mobile tab bar. */
 export function isPublicAppRoute(pathname: string) {
   return (
     pathname.startsWith("/sign-in") ||
@@ -24,6 +25,17 @@ export function isPublicAppRoute(pathname: string) {
     pathname === "/privacy" ||
     pathname === "/~offline"
   );
+}
+
+/*
+ * Household data must not bind before an identity is verified, so the auth and
+ * onboarding routes pause sync entirely. The offline fallback is deliberately
+ * not one of them: it is only ever reached by a device that is already signed
+ * in, and it is the one screen that still has to track connectivity, read the
+ * local snapshot, and queue edits until the connection returns.
+ */
+export function isSyncPausedRoute(pathname: string) {
+  return isPublicAppRoute(pathname) && pathname !== "/~offline";
 }
 
 function isActive(pathname: string, href: string) {
@@ -183,7 +195,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <OfflineProvider syncEnabled={!isPublicAppRoute(pathname)}>
+    <OfflineProvider syncEnabled={!isSyncPausedRoute(pathname)}>
       <ServiceWorkerRegistration />
       <ShellChrome>{children}</ShellChrome>
     </OfflineProvider>
