@@ -1,12 +1,11 @@
 export default function Loading() {
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6" aria-label="Loading page">
-      <div className="skeleton mb-7 h-9 w-48 rounded-2xl" />
-      <div className="skeleton mb-4 h-44 rounded-[2rem]" />
-      <div className="grid grid-cols-2 gap-3">
-        <div className="skeleton h-28 rounded-3xl" />
-        <div className="skeleton h-28 rounded-3xl" />
-      </div>
+    <div className="mx-auto w-full max-w-[60rem] px-5 pt-7 sm:px-8 md:pt-9" aria-label="Loading page">
+      <div className="skeleton h-3 w-28" />
+      <div className="skeleton mt-5 h-8 w-80 max-w-full" />
+      <div className="skeleton mt-10 h-14" />
+      <div className="skeleton mt-3 h-14" />
+      <div className="skeleton mt-3 h-14" />
     </div>
   );
 }

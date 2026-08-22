@@ -47,7 +47,7 @@ describe("AppShell sync errors", () => {
       pathname.mockReturnValue(route);
       render(<AppShell>Public content</AppShell>);
 
-      expect(screen.queryByText(/Sync paused:/)).not.toBeInTheDocument();
+      expect(screen.queryByText(/sync paused/i)).not.toBeInTheDocument();
       expect(screen.queryByText(/do not have access to this household/i)).not.toBeInTheDocument();
       expect(offline.syncEnabled).toEqual([false]);
     },
@@ -56,7 +56,7 @@ describe("AppShell sync errors", () => {
   it("shows the access-revocation banner on an authenticated household route", () => {
     render(<AppShell>Household content</AppShell>);
 
-    expect(screen.getByText(/Sync paused: You do not have access/i)).toBeInTheDocument();
+    expect(screen.getByText(/sync paused · You do not have access/i)).toBeInTheDocument();
     expect(offline.syncEnabled).toEqual([true]);
   });
 });

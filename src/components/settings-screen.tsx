@@ -3,16 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import {
-  Download,
-  LockKeyhole,
-  LogOut,
-  Plus,
-  Share,
-  ShieldAlert,
-  WifiOff,
-  X,
-} from "lucide-react";
+import { X } from "lucide-react";
 
 import { DEFAULT_STAPLE_CONCEPT_IDS, getFoodConcept } from "@/domain/concepts";
 import { resolveFoodConcept } from "@/domain/normalization";
@@ -24,16 +15,7 @@ import {
 import { clearFoodtopiaCaches, signOut } from "@/lib/client/auth";
 import { AiProviderSettings } from "./ai-provider-settings";
 import { useOfflineInventory } from "./offline-provider";
-import {
-  Badge,
-  Button,
-  Card,
-  Field,
-  inputClass,
-  Page,
-  PageHeader,
-  StateNotice,
-} from "./ui";
+import { Page, Section, StateNotice, cn } from "./ui";
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -41,30 +23,25 @@ type BeforeInstallPromptEvent = Event & {
 };
 
 const preferenceOptions = [
-  { label: "Vegetarian", value: "vegetarian" },
-  { label: "Vegan", value: "vegan" },
-  { label: "Dairy-free preference", value: "dairy-free" },
+  { label: "vegetarian", value: "vegetarian" },
+  { label: "vegan", value: "vegan" },
+  { label: "dairy-free", value: "dairy-free" },
 ] as const;
 const defaultStaples: string[] = [...DEFAULT_STAPLE_CONCEPT_IDS];
 
 function normalizeStaple(value: string) {
-  if (value.trim().toLowerCase() === "neutral cooking oil") {
-    return "vegetable-oil";
-  }
+  if (value.trim().toLowerCase() === "neutral cooking oil") return "vegetable-oil";
   return resolveFoodConcept(value)?.id ?? value;
 }
 
 function stapleLabel(id: string) {
   if (id === "vegetable-oil") return "neutral cooking oil";
-  return getFoodConcept(id)?.name ?? id;
+  return (getFoodConcept(id)?.name ?? id).toLowerCase();
 }
 
 function writeLocalPreferences(preferences: string[], staples: string[]) {
   try {
-    localStorage.setItem(
-      "foodtopia:preferences",
-      JSON.stringify({ preferences, staples }),
-    );
+    localStorage.setItem("foodtopia:preferences", JSON.stringify({ preferences, staples }));
   } catch {
     // A blocked preference store should not stop the settings UI.
   }
@@ -77,10 +54,7 @@ function readLocalPreferences() {
   try {
     const raw = localStorage.getItem("foodtopia:preferences");
     if (!raw) return { preferences: [] as string[], staples: defaultStaples };
-    const parsed = JSON.parse(raw) as {
-      preferences?: string[];
-      staples?: string[];
-    };
+    const parsed = JSON.parse(raw) as { preferences?: string[]; staples?: string[] };
     return {
       preferences: (parsed.preferences ?? []).map((value) =>
         value.toLowerCase().replace(" preference", ""),
@@ -94,8 +68,10 @@ function readLocalPreferences() {
 
 function isInstalledDisplayMode() {
   if (typeof window === "undefined") return false;
-  return window.matchMedia("(display-mode: standalone)").matches ||
-    (navigator as Navigator & { standalone?: boolean }).standalone === true;
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    (navigator as Navigator & { standalone?: boolean }).standalone === true
+  );
 }
 
 export function SettingsScreen() {
@@ -105,10 +81,10 @@ export function SettingsScreen() {
   const [householdName, setHouseholdName] = useState<string | null>(null);
   const [staples, setStaples] = useState<string[]>(defaultStaples);
   const [newStaple, setNewStaple] = useState("");
+  const [addingStaple, setAddingStaple] = useState(false);
   const [stapleError, setStapleError] = useState<string | null>(null);
   const [preferenceSaveError, setPreferenceSaveError] = useState(false);
-  const [installPrompt, setInstallPrompt] =
-    useState<BeforeInstallPromptEvent | null>(null);
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [installed, setInstalled] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
@@ -136,9 +112,7 @@ export function SettingsScreen() {
       setPreferences(local.preferences);
       setStaples(local.staples);
     }, 0);
-    if (apiMode !== "connected") {
-      return () => window.clearTimeout(timeout);
-    }
+    if (apiMode !== "connected") return () => window.clearTimeout(timeout);
     let cancelled = false;
     void getHouseholdPreferences()
       .then((remote) => {
@@ -193,20 +167,15 @@ export function SettingsScreen() {
     event.preventDefault();
     const value = newStaple.trim().toLowerCase();
     if (!value) return;
-    const conceptId = value === "neutral cooking oil"
-      ? "vegetable-oil"
-      : resolveFoodConcept(value)?.id;
+    const conceptId = value === "neutral cooking oil" ? "vegetable-oil" : resolveFoodConcept(value)?.id;
     if (!conceptId) {
-      setStapleError(
-        "Choose a recognized food so recipe evidence can match it.",
-      );
+      setStapleError("Choose a recognized food so recipe evidence can match it.");
       return;
     }
     setStapleError(null);
-    if (!staples.includes(conceptId)) {
-      persist(preferences, [...staples, conceptId]);
-    }
+    if (!staples.includes(conceptId)) persist(preferences, [...staples, conceptId]);
     setNewStaple("");
+    setAddingStaple(false);
   }
 
   async function install() {
@@ -231,188 +200,164 @@ export function SettingsScreen() {
   }
 
   return (
-    <Page>
-      <PageHeader
-        eyebrow={householdName ?? "Household"}
-        title="Settings"
-        description="Preferences shape ranking but never override ingredient evidence or label checks."
-      />
+    <Page className="max-w-[44rem]">
+      <header>
+        <p className="ml">settings{householdName ? ` · ${householdName.toLowerCase()}` : ""}</p>
+        <h1 className="hd mt-3 text-[clamp(1.5rem,6vw,1.65rem)]">How Foodtopia behaves.</h1>
+      </header>
 
-      <AiProviderSettings apiMode={apiMode} />
+      <div className="mt-9 flex flex-col gap-8">
+        <Section label="assistant" labelWidth="78px">
+          <AiProviderSettings apiMode={apiMode} />
+        </Section>
 
-      <Card className="mt-4">
-        <h2 className="text-lg font-extrabold">Food preferences</h2>
-        <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
-          Used to rank and filter suggestions. These are not allergy controls.
-        </p>
-        <div className="mt-4 grid gap-2 sm:grid-cols-2">
-          {preferenceOptions.map((option) => {
-            const selected = preferences.includes(option.value);
-            const next = selected
-              ? preferences.filter((item) => item !== option.value)
-              : [...preferences, option.value];
-            return (
-              <button
-                type="button"
-                role="checkbox"
-                aria-checked={selected}
-                key={option.value}
-                className={`flex min-h-12 items-center gap-3 rounded-2xl border px-3 text-left text-sm font-bold ${selected ? "border-[var(--leaf)] bg-[var(--sprout)]" : "border-[var(--line)] bg-white"}`}
-                onClick={() => persist(next, staples)}
-              >
-                <span
-                  className={`flex size-6 items-center justify-center rounded-lg border ${selected ? "border-[var(--leaf)] bg-[var(--leaf)] text-white" : "border-[var(--line)]"}`}
+        <Section label="preferences" labelWidth="78px">
+          <div className="row min-h-[50px] flex-wrap gap-x-6 gap-y-2 px-1 py-2">
+            {preferenceOptions.map((option) => {
+              const selected = preferences.includes(option.value);
+              const next = selected
+                ? preferences.filter((item) => item !== option.value)
+                : [...preferences, option.value];
+              return (
+                <button
+                  type="button"
+                  role="checkbox"
+                  aria-checked={selected}
+                  key={option.value}
+                  className={cn(
+                    "inline-flex min-h-9 items-center gap-2.5 transition",
+                    selected ? "text-[var(--ink)]" : "text-[var(--ink-6)] hover:text-[var(--ink-3)]",
+                  )}
+                  onClick={() => persist(next, staples)}
                 >
-                  {selected ? <span aria-hidden="true">✓</span> : null}
-                </span>
-                {option.label}
-              </button>
-            );
-          })}
-        </div>
-        {preferenceSaveError ? (
-          <div className="mt-3">
-            <StateNotice title="Preferences not synced" tone="warning">
-              This device kept the edit, but the shared household copy could not
-              be updated. Reconnect and try again.
-            </StateNotice>
+                  <span className={selected ? "nm text-[14px]" : "m text-[10.5px]"}>{option.label}</span>
+                  {selected && <span className="m text-[10.5px] text-[var(--accent)]">on</span>}
+                </button>
+              );
+            })}
           </div>
-        ) : null}
-        <div className="mt-4">
-          <StateNotice title="No allergen-safety claims" tone="warning">
-            <span className="inline-flex items-start gap-1">
-              <ShieldAlert className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-              Always verify packages, substitutions, preparation, and
-              cross-contact. A preference match does not mean a dish is safe.
-            </span>
-          </StateNotice>
-        </div>
-      </Card>
-
-      <Card className="mt-4">
-        <h2 className="text-lg font-extrabold">Assumed staples</h2>
-        <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
-          Recipes may label these “assumed staple,” never “known present.”
-        </p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {staples.map((staple) => (
-            <Badge key={staple} tone="green" className="gap-1.5 pl-3">
-              {stapleLabel(staple)}
-              <button
-                type="button"
-                className="flex size-6 items-center justify-center rounded-full"
-                onClick={() =>
-                  persist(
-                    preferences,
-                    staples.filter((item) => item !== staple),
-                  )
-                }
-                aria-label={`Remove ${stapleLabel(staple)}`}
-              >
-                <X className="size-3" aria-hidden="true" />
-              </button>
-            </Badge>
-          ))}
-        </div>
-        <form onSubmit={addStaple} className="mt-4 flex gap-2">
-          <Field label="Add staple" htmlFor="new-staple">
-            <input
-              id="new-staple"
-              className={inputClass}
-              maxLength={80}
-              value={newStaple}
-              onChange={(event) => setNewStaple(event.target.value)}
-            />
-          </Field>
-          <Button
-            type="submit"
-            size="icon"
-            className="mt-[1.65rem]"
-            aria-label="Add staple"
-          >
-            <Plus className="size-4" aria-hidden="true" />
-          </Button>
-        </form>
-        {stapleError ? (
-          <p className="mt-2 text-xs font-semibold text-[var(--danger)]">
-            {stapleError}
-          </p>
-        ) : null}
-      </Card>
-
-      <Card className="mt-4">
-        <div className="flex items-start gap-3">
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--sprout)] text-[var(--leaf)]">
-            <Download className="size-5" aria-hidden="true" />
-          </span>
-          <div>
-            <h2 className="text-lg font-extrabold">Install Foodtopia</h2>
-            <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
-              Standalone display, a home-screen icon, and offline inventory
-              access after the app has loaded.
+          <div className="row min-h-0 px-1 py-3">
+            <p className="bd text-[12px] text-[var(--time)]">
+              Preferences only rank suggestions. They are not allergy controls — verify packages,
+              preparation and cross-contact yourself.
             </p>
           </div>
-        </div>
-        {installed ? (
-          <div className="mt-4">
-            <StateNotice title="Installed on this device" tone="success">
-              Launch Foodtopia from the home screen for the app-like layout.
-            </StateNotice>
+          {preferenceSaveError && (
+            <div className="px-1 py-3">
+              <StateNotice title="Preferences not synced" tone="warning">
+                This device kept the edit, but the shared household copy could not be updated.
+                Reconnect and try again.
+              </StateNotice>
+            </div>
+          )}
+        </Section>
+
+        <Section label="staples" labelWidth="78px">
+          <div className="px-1 pt-3.5">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2.5">
+              {staples.map((staple) => (
+                <span key={staple} className="m inline-flex items-center gap-1.5 text-[11px] text-[var(--ink-2)]">
+                  {stapleLabel(staple)}
+                  <button
+                    type="button"
+                    className="flex size-5 items-center justify-center text-[var(--ink-6)] hover:text-[var(--time)]"
+                    onClick={() => persist(preferences, staples.filter((item) => item !== staple))}
+                    aria-label={`Remove ${stapleLabel(staple)}`}
+                  >
+                    <X className="size-2.5" aria-hidden="true" />
+                  </button>
+                </span>
+              ))}
+              {addingStaple ? (
+                <form onSubmit={addStaple} className="inline-flex items-center gap-2.5">
+                  <label htmlFor="new-staple" className="sr-only">
+                    Add staple
+                  </label>
+                  <input
+                    id="new-staple"
+                    autoFocus
+                    className="m w-40 border-b border-[var(--edge-strong)] bg-transparent pb-1 text-[11px] text-[var(--ink)] focus:border-[var(--accent)] focus:outline-none"
+                    maxLength={80}
+                    value={newStaple}
+                    onChange={(event) => setNewStaple(event.target.value)}
+                    onBlur={() => {
+                      if (!newStaple.trim()) setAddingStaple(false);
+                    }}
+                  />
+                  <button type="submit" className="m text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]">
+                    add
+                  </button>
+                </form>
+              ) : (
+                <button
+                  type="button"
+                  className="m text-[11px] text-[var(--ink-6)] hover:text-[var(--ink-3)]"
+                  onClick={() => setAddingStaple(true)}
+                >
+                  + add
+                </button>
+              )}
+            </div>
+            {stapleError && (
+              <p className="bd mt-3 text-[12px] text-[var(--time)]" role="alert">
+                {stapleError}
+              </p>
+            )}
+            <p className="bd mt-3 pb-4 text-[12px] text-[var(--ink-6)]">
+              Recipes call these “staple”, never “known present.”
+            </p>
           </div>
-        ) : installPrompt ? (
-          <Button className="mt-4 w-full" onClick={() => void install()}>
-            <Download className="size-4" aria-hidden="true" /> Install app
-          </Button>
-        ) : (
-          <div className="mt-4 rounded-2xl bg-white/55 p-4 text-sm leading-6 text-[var(--muted)]">
-            {isIOS ? (
-              <>
-                <span className="inline-flex items-center gap-1 font-bold text-[var(--ink)]">
-                  <Share className="size-4" aria-hidden="true" /> On iPhone or
-                  iPad:
-                </span>{" "}
-                open Safari, tap Share, then “Add to Home Screen.”
-              </>
+        </Section>
+
+        <Section label="this device" labelWidth="78px">
+          <div className="row min-h-0 px-1 py-3.5">
+            <p className="bd text-[12.5px]">
+              Snapshots and queued edits live on this device for the active household. Raw photos never
+              do. Signing out clears both, along with Foodtopia&rsquo;s local keys and caches.
+            </p>
+          </div>
+          <div className="row min-h-[50px] px-1">
+            <span className="bd flex-1 text-[var(--ink-3)]">Install Foodtopia</span>
+            {installed ? (
+              <span className="m text-[10.5px] text-[var(--ink-6)]">installed</span>
+            ) : installPrompt ? (
+              <button
+                type="button"
+                className="m border-b border-[var(--accent-rule)] pb-0.5 text-[10.5px] text-[var(--ink)]"
+                onClick={() => void install()}
+              >
+                install
+              </button>
             ) : (
-              <>Open your browser menu and choose “Install app” or “Add to Home screen” when available.</>
+              <span className="m text-[10.5px] text-[var(--ink-6)]">
+                {isIOS ? "share → add to home screen" : "from the browser menu"}
+              </span>
             )}
           </div>
-        )}
-        <p className="mt-3 flex items-start gap-2 text-xs leading-5 text-[var(--muted)]">
-          <WifiOff className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-          Offline edits replay only when Foodtopia is open, focused, and
-          reconnected. Photo analysis, uploads, recipes, and reconciliation need
-          connectivity.
-        </p>
-      </Card>
+          <div className="row min-h-[50px] px-1">
+            <span className="bd flex-1 text-[var(--ink-3)]">The beta privacy notice</span>
+            <Link href="/privacy" className="m text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]">
+              read
+            </Link>
+          </div>
+          <div className="row min-h-[50px] px-1">
+            <span className="bd flex-1 text-[var(--ink-3)]">Sign out and clear this device</span>
+            <button
+              type="button"
+              className="m text-[10.5px] text-[var(--ink-4)] hover:text-[var(--time)] disabled:opacity-40"
+              disabled={signingOut}
+              onClick={() => void logout()}
+            >
+              {signingOut ? "signing out…" : "sign out"}
+            </button>
+          </div>
+        </Section>
 
-      <Card className="mt-4">
-        <h2 className="flex items-center gap-2 text-lg font-extrabold">
-          <LockKeyhole className="size-5 text-[var(--leaf)]" aria-hidden="true" />
-          Privacy on this device
-        </h2>
-        <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-          Inventory snapshots and ordered commands live in IndexedDB for the
-          active household. Raw batch photos are not stored there. Signing out
-          clears the offline database, Foodtopia local/session keys, and caches
-          before redirecting.
+        <p className="bd border-t border-[var(--hairline)] pt-4 text-[12px] text-[var(--ink-6)]">
+          Offline edits replay only when Foodtopia is open, focused and reconnected. Photo analysis,
+          uploads, recipes and the ingredient check all need connectivity.
         </p>
-        <Link
-          href="/privacy"
-          className="mt-3 inline-flex min-h-11 items-center font-bold text-[var(--leaf)] underline decoration-2 underline-offset-4"
-        >
-          Read the beta privacy notice
-        </Link>
-        <Button
-          variant="danger"
-          className="mt-5 w-full"
-          busy={signingOut}
-          onClick={() => void logout()}
-        >
-          <LogOut className="size-4" aria-hidden="true" /> Sign out & clear this
-          device
-        </Button>
-      </Card>
+      </div>
     </Page>
   );
 }

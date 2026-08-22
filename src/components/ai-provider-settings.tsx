@@ -8,7 +8,6 @@ import {
   useState,
   type FormEvent,
 } from "react";
-import { Cloud, KeyRound, RefreshCw, Sparkles } from "lucide-react";
 
 import type {
   AiCredentialSource,
@@ -22,15 +21,7 @@ import {
   getAiSettings,
   updateAiSettings,
 } from "@/lib/client/api";
-import {
-  Badge,
-  Button,
-  Card,
-  Field,
-  inputClass,
-  selectClass,
-  StateNotice,
-} from "./ui";
+import { Button, Field, StateNotice, cn, inputClass, selectClass } from "./ui";
 
 type Draft = {
   provider: AiProvider;
@@ -100,7 +91,7 @@ function OpenRouterModelField({
       htmlFor={id}
       hint="Choose a loaded model or enter a custom OpenRouter model ID."
     >
-      <div className="space-y-2">
+      <div className="flex flex-col gap-3">
         {models.length > 0 ? (
           <select
             id={`${id}-choice`}
@@ -234,16 +225,18 @@ export function AiProviderSettings({
 
   if (apiMode !== "connected") {
     return (
-      <Card className="mt-4">
-        <h2 className="flex items-center gap-2 text-lg font-extrabold">
-          <Sparkles className="size-5 text-[var(--leaf)]" aria-hidden="true" />
-          AI provider
-        </h2>
-        <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-          This device-only demo uses built-in local assistants. Connect Supabase
-          to configure OpenAI or OpenRouter for a household.
-        </p>
-      </Card>
+      <>
+        <div className="row min-h-[50px] px-1">
+          <span className="bd flex-1">Local demo assistants</span>
+          <span className="m text-[10.5px] text-[var(--ink-4)]">in use</span>
+        </div>
+        <div className="row min-h-[50px] px-1">
+          <span className="bd flex-1 text-[var(--ink-4)]">
+            Connect Supabase to choose OpenAI or OpenRouter
+          </span>
+          <span className="m text-[10.5px] text-[var(--ink-6)]">owner only</span>
+        </div>
+      </>
     );
   }
 
@@ -327,37 +320,41 @@ export function AiProviderSettings({
   );
 
   return (
-    <Card className="mt-4">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h2 className="flex items-center gap-2 text-lg font-extrabold">
-            <Sparkles className="size-5 text-[var(--leaf)]" aria-hidden="true" />
-            AI provider
-          </h2>
-          <p className="mt-1 text-xs leading-5 text-[var(--muted)]">
-            Applies to photo analysis, meal-intent parsing, and match
-            explanations for everyone in this household.
-          </p>
-        </div>
-        {settings ? (
-          <Badge tone={settings.credentialConfigured ? "green" : "orange"}>
-            {settings.credentialConfigured ? "Ready" : "Needs key"}
-          </Badge>
-        ) : null}
+    <div>
+      <div className="row min-h-[50px] px-1">
+        <span className="bd min-w-0 flex-1 truncate">
+          {settings
+            ? `${providerLabel(settings.provider)} · ${settings.visionModelId}`
+            : "AI provider"}
+        </span>
+        <span
+          className={cn(
+            "m flex-none text-[10.5px]",
+            settings?.credentialConfigured ? "text-[var(--ink-4)]" : "text-[var(--time)]",
+          )}
+        >
+          {settings ? (settings.credentialConfigured ? "in use" : "needs key") : "loading"}
+        </span>
+      </div>
+      <div className="row min-h-0 px-1 py-3">
+        <p className="bd text-[12px] text-[var(--ink-6)]">
+          Applies to photo analysis, meal-intent parsing, and match explanations for everyone in this
+          household.
+        </p>
       </div>
 
       {loading ? (
-        <p className="mt-4 text-sm text-[var(--muted)]" role="status">
-          Loading provider settings…
+        <p className="m px-1 py-4 text-[11px] text-[var(--ink-4)]" role="status">
+          loading provider settings…
         </p>
       ) : error && !draft ? (
-        <div className="mt-4">
+        <div className="px-1 py-4">
           <StateNotice title="Provider settings unavailable" tone="error">
             {error}
           </StateNotice>
         </div>
       ) : settings && draft ? (
-        <form className="mt-4 space-y-4" onSubmit={save}>
+        <form className="flex flex-col gap-6 px-1 py-6" onSubmit={save}>
           {!settings.canEdit ? (
             <StateNotice title="Owner-managed setting" tone="neutral">
               Only the household owner can change the provider, models, or
@@ -385,9 +382,9 @@ export function AiProviderSettings({
           </Field>
 
           <fieldset disabled={!settings.canEdit || saving}>
-            <legend className="text-sm font-bold">Credential source</legend>
-            <div className="mt-2 grid gap-2 sm:grid-cols-2">
-              <label className="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-[var(--line)] bg-white px-3 text-sm font-bold">
+            <legend className="ml">Credential source</legend>
+            <div className="mt-3 flex flex-wrap gap-x-8 gap-y-3">
+              <label className="flex min-h-9 cursor-pointer items-center gap-2.5 text-[13.5px] font-light">
                 <input
                   type="radio"
                   name="ai-credential-source"
@@ -402,10 +399,9 @@ export function AiProviderSettings({
                     setSaved(false);
                   }}
                 />
-                <Cloud className="size-4 text-[var(--leaf)]" aria-hidden="true" />
                 Platform key
               </label>
-              <label className="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border border-[var(--line)] bg-white px-3 text-sm font-bold">
+              <label className="flex min-h-9 cursor-pointer items-center gap-2.5 text-[13.5px] font-light">
                 <input
                   type="radio"
                   name="ai-credential-source"
@@ -420,14 +416,13 @@ export function AiProviderSettings({
                     setSaved(false);
                   }}
                 />
-                <KeyRound className="size-4 text-[var(--leaf)]" aria-hidden="true" />
                 Household key
               </label>
             </div>
           </fieldset>
 
           {draft.credentialSource === "platform" ? (
-            <div className="space-y-2">
+            <div className="flex flex-col gap-4">
               <StateNotice
                 title={`${providerLabel(draft.provider)} platform key ${selectedPlatformAvailable ? "available" : "missing"}`}
                 tone={selectedPlatformAvailable ? "success" : "warning"}
@@ -479,7 +474,7 @@ export function AiProviderSettings({
 
           {draft.provider === "openrouter" ? (
             <>
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid gap-6 sm:grid-cols-2">
                 <OpenRouterModelField
                   id="ai-vision-model"
                   label="Vision model"
@@ -508,9 +503,9 @@ export function AiProviderSettings({
               </div>
 
               {settings.canEdit ? (
-                <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-3">
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <p className="text-xs leading-5 text-[var(--muted)]" role="status">
+                <div className="border-t border-[var(--hairline)] pt-4">
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="bd text-[12px] text-[var(--ink-6)]" role="status">
                       {modelsLoading
                         ? "Loading compatible models from OpenRouter…"
                         : modelsError
@@ -527,7 +522,7 @@ export function AiProviderSettings({
                       type="button"
                       size="small"
                       variant="secondary"
-                      className="w-full sm:w-auto"
+                      className="w-full flex-none sm:w-auto"
                       busy={modelsLoading}
                       disabled={!selectedDiscoveryInput || saving}
                       onClick={() => {
@@ -536,12 +531,11 @@ export function AiProviderSettings({
                         }
                       }}
                     >
-                      <RefreshCw className="size-4" aria-hidden="true" />
                       {openRouterModels ? "Reload models" : "Load models"}
                     </Button>
                   </div>
                   {modelsError ? (
-                    <div className="mt-2">
+                    <div className="mt-4">
                       <StateNotice title="Model choices unavailable" tone="warning">
                         {modelsError} You can still enter model IDs manually.
                       </StateNotice>
@@ -551,7 +545,7 @@ export function AiProviderSettings({
               ) : null}
             </>
           ) : (
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid gap-6 sm:grid-cols-2">
               <Field label="Vision model ID" htmlFor="ai-vision-model">
                 <input
                   id="ai-vision-model"
@@ -585,7 +579,7 @@ export function AiProviderSettings({
             </div>
           )}
 
-          <p className="text-xs leading-5 text-[var(--muted)]">
+          <p className="bd text-[12px] text-[var(--ink-6)]">
             OpenRouter routes requests to the selected model&apos;s underlying
             provider. An owner may change this household route later; members
             should review the current route before a first photo scan.
@@ -604,12 +598,12 @@ export function AiProviderSettings({
           ) : null}
 
           {settings.canEdit ? (
-            <Button className="w-full" type="submit" busy={saving}>
+            <Button className="self-start" type="submit" busy={saving}>
               Save AI provider
             </Button>
           ) : null}
         </form>
       ) : null}
-    </Card>
+    </div>
   );
 }

@@ -2,75 +2,114 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  ArrowRight,
-  Check,
-  ChefHat,
-  Clock3,
-  HelpCircle,
-  Search,
-  ShoppingBasket,
-  Sparkles,
-  Users,
-  WifiOff,
-} from "lucide-react";
-import type {
-  IngredientEvidenceStatus,
-  RecipeAssessment,
-  RecipeTier,
-} from "@/contracts/domain";
+import { Search } from "lucide-react";
+import type { IngredientEvidenceStatus, RecipeAssessment, RecipeTier } from "@/contracts/domain";
 import type { RecipeSuggestionResponse } from "@/contracts/api";
 import { getRecipeSuggestions } from "@/lib/client/api";
 import { saveRecipeAssessment } from "@/lib/client/recipe-cache";
 import { useOfflineInventory } from "./offline-provider";
-import { Badge, Button, Card, EmptyState, Page, PageHeader, StateNotice } from "./ui";
+import { Button, Page, Section, StateNotice, cn } from "./ui";
 
-const evidenceLabels: Record<IngredientEvidenceStatus, { label: string; tone: "green" | "neutral" | "yellow" | "orange" }> = {
-  present_sufficient: { label: "Have it", tone: "green" },
-  present_quantity_unknown: { label: "Amount unknown", tone: "yellow" },
-  insufficient: { label: "Need more", tone: "orange" },
-  missing: { label: "Missing", tone: "orange" },
-  ambiguous: { label: "Check this", tone: "yellow" },
-  assumed_staple: { label: "Staple", tone: "neutral" },
+const evidenceLabels: Record<IngredientEvidenceStatus, string> = {
+  present_sufficient: "Have it",
+  present_quantity_unknown: "Amount unknown",
+  insufficient: "Need more",
+  missing: "Missing",
+  ambiguous: "Check this",
+  assumed_staple: "Staple",
 };
 
-const tierCopy: Record<RecipeTier, { label: string; description: string; tone: "green" | "yellow" | "orange" | "neutral" }> = {
-  ready: { label: "Ready", description: "All required ingredients are known present in a usable form and amount.", tone: "green" },
-  likely_ready: { label: "Likely ready", description: "Required foods appear present, but one or more amounts are not tracked.", tone: "yellow" },
-  almost_ready: { label: "Almost ready", description: "A small number of required ingredients are missing or insufficient.", tone: "orange" },
-  incompatible: { label: "Not a fit", description: "This recipe conflicts with the request or known preferences.", tone: "neutral" },
+const tierCopy: Record<RecipeTier, { label: string; description: string }> = {
+  ready: {
+    label: "ready",
+    description: "Everything required is known present, in a usable form and amount.",
+  },
+  likely_ready: {
+    label: "likely ready",
+    description: "The foods appear present, but one or more amounts are not tracked.",
+  },
+  almost_ready: {
+    label: "almost ready",
+    description: "A small number of required ingredients are missing or insufficient.",
+  },
+  incompatible: {
+    label: "not a fit",
+    description: "This recipe conflicts with the request or with known preferences.",
+  },
 };
 
-function RecipeCard({ assessment, onOpen }: { assessment: RecipeAssessment; onOpen: () => void }) {
-  const { recipe, tier, evidence, missingCount } = assessment;
+const starters = [
+  "dinner in 30",
+  "use the vegetables",
+  "a filling breakfast",
+  "something to share",
+];
+
+/** The one line that says why this recipe is on the list. */
+function reasonFor(assessment: RecipeAssessment) {
+  const { tier, evidence, missingCount } = assessment;
+  if (tier === "ready") return "Everything it needs is on the shelves.";
+  if (tier === "likely_ready") {
+    const untracked = evidence.find((item) => item.status === "present_quantity_unknown");
+    return untracked
+      ? `All present — the ${untracked.ingredientName.toLowerCase()} amount isn't tracked.`
+      : "All present, though one amount isn't tracked.";
+  }
+  const short = evidence.filter((item) => item.status === "missing" || item.status === "insufficient");
+  if (short.length === 1) return `Short one thing: ${short[0].ingredientName.toLowerCase()}.`;
+  if (short.length > 1)
+    return `Short ${short.length} things: ${short.map((item) => item.ingredientName.toLowerCase()).join(", ")}.`;
+  return `${missingCount} ingredient${missingCount === 1 ? "" : "s"} to sort out.`;
+}
+
+function RecipeRow({
+  assessment,
+  lit,
+  onOpen,
+}: {
+  assessment: RecipeAssessment;
+  lit: boolean;
+  onOpen: () => void;
+}) {
+  const { recipe, tier, evidence } = assessment;
+  const notes = evidence.filter((item) => item.status !== "present_sufficient").slice(0, 3);
+
   return (
-    <Card className="overflow-hidden p-0">
-      <button type="button" className="w-full p-5 text-left" onClick={onOpen} aria-label={`Open ${recipe.title}`}>
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <Badge tone={tierCopy[tier].tone}>{tierCopy[tier].label}</Badge>
-            <h3 className="mt-3 text-xl font-extrabold tracking-[-0.03em]">{recipe.title}</h3>
-          </div>
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[var(--sprout)] text-[var(--leaf)]"><ArrowRight className="size-4" aria-hidden="true" /></span>
-        </div>
-        <p className="mt-2 line-clamp-2 text-sm leading-6 text-[var(--muted)]">{recipe.description}</p>
-        <div className="mt-4 flex flex-wrap gap-3 text-xs font-bold text-[var(--muted)]">
-          <span className="inline-flex items-center gap-1"><Clock3 className="size-4" aria-hidden="true" /> {recipe.totalMinutes} min</span>
-          <span className="inline-flex items-center gap-1"><Users className="size-4" aria-hidden="true" /> {recipe.servings} servings</span>
-          {missingCount > 0 && <span className="inline-flex items-center gap-1 text-[#98442f]"><ShoppingBasket className="size-4" aria-hidden="true" /> {missingCount} missing</span>}
-        </div>
-      </button>
-      <div className="border-t border-[var(--line)] bg-[#fbf8f0] px-5 py-3">
-        <div className="flex flex-wrap gap-1.5">
-          {evidence.filter((item) => item.status !== "present_sufficient").slice(0, 4).map((item) => (
-            <span key={item.ingredientId} className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-[var(--muted)]">
-              {item.ingredientName} · {evidenceLabels[item.status].label}
+    <button
+      type="button"
+      onClick={onOpen}
+      aria-label={`Open ${recipe.title}`}
+      className={cn(
+        "block w-full border-b border-[var(--hairline)] py-4 pr-1 text-left transition last:border-b-0 hover:bg-[var(--ground-hi)]",
+        lit ? "pl-4 shadow-[inset_3px_0_0_-1px_var(--accent-solid)]" : "pl-4",
+      )}
+    >
+      <div className="flex items-baseline justify-between gap-3.5">
+        <span className={cn("nm text-[16px]", tier === "almost_ready" && "text-[var(--ink-3)]")}>
+          {recipe.title}
+        </span>
+        <span
+          className={cn(
+            "m flex-none text-[10.5px]",
+            tier === "almost_ready" ? "text-[var(--ink-6)]" : "text-[var(--ink-4)]",
+          )}
+        >
+          {recipe.totalMinutes} min · {recipe.servings}
+        </span>
+      </div>
+      <p className={cn("bd mt-1.5 text-[12.5px]", tier === "almost_ready" && "text-[var(--ink-6)]")}>
+        {reasonFor(assessment)}
+      </p>
+      {notes.length > 0 && (
+        <p className="m mt-2 flex flex-wrap gap-x-5 gap-y-1 text-[10.5px] text-[var(--ink-6)]">
+          {notes.map((item) => (
+            <span key={item.ingredientId}>
+              {item.ingredientName} · {evidenceLabels[item.status]}
             </span>
           ))}
-          {evidence.every((item) => item.status === "present_sufficient") && <span className="inline-flex items-center gap-1 text-xs font-bold text-[var(--leaf)]"><Check className="size-4" aria-hidden="true" /> Required ingredients accounted for</span>}
-        </div>
-      </div>
-    </Card>
+        </p>
+      )}
+    </button>
   );
 }
 
@@ -89,7 +128,7 @@ export function RecipeSuggestions() {
       return;
     }
     if (!online) {
-      setError("Recipe retrieval needs a connection. Your inventory remains available offline.");
+      setError("Recipe retrieval needs a connection. The kitchen remains available offline.");
       return;
     }
     setPrompt(nextPrompt);
@@ -109,83 +148,153 @@ export function RecipeSuggestions() {
     router.push(`/recipes/${assessment.recipe.slug}`);
   }
 
-  const groups: Array<{ tier: RecipeTier; title: string; assessments: RecipeAssessment[] }> = response
+  const tiers: RecipeTier[] = ["ready", "likely_ready", "almost_ready"];
+  const groups = response
+    ? tiers
+        .map((tier) => ({
+          tier,
+          assessments: response.assessments.filter((item) => item.tier === tier),
+        }))
+        .filter((group) => group.assessments.length > 0)
+    : [];
+
+  const intent = response?.parsedIntent;
+  const understood = intent
     ? [
-        { tier: "ready", title: "Ready", assessments: response.assessments.filter((item) => item.tier === "ready") },
-        { tier: "likely_ready", title: "Likely ready", assessments: response.assessments.filter((item) => item.tier === "likely_ready") },
-        { tier: "almost_ready", title: "Almost ready", assessments: response.assessments.filter((item) => item.tier === "almost_ready") },
-      ]
+        intent.maxMinutes ? `${intent.maxMinutes} min max` : null,
+        intent.servings ? `${intent.servings} servings` : null,
+        ...intent.mealTypes,
+        ...intent.cuisines,
+        ...intent.dietaryTags.map((tag) => `${tag} preference`),
+      ].filter((value): value is string => Boolean(value))
     : [];
 
   return (
-    <Page>
-      <PageHeader eyebrow="From your kitchen" title="What should we cook?" description="Ask in plain English. Foodtopia searches original editorial preview recipes and explains every ingredient match." />
+    <Page className="max-w-[46rem]">
+      <header>
+        <p className="ml">cook</p>
+        <h1 className="hd mt-3 text-[clamp(1.6rem,6vw,1.75rem)]">What sounds good?</h1>
+      </header>
 
-      <Card className="border-0 bg-[var(--leaf)] p-4 text-white sm:p-5">
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            const value = new FormData(event.currentTarget).get("prompt");
-            void searchRecipes(typeof value === "string" ? value : "");
-          }}
-        >
-          <label htmlFor="recipe-prompt" className="mb-2 block text-sm font-bold">What sounds good?</label>
-          <textarea name="prompt" id="recipe-prompt" rows={3} maxLength={500} disabled={!hydrated} className="w-full resize-none rounded-2xl border border-white/16 bg-white/10 px-4 py-3 text-base text-white placeholder:text-white/55 focus:bg-white/14 focus:outline-none disabled:cursor-wait disabled:opacity-60" placeholder="Something cozy, vegetarian, and under 30 minutes" value={prompt} onChange={(event) => setPrompt(event.target.value)} />
-          <div className="mt-3 flex items-center justify-between gap-3">
-            <span className="text-xs text-white/65">{prompt.length}/500</span>
-            <Button type="submit" className="bg-[var(--tomato)] hover:bg-[#ed785f]" disabled={!online || !hydrated} busy={loading}><Search className="size-4" aria-hidden="true" /> Find recipes</Button>
-          </div>
-        </form>
-      </Card>
-
-      {!online && <div className="mt-3"><StateNotice title="Recipes need connectivity" tone="warning"><span className="inline-flex items-center gap-1"><WifiOff className="size-4" aria-hidden="true" /> Previously opened screens remain available, but retrieving and interpreting a new request happens online.</span></StateNotice></div>}
-      {error && <div className="mt-3"><StateNotice title="Couldn’t find recipes" tone="error">{error}</StateNotice></div>}
-
-      {!response && !loading && (
-        <section className="mt-7">
-          <h2 className="mb-3 text-sm font-extrabold">Try a starting point</h2>
-          <div className="flex flex-wrap gap-2">
-            {["Dinner in 30 minutes", "Use the vegetables first", "A filling breakfast", "Something the whole household can share"].map((suggestion) => (
-              <button type="button" key={suggestion} onClick={() => void searchRecipes(suggestion)} disabled={!online || !hydrated} className="min-h-11 rounded-full border border-[var(--line)] bg-white/65 px-4 text-sm font-semibold text-[var(--leaf)] disabled:cursor-wait disabled:opacity-45">{suggestion}</button>
+      {/* The request line: one lit rule, the count in mono. */}
+      <form
+        className="mt-6"
+        onSubmit={(event) => {
+          event.preventDefault();
+          const value = new FormData(event.currentTarget).get("prompt");
+          void searchRecipes(typeof value === "string" ? value : "");
+        }}
+      >
+        <label htmlFor="recipe-prompt" className="sr-only">
+          What sounds good?
+        </label>
+        <div className="flex items-start gap-3 border-b border-[var(--accent-line)] pb-3">
+          <Search className="mt-1.5 size-4 flex-none text-[var(--accent)]" aria-hidden="true" />
+          <textarea
+            name="prompt"
+            id="recipe-prompt"
+            rows={2}
+            maxLength={500}
+            disabled={!hydrated}
+            className="bd w-full resize-none bg-transparent text-[var(--ink)] focus:outline-none disabled:cursor-wait disabled:opacity-60"
+            placeholder="something cozy, vegetarian, under 30 minutes"
+            value={prompt}
+            onChange={(event) => setPrompt(event.target.value)}
+          />
+          <span className="m mt-1.5 flex-none text-[10.5px] text-[var(--ink-6)]">{prompt.length}/500</span>
+        </div>
+        <div className="mt-3.5 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-wrap gap-x-5 gap-y-2">
+            {starters.map((suggestion) => (
+              <button
+                type="button"
+                key={suggestion}
+                onClick={() => void searchRecipes(suggestion)}
+                disabled={!online || !hydrated}
+                className="m min-h-8 text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-45"
+              >
+                {suggestion}
+              </button>
             ))}
           </div>
-          <div className="mt-7">
-            <EmptyState icon={<ChefHat className="size-6" aria-hidden="true" />} title={lots.some((lot) => lot.status === "active") ? "Your inventory is ready to search" : "Add food for better matches"} description={lots.some((lot) => lot.status === "active") ? "Include time, cuisine, meal, servings, or foods you want to use." : "Recipe results can still be browsed, but inventory evidence will be limited until the kitchen has items."} />
-          </div>
-        </section>
+          <Button type="submit" size="small" disabled={!online || !hydrated} busy={loading}>
+            Find recipes
+          </Button>
+        </div>
+      </form>
+
+      {!online && (
+        <div className="mt-6">
+          <StateNotice title="Recipes need connectivity" tone="warning">
+            Previously opened screens stay available, but retrieving and interpreting a new request
+            happens online.
+          </StateNotice>
+        </div>
+      )}
+      {error && (
+        <div className="mt-6">
+          <StateNotice title="No recipes found" tone="error">
+            {error}
+          </StateNotice>
+        </div>
       )}
 
-      {loading && <div className="mt-6 space-y-3" aria-label="Finding recipes"><div className="skeleton h-44 rounded-3xl" /><div className="skeleton h-44 rounded-3xl" /></div>}
+      {!response && !loading && !error && (
+        <p className="bd mt-9 max-w-[30rem] text-[var(--ink-4)]">
+          {lots.some((lot) => lot.status === "active")
+            ? "Include time, cuisine, meal, servings, or the foods you want to use. Every result explains what is present, uncertain, or missing."
+            : "Recipes can still be browsed, but inventory evidence stays limited until the kitchen has items."}
+        </p>
+      )}
+
+      {loading && (
+        <div className="mt-9 space-y-3" aria-label="Finding recipes">
+          <div className="skeleton h-20" />
+          <div className="skeleton h-20" />
+        </div>
+      )}
 
       {response && !loading && (
-        <div className="mt-7">
-          <div className="mb-6 rounded-2xl border border-[var(--line)] bg-white/45 p-4">
-            <p className="flex items-center gap-2 text-sm font-extrabold"><Sparkles className="size-4 text-[var(--tomato)]" aria-hidden="true" /> Understood request</p>
-            <div className="mt-2 flex flex-wrap gap-2 text-xs text-[var(--muted)]">
-              {response.parsedIntent.maxMinutes && <Badge>{response.parsedIntent.maxMinutes} min max</Badge>}
-              {response.parsedIntent.servings && <Badge>{response.parsedIntent.servings} servings</Badge>}
-              {response.parsedIntent.mealTypes.map((item) => <Badge key={item}>{item}</Badge>)}
-              {response.parsedIntent.cuisines.map((item) => <Badge key={item}>{item}</Badge>)}
-              {response.parsedIntent.dietaryTags.map((item) => <Badge key={item}>{item} preference</Badge>)}
-              {!response.parsedIntent.maxMinutes && !response.parsedIntent.servings && !response.parsedIntent.mealTypes.length && !response.parsedIntent.cuisines.length && !response.parsedIntent.dietaryTags.length && <span>No extra filters inferred.</span>}
-            </div>
-          </div>
+        <div className="mt-10 flex flex-col gap-9">
+          <Section label="understood" labelWidth="74px">
+            <p className="m flex flex-wrap gap-x-5 gap-y-1.5 py-3.5 text-[10.5px] text-[var(--ink-4)]">
+              {understood.length ? (
+                understood.map((item) => <span key={item}>{item}</span>)
+              ) : (
+                <span>no extra filters inferred</span>
+              )}
+            </p>
+          </Section>
 
-          {groups.map((group) => group.assessments.length ? (
-            <section key={group.tier} className="mb-8">
-              <div className="mb-3">
-                <h2 className="text-xl font-extrabold tracking-tight">{group.title}</h2>
-                <p className="mt-1 text-xs leading-5 text-[var(--muted)]">{tierCopy[group.tier].description}</p>
-              </div>
-              <div className="space-y-3">{group.assessments.map((assessment) => <RecipeCard key={assessment.recipe.id} assessment={assessment} onOpen={() => openRecipe(assessment)} />)}</div>
-            </section>
-          ) : null)}
+          {groups.map((group) => (
+            <Section
+              key={group.tier}
+              label={tierCopy[group.tier].label}
+              meta={String(group.assessments.length)}
+              labelWidth="74px"
+            >
+              {group.assessments.map((assessment, index) => (
+                <RecipeRow
+                  key={assessment.recipe.id}
+                  assessment={assessment}
+                  lit={group.tier === "ready" && index === 0}
+                  onOpen={() => openRecipe(assessment)}
+                />
+              ))}
+            </Section>
+          ))}
 
-          {!groups.some((group) => group.assessments.length) && <EmptyState icon={<HelpCircle className="size-6" aria-hidden="true" />} title="No feasible recipes this time" description="Try a broader request or update the inventory. Foodtopia won’t invent a recipe to fill the gap." />}
+          {!groups.length && (
+            <p className="bd border-t border-[var(--hairline)] py-8 text-[var(--ink-4)]">
+              No feasible recipes this time. Try a broader request, or update the kitchen — Foodtopia
+              will not invent a recipe to fill the gap.
+            </p>
+          )}
 
-          <StateNotice title="Preferences, not allergy protection" tone="warning">
-            {response.allergyNotice} Always check ingredient labels and prevent cross-contact yourself. Foodtopia does not make allergen-safety claims.
-          </StateNotice>
+          <p className="bd border-t border-[var(--hairline)] pt-4 text-[12px] text-[var(--time)]">
+            {response.allergyNotice} Preferences only rank suggestions. They are not allergy controls —
+            check every package label, ingredient and cross-contact risk yourself.
+          </p>
         </div>
       )}
     </Page>
