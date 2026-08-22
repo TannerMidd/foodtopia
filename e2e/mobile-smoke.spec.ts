@@ -4,23 +4,24 @@ const appUrl = process.env.FOODTOPIA_E2E_URL ?? "";
 
 test("dashboard leads to evidence-based recipe suggestions", async ({ page }) => {
   await page.goto(`${appUrl}/`);
-  await expect(page.getByRole("heading", { name: /What.s in the kitchen/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /things want using this week/ })).toBeVisible();
 
-  await page.getByRole("link", { name: "Recipes", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "What should we cook?" })).toBeVisible();
+  await page.getByRole("link", { name: "cook", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "What sounds good?" })).toBeVisible();
   await page.getByLabel("What sounds good?").fill("A vegetarian dinner in 30 minutes");
   await page.getByRole("button", { name: "Find recipes" }).click();
 
-  await expect(page.getByText("Understood request")).toBeVisible({ timeout: 15_000 });
-  await expect(page.getByText("Preferences, not allergy protection")).toBeVisible();
-  await expect(page.getByText(/Ready|Likely ready|Almost ready/).first()).toBeVisible();
+  await expect(page.getByText("understood", { exact: true })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByText(/not allergy controls/)).toBeVisible();
+  await expect(page.getByText(/^(ready|likely ready|almost ready)$/).first()).toBeVisible();
   await expect(page.getByText(/Have it|Amount unknown|Missing|Need more/).first()).toBeVisible();
 });
 
 test("manual item entry is optimistic and remains visible", async ({ page }) => {
-  await page.goto(`${appUrl}/`);
-  await page.getByRole("link", { name: "Add manually" }).click();
+  await page.goto(`${appUrl}/inventory`);
   await expect(page.locator("#lot-10000000-0000-4000-8000-000000000001").getByRole("heading", { name: "Tomatoes" })).toBeVisible();
+
+  await page.getByRole("button", { name: "add one by hand" }).click();
   await expect(page.getByRole("heading", { name: "Add one item" })).toBeVisible();
 
   const itemName = `Miso ${Date.now()}`;
@@ -43,20 +44,20 @@ test("photo candidates are reviewed and a missed food can be added before confir
     buffer: svg,
   });
   await expect(page.getByAltText("Batch photo 1")).toBeVisible();
-  await page.getByRole("button", { name: "Review 1 photo" }).click();
+  await page.getByRole("button", { name: "Look for food" }).click();
   await expect(page.getByRole("heading", { name: "Review the cloud-processing notice" })).toBeVisible();
   await page.getByRole("button", { name: "I agree & analyze" }).click();
 
-  await expect(page.getByRole("heading", { name: "Review every item" })).toBeVisible({ timeout: 15_000 });
-  await expect(page.getByText("Nothing reaches inventory until you confirm below.")).toBeVisible();
-  await page.getByRole("link", { name: "Home", exact: true }).click();
+  await expect(page.getByRole("heading", { name: /Keep what.s right\./ })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByText("Nothing is saved until you say so.")).toBeVisible();
+  await page.getByRole("link", { name: "today", exact: true }).click();
   await expect(page.getByText("Photo review waiting").first()).toBeVisible();
   await page.getByText("Photo review waiting").first().click();
-  await expect(page.getByRole("heading", { name: "Review every item" })).toBeVisible();
-  await page.getByRole("button", { name: "Add a missed food" }).click();
+  await expect(page.getByRole("heading", { name: /Keep what.s right\./ })).toBeVisible();
+  await page.getByRole("button", { name: "Something the photo missed…" }).click();
   const missedName = `Cilantro ${Date.now()}`;
   await page.getByLabel("Food name").last().fill(missedName);
-  await page.getByRole("button", { name: /Confirm \d+ items?/ }).click();
+  await page.getByRole("button", { name: /^Save \w+ items?$/ }).click();
 
   await expect(page).toHaveURL(/\/inventory/);
   await expect(page.getByText(missedName, { exact: true })).toBeVisible();
@@ -95,12 +96,12 @@ test("a queue-delivery failure resumes the same uploaded analysis", async ({ pag
       '<svg xmlns="http://www.w3.org/2000/svg" width="240" height="180"><rect width="240" height="180" fill="#4f8b62"/></svg>',
     ),
   });
-  await page.getByRole("button", { name: "Review 1 photo" }).click();
+  await page.getByRole("button", { name: "Look for food" }).click();
   await page.getByRole("button", { name: "I agree & analyze" }).click();
 
   await expect(page.getByText("Private upload ready to resume")).toBeVisible();
   await page.getByRole("button", { name: "Retry this analysis" }).click();
-  await expect(page.getByRole("heading", { name: "Review every item" })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole("heading", { name: /Keep what.s right\./ })).toBeVisible({ timeout: 15_000 });
   expect(createRequests).toBe(1);
   expect(completeRequests).toBe(2);
 });
@@ -117,21 +118,19 @@ test("cooking reconciliation can be undone through inventory events", async ({ p
   });
   await expect(recipe).toBeVisible({ timeout: 15_000 });
   await recipe.click();
-  await expect(
-    page.getByRole("heading", { name: "Spinach Tomato Scrambled Eggs" }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Start cooking" }).click();
+  await expect(page.getByText("spinach tomato scrambled eggs", { exact: false })).toBeVisible();
+  await page.getByRole("button", { name: "Cook this" }).click();
 
-  await expect(page.getByText("Cooking now")).toBeVisible();
-  await page.getByRole("button", { name: "Finish & update ingredients" }).click();
+  await expect(page.getByText(/cooking · step/)).toBeVisible();
+  await page.getByRole("button", { name: "Done cooking" }).click();
   const eggChoice = page.getByRole("radiogroup", {
     name: "Amount of eggs used from Eggs",
   }).first();
-  await eggChoice.getByRole("radio", { name: "Used up" }).click();
-  await page.getByRole("button", { name: "Save kitchen" }).click();
+  await eggChoice.getByRole("radio", { name: "used up" }).click();
+  await page.getByRole("button", { name: "Update the kitchen" }).click();
 
   await expect(page.getByRole("heading", { name: "Kitchen updated" })).toBeVisible();
-  await page.getByRole("button", { name: "Undo inventory changes" }).click();
+  await page.getByRole("button", { name: "undo inventory changes" }).click();
   await expect(
     page.getByRole("heading", { name: "Kitchen changes undone" }),
   ).toBeVisible();

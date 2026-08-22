@@ -1,103 +1,265 @@
 @import "tailwindcss";
 
-:root {
-  --paper: #f7f3e9;
-  --paper-deep: #eee8da;
-  --card: #fffdf8;
-  --ink: #17382b;
-  --muted: #66756d;
-  --line: #ded9cb;
-  --leaf: #235943;
-  --leaf-bright: #36755b;
-  --sprout: #dce9ce;
-  --tomato: #e6674e;
-  --tomato-soft: #f7ddd5;
-  --sun: #f2c75c;
-  --shadow: 0 12px 36px rgba(42, 54, 44, 0.08);
-}
+/*
+ * Foodtopia — "a quieter kitchen ledger".
+ *
+ * Warm charcoal instead of blue-black. Labels live in a wide left margin, so
+ * every line of the app is one fact: a reading serif with its numbers in mono.
+ * No cards and no boxed panels — shelves are separated by a single hairline.
+ * The accent behaves like light rather than paint, and one soft glow marks the
+ * only action that matters on each screen.
+ *
+ * The shared classes below live in the `components` layer so ordinary Tailwind
+ * utilities still win against them — `.row min-h-0` has to mean what it says.
+ */
 
 @theme inline {
-  --color-background: var(--paper);
+  --color-background: var(--page);
   --color-foreground: var(--ink);
-  --font-sans: var(--font-sans);
+  --font-serif: var(--font-newsreader), Newsreader, Georgia, serif;
+  --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
 }
 
-* {
-  box-sizing: border-box;
+@layer base {
+  :root {
+    /* Ground */
+    --page: #100f0e;
+    --ground: #181715;
+    --ground-hi: #1d1c19;
+    --ground-tint: #211f1c;
+
+    /* Edges */
+    --hairline: #232220;
+    --edge: #2b2a26;
+    --edge-strong: #383630;
+
+    /* Ink, brightest to faintest */
+    --ink: #eceae5;
+    --ink-2: #c9c3b9;
+    --ink-3: #a49e94;
+    --ink-4: #8f8a80;
+    --ink-5: #7c776d;
+    --ink-6: #6d6960;
+
+    /* Accent behaves like light, never paint */
+    --accent: #5b7fb8;
+    --accent-ink: #dfe6f2;
+    --accent-on: #0f1319;
+
+    /* Printed dates and anything time-bound */
+    --time: #c99a5b;
+
+    /* Derived accent washes, so every surface mixes it the same way */
+    --accent-line: color-mix(in oklab, var(--accent) 55%, transparent);
+    --accent-wash: color-mix(in oklab, var(--accent) 20%, transparent);
+    --accent-halo: color-mix(in oklab, var(--accent) 7%, transparent);
+    --accent-solid: color-mix(in oklab, var(--accent) 60%, transparent);
+    --accent-rule: color-mix(in oklab, var(--accent) 75%, transparent);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    min-height: 100%;
+    background: var(--page);
+    color: var(--ink);
+    color-scheme: dark;
+    text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    min-height: 100dvh;
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: var(--font-newsreader), Newsreader, Georgia, serif;
+    font-weight: 300;
+    font-synthesis-weight: none;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  button,
+  a,
+  input[type="checkbox"],
+  input[type="radio"] {
+    touch-action: manipulation;
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--accent) 40%, transparent);
+    color: var(--ink);
+  }
+
+  ::placeholder {
+    color: var(--ink-6);
+    font-style: italic;
+  }
 }
 
-html {
-  min-height: 100%;
-  background: var(--paper);
-  color: var(--ink);
-  text-rendering: optimizeLegibility;
-  -webkit-tap-highlight-color: transparent;
-}
+@layer components {
+  /* -------------------------------------------------------------- type --- */
 
-body {
-  min-height: 100dvh;
-  margin: 0;
-  background:
-    radial-gradient(circle at 85% -8%, rgba(220, 233, 206, 0.8), transparent 24rem),
-    var(--paper);
-  color: var(--ink);
-  font-family: "Avenir Next", Avenir, "Segoe UI", system-ui, -apple-system, sans-serif;
-}
+  /* Mono label. Lives in the left margin and never inside the content. */
+  .ml {
+    margin: 0;
+    font-family: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 10.5px;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: lowercase;
+    color: var(--ink-6);
+  }
 
-button,
-input,
-textarea,
-select {
-  font: inherit;
-}
+  /* Mono: numbers, amounts, and any machine-recorded fact. */
+  .m {
+    font-family: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
+    font-weight: 400;
+  }
 
-button,
-a,
-input[type="checkbox"],
-input[type="radio"] {
-  touch-action: manipulation;
-}
+  /* The name of a thing. */
+  .nm {
+    font-size: 15px;
+    font-weight: 300;
+    letter-spacing: 0.005em;
+  }
 
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-textarea:focus-visible,
-select:focus-visible,
-[tabindex]:focus-visible {
-  outline: 3px solid rgba(230, 103, 78, 0.42);
-  outline-offset: 3px;
-}
+  /* Running prose. */
+  .bd {
+    font-size: 13.5px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--ink-3);
+  }
 
-::selection {
-  background: var(--sprout);
-  color: var(--ink);
-}
+  .hd {
+    margin: 0;
+    font-weight: 200;
+    letter-spacing: -0.015em;
+    line-height: 1.15;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
 
-.safe-top {
-  padding-top: max(0.75rem, env(safe-area-inset-top));
-}
+  /* ---------------------------------------------------------- surfaces --- */
 
-.safe-bottom {
-  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
-}
+  /* A frame, used only where the design shows a device or standalone panel. */
+  .frame {
+    border: 1px solid var(--edge);
+    border-radius: 4px;
+    overflow: hidden;
+    background:
+      radial-gradient(760px 340px at 14% -12%, color-mix(in oklab, var(--accent) 9%, transparent), transparent 72%),
+      var(--ground);
+  }
 
-.page-enter {
-  animation: page-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
+  /* ------------------------------------------------------------ ledger --- */
 
-.skeleton {
-  position: relative;
-  overflow: hidden;
-  background: #ebe6da;
-}
+  /*
+   * The signature layout: a hairline above the group, one hairline under every
+   * row, and none under the last. Rows are facts, not cards.
+   */
+  .ledger {
+    border-top: 1px solid var(--hairline);
+  }
 
-.skeleton::after {
-  position: absolute;
-  inset: 0;
-  content: "";
-  transform: translateX(-100%);
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.62), transparent);
-  animation: shimmer 1.35s infinite;
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 52px;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .ledger > .row:last-child,
+  .row:last-child {
+    border-bottom: none;
+  }
+
+  .row-link {
+    transition: background-color 140ms ease;
+  }
+
+  .row-link:hover {
+    background: var(--ground-hi);
+  }
+
+  /* ------------------------------------------------------------ action --- */
+
+  /*
+   * The one action that matters on a screen. Accent as light: a thin lit edge,
+   * a low wash, and a soft halo bleeding past the border.
+   */
+  .glow {
+    border: 1px solid var(--accent-line);
+    background: var(--accent-wash);
+    box-shadow: 0 0 0 5px var(--accent-halo);
+    color: var(--ink);
+  }
+
+  .glow:hover:not(:disabled) {
+    background: color-mix(in oklab, var(--accent) 28%, transparent);
+    box-shadow: 0 0 0 6px color-mix(in oklab, var(--accent) 10%, transparent);
+  }
+
+  .glow:disabled {
+    box-shadow: none;
+  }
+
+  /* The lit mark: nav dots, the wordmark, anything that reads as a small lamp. */
+  .lamp {
+    background: var(--accent);
+    box-shadow: 0 0 12px 2px color-mix(in oklab, var(--accent) 45%, transparent);
+  }
+
+  /* ------------------------------------------------------------ motion --- */
+
+  .safe-top {
+    padding-top: max(0.75rem, env(safe-area-inset-top));
+  }
+
+  .safe-bottom {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+
+  .page-enter {
+    animation: page-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background: var(--ground-hi);
+  }
+
+  .skeleton::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgba(236, 234, 229, 0.05), transparent);
+    animation: shimmer 1.35s infinite;
+  }
 }
 
 @keyframes page-enter {

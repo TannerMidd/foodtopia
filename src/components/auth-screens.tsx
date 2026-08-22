@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState, type FormEvent } from "react";
-import { ArrowRight, CheckCircle2, LoaderCircle, LockKeyhole, Mail, Users } from "lucide-react";
+import { ArrowRight, LoaderCircle, Mail } from "lucide-react";
 import { ApiClientError, acceptHouseholdInvite, bootstrapHousehold } from "@/lib/client/api";
 import {
   clearFoodtopiaCaches,
@@ -12,15 +12,19 @@ import {
 } from "@/lib/client/auth";
 import { normalizeInternalPath } from "@/lib/internal-path";
 import { useOfflineInventory } from "./offline-provider";
-import { Button, Card, Field, inputClass, StateNotice } from "./ui";
+import { Button, Field, StateNotice, inputClass } from "./ui";
 
+/*
+ * The sign-in surface is the one place the app shows a frame: a single quiet
+ * sheet, centred, with the lit mark at the top.
+ */
 function AuthFrame({ children }: { children: React.ReactNode }) {
   return (
-    <main className="safe-top safe-bottom mx-auto flex min-h-dvh w-full max-w-lg items-center px-4 py-8 sm:px-6">
+    <main className="safe-top safe-bottom mx-auto flex min-h-dvh w-full max-w-[26rem] items-center px-6 py-10">
       <div className="w-full">
-        <Link href="/" className="mx-auto mb-8 flex w-max items-center gap-2 rounded-full" aria-label="Foodtopia home">
-          <span className="flex size-11 items-center justify-center rounded-2xl bg-[var(--leaf)] text-xl font-black text-white">F</span>
-          <span className="text-xl font-extrabold tracking-[-0.04em]">foodtopia</span>
+        <Link href="/" className="inline-flex items-center gap-2.5" aria-label="Foodtopia home">
+          <span className="lamp size-[7px] rounded-[1px]" aria-hidden="true" />
+          <span className="text-[16px] font-light">foodtopia</span>
         </Link>
         {children}
       </div>
@@ -50,24 +54,70 @@ function MagicLinkForm({ nextPath = "/", invitation = false }: { nextPath?: stri
 
   if (state === "sent") {
     return (
-      <div className="text-center" role="status">
-        <span className="mx-auto mb-5 flex size-16 items-center justify-center rounded-3xl bg-[var(--sprout)] text-[var(--leaf)]"><CheckCircle2 className="size-7" aria-hidden="true" /></span>
-        <h2 className="text-2xl font-extrabold tracking-tight">Check your email</h2>
-        <p className="mt-2 text-sm leading-6 text-[var(--muted)]">If this address has private-beta access, a one-time sign-in link is on its way. The link expires, so open it on this device soon.</p>
-        <Button variant="ghost" className="mt-5" onClick={() => setState("idle")}>Use another email</Button>
+      <div role="status">
+        <p className="ml">check your email</p>
+        <h2 className="hd mt-3 text-[22px]">A link is on its way.</h2>
+        <p className="bd mt-2.5">
+          If this address has private-beta access, a one-time sign-in link has been sent. It expires,
+          so open it on this device soon.
+        </p>
+        <button
+          type="button"
+          className="m mt-6 min-h-9 text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+          onClick={() => setState("idle")}
+        >
+          use another email
+        </button>
       </div>
     );
   }
 
   return (
     <form onSubmit={(event) => void submit(event)}>
-      <Field label="Email address" htmlFor="auth-email" hint="No password needed. Access is limited to invited beta households.">
-        <div className="relative"><Mail className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[var(--muted)]" aria-hidden="true" /><input id="auth-email" name="email" type="email" autoComplete="email" required className={`${inputClass} pl-11`} placeholder="you@example.com" value={email} onChange={(event) => setEmail(event.target.value)} /></div>
-      </Field>
-      {state === "error" && <div className="mt-3"><StateNotice title="Sign-in email not sent" tone="error">We couldn’t send a link right now. Check the address and try again later.</StateNotice></div>}
-      {state === "demo" && <div className="mt-3"><StateNotice title="Email is off in this demo" tone="warning">This build does not have an email provider connected. You can still explore the demo household on this device.</StateNotice></div>}
-      <Button type="submit" className="mt-5 w-full" busy={busy}>{invitation ? "Continue with email" : "Email me a sign-in link"}<ArrowRight className="size-4" aria-hidden="true" /></Button>
-      {state === "demo" && <Link href="/" className="mt-3 flex min-h-12 items-center justify-center rounded-full border border-[var(--line)] bg-white font-bold text-[var(--leaf)]">Explore demo household</Link>}
+      <label htmlFor="auth-email" className="ml block">
+        Email
+      </label>
+      <div className="mt-2.5 flex items-center gap-3 border-b border-[var(--edge-strong)] pb-3 focus-within:border-[var(--accent)]">
+        <Mail className="size-4 flex-none text-[var(--ink-6)]" aria-hidden="true" />
+        <input
+          id="auth-email"
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
+          className="bd min-h-8 w-full bg-transparent text-[var(--ink)] focus:outline-none"
+          placeholder="you@example.com"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+        />
+      </div>
+      {state === "error" && (
+        <div className="mt-5">
+          <StateNotice title="Sign-in email not sent" tone="error">
+            A link could not be sent right now. Check the address and try again later.
+          </StateNotice>
+        </div>
+      )}
+      {state === "demo" && (
+        <div className="mt-5">
+          <StateNotice title="Email is off in this demo" tone="warning">
+            This build has no email provider connected. You can still explore the demo household on
+            this device.
+          </StateNotice>
+        </div>
+      )}
+      <Button type="submit" className="mt-6 w-full" busy={busy}>
+        {invitation ? "Continue with email" : "Send a sign-in link"}
+        <ArrowRight className="size-4 text-[var(--accent-ink)]" aria-hidden="true" />
+      </Button>
+      {state === "demo" && (
+        <Link
+          href="/"
+          className="m mt-5 flex min-h-9 items-center justify-center text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+        >
+          explore the demo household
+        </Link>
+      )}
     </form>
   );
 }
@@ -116,7 +166,7 @@ function AdminPasswordForm({ nextPath }: { nextPath: string }) {
           onChange={(event) => setUsername(event.target.value)}
         />
       </Field>
-      <div className="mt-4">
+      <div className="mt-6">
         <Field label="Password" htmlFor="admin-password">
           <input
             id="admin-password"
@@ -133,15 +183,15 @@ function AdminPasswordForm({ nextPath }: { nextPath: string }) {
         </Field>
       </div>
       {failed ? (
-        <div className="mt-3">
+        <div className="mt-5">
           <StateNotice title="Admin sign-in failed" tone="error">
             Invalid username or password.
           </StateNotice>
         </div>
       ) : null}
-      <Button type="submit" className="mt-5 w-full" busy={busy}>
+      <Button type="submit" className="mt-6 w-full" busy={busy}>
         Sign in as admin
-        <ArrowRight className="size-4" aria-hidden="true" />
+        <ArrowRight className="size-4 text-[var(--accent-ink)]" aria-hidden="true" />
       </Button>
     </form>
   );
@@ -161,8 +211,13 @@ export function SignInScreen({
   return (
     <AuthFrame>
       {householdDeletion ? (
-        <div className="mb-4">
-          <StateNotice title={householdDeletion === "pending" ? "Household deletion scheduled" : "Household deleted"} tone="success">
+        <div className="mt-10">
+          <StateNotice
+            title={
+              householdDeletion === "pending" ? "Household deletion scheduled" : "Household deleted"
+            }
+            tone="success"
+          >
             {householdDeletion === "pending"
               ? "Access is quarantined now. Private data will be permanently removed after outstanding upload links expire."
               : "The household and its private application data were removed."}
@@ -170,36 +225,42 @@ export function SignInScreen({
         </div>
       ) : null}
       {authError ? (
-        <div className="mb-4">
+        <div className="mt-10">
           <StateNotice title="That sign-in link could not be completed" tone="error">
             Request a fresh link below. Your invitation and offline household data are unchanged.
           </StateNotice>
         </div>
       ) : null}
+
       {adminLoginEnabled ? (
-        <Card className="mb-4 p-6 sm:p-8">
-          <div className="mb-6 text-center">
-            <span className="mx-auto mb-5 flex size-14 items-center justify-center rounded-2xl bg-[var(--sprout)] text-[var(--leaf)]">
-              <LockKeyhole className="size-6" aria-hidden="true" />
-            </span>
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--leaf)]">
-              Testing access
-            </p>
-            <h1 className="mt-2 text-3xl font-extrabold tracking-[-0.045em]">
-              Administrator sign-in
-            </h1>
-            <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-              Use the configured administrator username and password.
-            </p>
+        <section className="mt-12 border-b border-[var(--hairline)] pb-10">
+          <p className="ml">testing access</p>
+          <h1 className="hd mt-3 text-[22px]">Administrator sign-in</h1>
+          <p className="bd mt-2.5">Use the configured administrator username and password.</p>
+          <div className="mt-7">
+            <AdminPasswordForm nextPath={nextPath} />
           </div>
-          <AdminPasswordForm nextPath={nextPath} />
-        </Card>
+        </section>
       ) : null}
-      <Card className="p-6 sm:p-8">
-        <div className="mb-6 text-center"><span className="mx-auto mb-5 flex size-14 items-center justify-center rounded-2xl bg-[var(--tomato-soft)] text-[var(--tomato)]"><LockKeyhole className="size-6" aria-hidden="true" /></span><p className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--tomato)]">Private beta</p><h1 className="mt-2 text-3xl font-extrabold tracking-[-0.045em]">Welcome back</h1><p className="mt-2 text-sm leading-6 text-[var(--muted)]">Use the email that was invited to your household.</p></div>
-        <MagicLinkForm nextPath={nextPath} />
-      </Card>
-      <p className="mt-5 text-center text-xs leading-5 text-[var(--muted)]">By continuing, you agree to keep household photos and inventory private and acknowledge the <Link className="font-bold underline underline-offset-2" href="/privacy">beta privacy notice</Link>. Foodtopia is currently US English only.</p>
+
+      <section className={adminLoginEnabled ? "mt-10" : "mt-12"}>
+        <p className="ml">private beta</p>
+        <h1 className="hd mt-3 text-[26px]">Welcome back.</h1>
+        <p className="bd mt-2.5">
+          Use the address that was invited to your household. There&rsquo;s no password to remember.
+        </p>
+        <div className="mt-8">
+          <MagicLinkForm nextPath={nextPath} />
+        </div>
+      </section>
+
+      <p className="bd mt-8 text-[12px] text-[var(--ink-6)]">
+        Continuing means keeping household photos and inventory private, and acknowledging the{" "}
+        <Link className="border-b border-[var(--edge-strong)] text-[var(--ink-3)]" href="/privacy">
+          beta privacy notice
+        </Link>
+        . US English for now.
+      </p>
     </AuthFrame>
   );
 }
@@ -229,17 +290,37 @@ export function InviteScreen({ token }: { token: string }) {
       }
     }
     void acceptIfSignedIn();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [clear, token]);
 
   return (
     <AuthFrame>
-      <Card className="p-6 sm:p-8">
-        <div className="mb-6 text-center"><span className="mx-auto mb-5 flex size-14 items-center justify-center rounded-2xl bg-[var(--sprout)] text-[var(--leaf)]"><Users className="size-6" aria-hidden="true" /></span><p className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--tomato)]">Household invite</p><h1 className="mt-2 text-3xl font-extrabold tracking-[-0.045em]">Join the shared kitchen</h1><p className="mt-2 text-sm leading-6 text-[var(--muted)]">Enter the invited email. Membership is checked after the one-time sign-in link opens.</p></div>
-        {state === "sign_in" && <MagicLinkForm invitation nextPath={`/invite/${encodeURIComponent(token)}`} />}
-        {(state === "checking" || state === "accepting") && <div className="text-center" role="status"><LoaderCircle className="mx-auto size-8 animate-spin text-[var(--leaf)]" aria-hidden="true" /><p className="mt-3 text-sm text-[var(--muted)]">{state === "checking" ? "Checking your sign-in..." : "Joining the household..."}</p></div>}
-        {state === "error" && <StateNotice title="This invitation could not be accepted" tone="error">It may be expired, already used by another account, or intended for a different email. Ask the household owner for a new invitation.</StateNotice>}
-      </Card>
+      <section className="mt-12">
+        <p className="ml">household invite</p>
+        <h1 className="hd mt-3 text-[26px]">Join the shared kitchen.</h1>
+        <p className="bd mt-2.5">
+          Enter the invited email. Membership is checked after the one-time sign-in link opens.
+        </p>
+        <div className="mt-8">
+          {state === "sign_in" && (
+            <MagicLinkForm invitation nextPath={`/invite/${encodeURIComponent(token)}`} />
+          )}
+          {(state === "checking" || state === "accepting") && (
+            <p className="m flex items-center gap-3 text-[11px] text-[var(--ink-4)]" role="status">
+              <LoaderCircle className="size-4 animate-spin text-[var(--accent)]" aria-hidden="true" />
+              {state === "checking" ? "checking your sign-in…" : "joining the household…"}
+            </p>
+          )}
+          {state === "error" && (
+            <StateNotice title="This invitation could not be accepted" tone="error">
+              It may be expired, already used by another account, or intended for a different email.
+              Ask the household owner for a new invitation.
+            </StateNotice>
+          )}
+        </div>
+      </section>
     </AuthFrame>
   );
 }
@@ -253,10 +334,16 @@ export function OnboardingScreen({ token }: { token: string }) {
 
   useEffect(() => {
     let cancelled = false;
-    void getAuthenticatedUser().then((auth) => {
-      if (!cancelled) setAuthState(auth.demo || !auth.user ? "sign_in" : "ready");
-    }).catch(() => { if (!cancelled) setAuthState("sign_in"); });
-    return () => { cancelled = true; };
+    void getAuthenticatedUser()
+      .then((auth) => {
+        if (!cancelled) setAuthState(auth.demo || !auth.user ? "sign_in" : "ready");
+      })
+      .catch(() => {
+        if (!cancelled) setAuthState("sign_in");
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   async function createHousehold(event: FormEvent) {
@@ -275,12 +362,55 @@ export function OnboardingScreen({ token }: { token: string }) {
 
   return (
     <AuthFrame>
-      <Card className="p-6 sm:p-8">
-        <div className="mb-6 text-center"><span className="mx-auto mb-5 flex size-14 items-center justify-center rounded-2xl bg-[var(--sprout)] text-[var(--leaf)]"><Users className="size-6" aria-hidden="true" /></span><p className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--tomato)]">Private-beta invitation</p><h1 className="mt-2 text-3xl font-extrabold tracking-[-0.045em]">Create your shared kitchen</h1><p className="mt-2 text-sm leading-6 text-[var(--muted)]">Sign in with the invited email, then choose the household name everyone will see.</p></div>
-        {authState === "checking" && <div className="text-center" role="status"><LoaderCircle className="mx-auto size-8 animate-spin text-[var(--leaf)]" aria-hidden="true" /><p className="mt-3 text-sm text-[var(--muted)]">Checking your invitation...</p></div>}
-        {authState === "sign_in" && <MagicLinkForm invitation nextPath={`/onboarding/${encodeURIComponent(token)}`} />}
-        {authState === "ready" && <form onSubmit={(event) => void createHousehold(event)}><Field label="Household name" htmlFor="household-name" hint="For example, Maple Street or The Parkers"><input id="household-name" required minLength={2} maxLength={80} className={inputClass} value={name} onChange={(event) => setName(event.target.value)} /></Field>{error && <div className="mt-3"><StateNotice title="Household not created" tone="error">The invitation may be expired, used, or meant for another email. Ask the beta coordinator for a new link.</StateNotice></div>}<Button type="submit" className="mt-5 w-full" busy={busy}>Create household<ArrowRight className="size-4" aria-hidden="true" /></Button></form>}
-      </Card>
+      <section className="mt-12">
+        <p className="ml">private-beta invitation</p>
+        <h1 className="hd mt-3 text-[26px]">Create your shared kitchen.</h1>
+        <p className="bd mt-2.5">
+          Sign in with the invited email, then choose the household name everyone will see.
+        </p>
+        <div className="mt-8">
+          {authState === "checking" && (
+            <p className="m flex items-center gap-3 text-[11px] text-[var(--ink-4)]" role="status">
+              <LoaderCircle className="size-4 animate-spin text-[var(--accent)]" aria-hidden="true" />
+              checking your invitation…
+            </p>
+          )}
+          {authState === "sign_in" && (
+            <MagicLinkForm invitation nextPath={`/onboarding/${encodeURIComponent(token)}`} />
+          )}
+          {authState === "ready" && (
+            <form onSubmit={(event) => void createHousehold(event)}>
+              <Field
+                label="Household name"
+                htmlFor="household-name"
+                hint="For example, Maple Street or The Parkers"
+              >
+                <input
+                  id="household-name"
+                  required
+                  minLength={2}
+                  maxLength={80}
+                  className={inputClass}
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                />
+              </Field>
+              {error && (
+                <div className="mt-5">
+                  <StateNotice title="Household not created" tone="error">
+                    The invitation may be expired, used, or meant for another email. Ask the beta
+                    coordinator for a new link.
+                  </StateNotice>
+                </div>
+              )}
+              <Button type="submit" className="mt-6 w-full" busy={busy}>
+                Create household
+                <ArrowRight className="size-4 text-[var(--accent-ink)]" aria-hidden="true" />
+              </Button>
+            </form>
+          )}
+        </div>
+      </section>
     </AuthFrame>
   );
 }
@@ -306,11 +436,14 @@ export function AuthCompletion({ nextPath }: { nextPath: string }) {
 
   return (
     <AuthFrame>
-      <Card className="p-8 text-center">
-        <LoaderCircle className="mx-auto size-9 animate-spin text-[var(--leaf)]" aria-hidden="true" />
-        <h1 className="mt-5 text-2xl font-extrabold">Opening your kitchen</h1>
-        <p className="mt-2 text-sm text-[var(--muted)]">Preparing a clean offline store for this account.</p>
-      </Card>
+      <section className="mt-12" role="status">
+        <p className="ml">signing in</p>
+        <h1 className="hd mt-3 flex items-center gap-3 text-[26px]">
+          <LoaderCircle className="size-5 animate-spin text-[var(--accent)]" aria-hidden="true" />
+          Opening your kitchen
+        </h1>
+        <p className="bd mt-2.5">Preparing a clean offline store for this account.</p>
+      </section>
     </AuthFrame>
   );
 }

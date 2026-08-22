@@ -1,7 +1,7 @@
 "use client";
 
 import type { ButtonHTMLAttributes, ReactNode } from "react";
-import { AlertCircle, LoaderCircle } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 
 export function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -13,6 +13,10 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   busy?: boolean;
 };
 
+/*
+ * Primary is the only lit control on a screen — accent as light, not paint.
+ * Everything else steps back to a hairline or to bare mono text.
+ */
 export function Button({
   className,
   variant = "primary",
@@ -23,21 +27,21 @@ export function Button({
   ...props
 }: ButtonProps) {
   const variants = {
-    primary: "bg-[var(--leaf)] text-white hover:bg-[var(--leaf-bright)] shadow-sm",
+    primary: "glow",
     secondary:
-      "border border-[var(--line)] bg-[var(--card)] text-[var(--ink)] hover:border-[var(--leaf)]",
-    ghost: "bg-transparent text-[var(--leaf)] hover:bg-[var(--sprout)]",
-    danger: "bg-[var(--tomato-soft)] text-[#9b3f2c] hover:bg-[#f2cfc5]",
+      "border border-[var(--edge-strong)] text-[var(--ink-2)] hover:border-[var(--ink-5)] hover:text-[var(--ink)]",
+    ghost: "text-[var(--ink-4)] hover:text-[var(--ink)]",
+    danger: "text-[var(--ink-3)] hover:text-[var(--time)]",
   };
   const sizes = {
-    default: "min-h-12 rounded-full px-5 py-2.5",
-    small: "min-h-11 rounded-full px-4 py-2 text-sm",
-    icon: "size-11 shrink-0 rounded-full",
+    default: "min-h-11 rounded-[3px] px-[18px] text-[15px]",
+    small: "min-h-11 rounded-[3px] px-4 text-[13.5px]",
+    icon: "size-11 shrink-0 rounded-[3px]",
   };
   return (
     <button
       className={cn(
-        "inline-flex items-center justify-center gap-2 font-semibold transition disabled:cursor-not-allowed disabled:opacity-45",
+        "inline-flex items-center justify-center gap-2.5 font-light transition disabled:cursor-not-allowed disabled:opacity-40",
         variants[variant],
         sizes[size],
         className,
@@ -53,7 +57,7 @@ export function Button({
 
 export function Page({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <main className={cn("page-enter mx-auto w-full max-w-3xl px-4 pb-8 pt-5 sm:px-6 sm:pt-7", className)}>
+    <main className={cn("page-enter mx-auto w-full max-w-[60rem] px-5 pb-10 pt-7 sm:px-8 md:pt-9", className)}>
       {children}
     </main>
   );
@@ -71,32 +75,54 @@ export function PageHeader({
   action?: ReactNode;
 }) {
   return (
-    <header className="mb-6 flex items-start justify-between gap-4">
+    <header className="mb-9 flex items-end justify-between gap-6">
       <div className="min-w-0">
-        {eyebrow && (
-          <p className="mb-1 text-xs font-bold uppercase tracking-[0.16em] text-[var(--tomato)]">{eyebrow}</p>
-        )}
-        <h1 className="text-[clamp(1.8rem,7vw,2.55rem)] font-extrabold leading-[1.04] tracking-[-0.045em] text-[var(--ink)]">
-          {title}
-        </h1>
-        {description && <p className="mt-2 max-w-xl text-sm leading-6 text-[var(--muted)]">{description}</p>}
+        {eyebrow && <p className="ml">{eyebrow}</p>}
+        <h1 className="hd mt-3 text-[clamp(1.6rem,6vw,1.9rem)]">{title}</h1>
+        {description && <p className="bd mt-2.5 max-w-[34rem]">{description}</p>}
       </div>
       {action && <div className="shrink-0">{action}</div>}
     </header>
   );
 }
 
-export function Card({ children, className }: { children: ReactNode; className?: string }) {
+/*
+ * The signature layout. The label sits in a wide left margin — outside the
+ * content — so each row below the rule reads as exactly one fact.
+ */
+export function Section({
+  label,
+  meta,
+  children,
+  className,
+  labelWidth = "92px",
+  id,
+}: {
+  label: string;
+  meta?: ReactNode;
+  children: ReactNode;
+  className?: string;
+  labelWidth?: string;
+  id?: string;
+}) {
   return (
-    <section
-      className={cn(
-        "rounded-[1.65rem] border border-[color:var(--line)] bg-[var(--card)] p-5 shadow-[var(--shadow)]",
-        className,
-      )}
-    >
-      {children}
+    <section id={id} className={cn("flex flex-col gap-3 sm:flex-row sm:gap-7", className)}>
+      <div className="flex-none pt-0 sm:pt-4" style={{ width: labelWidth }}>
+        <p className="ml">{label}</p>
+        {meta && <p className="m mt-1.5 text-[10.5px] text-[var(--ink-6)]">{meta}</p>}
+      </div>
+      <div className="ledger min-w-0 flex-1">{children}</div>
     </section>
   );
+}
+
+/*
+ * A standalone panel — used only where the design shows a self-contained
+ * surface (a sign-in sheet, a modal, a conflict to resolve), never as a card
+ * around ordinary content.
+ */
+export function Card({ children, className }: { children: ReactNode; className?: string }) {
+  return <section className={cn("frame p-6", className)}>{children}</section>;
 }
 
 export function Badge({
@@ -109,16 +135,14 @@ export function Badge({
   className?: string;
 }) {
   const tones = {
-    neutral: "bg-[#eeeae0] text-[#59675f]",
-    green: "bg-[var(--sprout)] text-[#24533f]",
-    orange: "bg-[#f8e1d6] text-[#98442f]",
-    red: "bg-[#f8d9d3] text-[#963928]",
-    yellow: "bg-[#f7edc8] text-[#725b13]",
+    neutral: "text-[var(--ink-6)]",
+    green: "text-[var(--ink-2)]",
+    orange: "text-[var(--time)]",
+    red: "text-[var(--time)]",
+    yellow: "text-[var(--time)]",
   };
   return (
-    <span className={cn("inline-flex min-h-7 items-center rounded-full px-2.5 py-1 text-xs font-bold", tones[tone], className)}>
-      {children}
-    </span>
+    <span className={cn("m text-[11px] whitespace-nowrap", tones[tone], className)}>{children}</span>
   );
 }
 
@@ -133,18 +157,21 @@ export function StateNotice({
   tone?: "neutral" | "warning" | "error" | "success";
   action?: ReactNode;
 }) {
-  const tones = {
-    neutral: "border-[var(--line)] bg-[var(--card)]",
-    warning: "border-[#e9d593] bg-[#fff8dc]",
-    error: "border-[#efb9ad] bg-[#fff1ed]",
-    success: "border-[#bdd8bd] bg-[#eff8ea]",
+  // Trouble is marked by a lit left rule, not by a coloured box.
+  const rules = {
+    neutral: "shadow-[inset_2px_0_0_0_var(--edge-strong)]",
+    warning: "shadow-[inset_2px_0_0_0_var(--time)]",
+    error: "shadow-[inset_2px_0_0_0_var(--time)]",
+    success: "shadow-[inset_2px_0_0_0_var(--accent-solid)]",
   };
   return (
-    <div className={cn("flex items-start gap-3 rounded-2xl border p-4", tones[tone])} role={tone === "error" ? "alert" : "status"}>
-      <AlertCircle className="mt-0.5 size-5 shrink-0 text-[var(--leaf)]" aria-hidden="true" />
+    <div
+      className={cn("flex items-start justify-between gap-5 py-3.5 pl-5", rules[tone])}
+      role={tone === "error" ? "alert" : "status"}
+    >
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-bold">{title}</p>
-        {children && <div className="mt-1 text-sm leading-5 text-[var(--muted)]">{children}</div>}
+        <p className="nm">{title}</p>
+        {children && <div className="bd mt-1.5">{children}</div>}
       </div>
       {action && <div className="shrink-0">{action}</div>}
     </div>
@@ -163,21 +190,25 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="rounded-[1.65rem] border border-dashed border-[var(--line)] bg-white/45 px-6 py-10 text-center">
-      <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-[var(--sprout)] text-[var(--leaf)]">
+    <div className="border-t border-[var(--hairline)] py-10">
+      <span className="flex text-[var(--ink-6)]" aria-hidden="true">
         {icon}
-      </div>
-      <h2 className="text-lg font-bold">{title}</h2>
-      <p className="mx-auto mt-1 max-w-sm text-sm leading-6 text-[var(--muted)]">{description}</p>
-      {action && <div className="mt-5">{action}</div>}
+      </span>
+      <h2 className="hd mt-5 text-[20px]">{title}</h2>
+      <p className="bd mt-2 max-w-sm">{description}</p>
+      {action && <div className="mt-6">{action}</div>}
     </div>
   );
 }
 
+/*
+ * Inputs are ruled, not boxed — a single hairline under the value, lit by the
+ * accent on focus.
+ */
 export const inputClass =
-  "min-h-12 w-full rounded-2xl border border-[var(--line)] bg-white px-4 text-base text-[var(--ink)] placeholder:text-[#929d96] transition hover:border-[#afbaaf] focus:border-[var(--leaf)] focus:outline-none";
+  "min-h-11 w-full border-b border-[var(--edge-strong)] bg-transparent pb-2.5 text-[15px] font-light text-[var(--ink)] transition focus:border-[var(--accent)] focus:outline-none focus:ring-0 disabled:opacity-45";
 
-export const selectClass = `${inputClass} appearance-none pr-9`;
+export const selectClass = `${inputClass} m appearance-none pr-7 text-[13px]`;
 
 export function Field({
   label,
@@ -192,11 +223,11 @@ export function Field({
 }) {
   return (
     <div>
-      <label htmlFor={htmlFor} className="mb-1.5 block text-sm font-bold">
+      <label htmlFor={htmlFor} className="ml mb-2.5 block">
         {label}
       </label>
       {children}
-      {hint && <p className="mt-1.5 text-xs leading-5 text-[var(--muted)]">{hint}</p>}
+      {hint && <p className="bd mt-2 text-[12px] text-[var(--ink-6)]">{hint}</p>}
     </div>
   );
 }
@@ -216,18 +247,23 @@ export function Modal({
 }) {
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-[#17382b]/40 p-0 backdrop-blur-[2px] sm:items-center sm:p-5" onMouseDown={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex items-end justify-center bg-[#100f0e]/75 p-0 backdrop-blur-[2px] sm:items-center sm:p-6"
+      onMouseDown={onClose}
+    >
       <section
-        className="safe-bottom max-h-[92dvh] w-full max-w-xl overflow-y-auto rounded-t-[2rem] bg-[var(--card)] p-5 shadow-2xl sm:rounded-[2rem] sm:p-6"
+        className="frame safe-bottom max-h-[92dvh] w-full max-w-xl overflow-y-auto rounded-b-none px-6 pb-6 pt-7 sm:rounded-[4px] sm:px-8 sm:pb-8"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
         onMouseDown={(event) => event.stopPropagation()}
       >
-        <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-[var(--line)] sm:hidden" />
-        <div className="mb-5">
-          <h2 id="modal-title" className="text-xl font-extrabold tracking-tight">{title}</h2>
-          {description && <p className="mt-1 text-sm leading-5 text-[var(--muted)]">{description}</p>}
+        <div className="mx-auto mb-5 h-px w-10 bg-[var(--edge-strong)] sm:hidden" />
+        <div className="mb-7">
+          <h2 id="modal-title" className="hd text-[24px]">
+            {title}
+          </h2>
+          {description && <p className="bd mt-2.5">{description}</p>}
         </div>
         {children}
       </section>

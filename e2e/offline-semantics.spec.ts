@@ -4,20 +4,20 @@ const appUrl = process.env.FOODTOPIA_E2E_URL ?? "";
 
 test("static offline fallback reads Dexie and queues an edit", async ({ context, page }) => {
   await page.goto(`${appUrl}/~offline`);
-  await expect(page.getByText("Device-only offline inventory")).toBeVisible();
+  await expect(page.getByText("device-only offline kitchen")).toBeVisible();
   await expect(page.locator("#lot-10000000-0000-4000-8000-000000000001").getByRole("heading", { name: "Tomatoes" })).toBeVisible();
 
   await context.setOffline(true);
-  await expect(page.getByText(/Offline — inventory edits will sync/)).toBeVisible();
-  await page.getByRole("button", { name: "Add food manually" }).click();
+  await expect(page.getByText(/offline — inventory edits sync/)).toBeVisible();
+  await page.getByRole("button", { name: "add one by hand" }).click();
   const itemName = `Offline oats ${Date.now()}`;
   await page.getByLabel("Food name").fill(itemName);
   await page.getByRole("button", { name: "Add item", exact: true }).click();
 
   await expect(page.getByText(itemName, { exact: true })).toBeVisible();
-  await expect(page.getByText(/1 pending/)).toBeVisible();
+  await expect(page.getByText(/1 waiting/)).toBeVisible();
   await context.setOffline(false);
-  await expect(page.getByText(/1 pending/)).toBeHidden({ timeout: 10_000 });
+  await expect(page.getByText(/1 waiting/)).toBeHidden({ timeout: 10_000 });
   await page.reload();
   await expect(page.getByText(itemName, { exact: true })).toBeVisible();
 });
@@ -39,10 +39,10 @@ test("a stale inventory command surfaces a resolvable 409", async ({ page }) => 
     });
   });
 
-  await inventoryRow.getByRole("button", { name: "Used up" }).click();
+  await inventoryRow.getByRole("button", { name: /used up/i }).click();
   await expect(page.getByText("Household update collided")).toBeVisible({ timeout: 10_000 });
-  await expect(page.getByText(/paused the ordered outbox at this 409/)).toBeVisible();
-  await page.getByRole("button", { name: "Use latest" }).click();
+  await expect(page.getByText(/paused here instead of overwriting the newer version/)).toBeVisible();
+  await page.getByRole("button", { name: "use latest" }).click();
   await expect(page.getByText("Household update collided")).toBeHidden();
 });
 
@@ -63,9 +63,9 @@ test("a permanent queued-command failure pauses and can be discarded", async ({ 
     });
   });
 
-  await inventoryRow.getByRole("button", { name: "Used up" }).click();
+  await inventoryRow.getByRole("button", { name: /used up/i }).click();
   await expect(page.getByText("Queued change was rejected")).toBeVisible();
-  await page.getByRole("button", { name: "Discard change" }).click();
+  await page.getByRole("button", { name: "discard change" }).click();
   await expect(page.getByText("Queued change was rejected")).toBeHidden();
 });
 
@@ -91,7 +91,7 @@ test("an authenticated 403 immediately evicts the prior household offline store"
   });
   await page.evaluate(() => window.dispatchEvent(new Event("focus")));
 
-  await expect(page.getByText("Sync paused: Household access was revoked.")).toBeVisible();
+  await expect(page.getByText("sync paused · Household access was revoked.")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Tomatoes" })).toBeHidden();
 
   const counts = await page.evaluate(async () =>
@@ -138,7 +138,7 @@ test("logout clears Dexie household rows and Foodtopia caches", async ({ page })
     sessionStorage.setItem("foodtopia:recipe:last", "prior-household-evidence");
   });
 
-  await page.getByRole("button", { name: "Sign out & clear this device" }).click();
+  await page.getByRole("button", { name: "sign out" }).click();
   await expect(page).toHaveURL(/\/sign-in/);
   const remaining = await page.evaluate(async () => {
     const cacheKeys = await caches.keys();

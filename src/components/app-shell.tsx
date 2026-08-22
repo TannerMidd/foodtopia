@@ -2,27 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Camera,
-  CircleUserRound,
-  CloudOff,
-  Home,
-  PackageOpen,
-  RefreshCw,
-  Soup,
-  TriangleAlert,
-} from "lucide-react";
 import type { ReactNode } from "react";
 import { OfflineProvider, useOfflineInventory } from "./offline-provider";
 import { ServiceWorkerRegistration } from "./service-worker-registration";
 import { cn } from "./ui";
 
 const navItems = [
-  { href: "/", label: "Home", icon: Home },
-  { href: "/inventory", label: "Inventory", icon: PackageOpen },
-  { href: "/capture", label: "Add", icon: Camera, primary: true },
-  { href: "/recipes", label: "Recipes", icon: Soup },
-  { href: "/household", label: "Household", icon: CircleUserRound },
+  { href: "/", label: "today" },
+  { href: "/inventory", label: "kitchen" },
+  { href: "/capture", label: "add food", desktopOnly: true },
+  { href: "/recipes", label: "cook" },
+  { href: "/household", label: "household" },
 ];
 
 export function isPublicAppRoute(pathname: string) {
@@ -36,92 +26,155 @@ export function isPublicAppRoute(pathname: string) {
   );
 }
 
+function isActive(pathname: string, href: string) {
+  return href === "/" ? pathname === "/" : pathname.startsWith(href);
+}
+
+/* The lit mark. One small lamp, never a logo block. */
+function Wordmark({ className }: { className?: string }) {
+  return (
+    <span className={cn("inline-flex items-center gap-2.5", className)}>
+      <span className="lamp size-[7px] rounded-[1px]" aria-hidden="true" />
+      <span className="text-[16px] font-light tracking-[0.01em]">foodtopia</span>
+    </span>
+  );
+}
+
+function syncLine({
+  online,
+  syncState,
+  pending,
+  lastSyncedAt,
+}: {
+  online: boolean;
+  syncState: string;
+  pending: number;
+  lastSyncedAt?: string | null;
+}) {
+  if (!online) return "offline · edits are queued here";
+  if (syncState === "syncing") return "syncing…";
+  const stamp = lastSyncedAt
+    ? `synced ${new Date(lastSyncedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false })}`
+    : "not synced yet";
+  return `${stamp} · ${pending > 0 ? `${pending} waiting` : "nothing waiting"}`;
+}
+
 function ShellChrome({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const { online, syncState, syncError, conflicts, outbox } = useOfflineInventory();
+  const { online, syncState, syncError, conflicts, outbox, lastSyncedAt } = useOfflineInventory();
   const publicRoute = isPublicAppRoute(pathname);
 
   if (publicRoute) {
     return (
       <div className="min-h-dvh">
         {pathname === "/~offline" && !online ? (
-          <div className="mx-auto mt-3 flex w-[calc(100%-2rem)] max-w-3xl items-center gap-2 rounded-2xl bg-[#fff4cc] px-4 py-2.5 text-sm font-semibold text-[#66531b]" role="status">
-            <CloudOff className="size-4 shrink-0" aria-hidden="true" />
-            <span className="flex-1">Offline — inventory edits will sync when this app is open and reconnected.</span>
-            {outbox.length > 0 ? <span className="shrink-0">{outbox.length} pending</span> : null}
-          </div>
+          <p className="m mx-auto w-full max-w-3xl px-5 pt-4 text-[10.5px] text-[var(--time)]" role="status">
+            offline — inventory edits sync when this app is open and reconnected
+            {outbox.length > 0 ? ` · ${outbox.length} waiting` : ""}
+          </p>
         ) : null}
         {children}
       </div>
     );
   }
 
+  const status = syncLine({ online, syncState, pending: outbox.length, lastSyncedAt });
+
   return (
-    <div className="min-h-dvh pb-[calc(5.75rem+env(safe-area-inset-bottom))] md:pb-8">
-      <header className="safe-top mx-auto flex w-full max-w-3xl items-center justify-between px-5 pb-2 sm:px-6">
-        <Link href="/" className="inline-flex min-h-11 items-center gap-2 rounded-full pr-3" aria-label="Foodtopia home">
-          <span className="flex size-9 items-center justify-center rounded-xl bg-[var(--leaf)] text-lg font-black text-white">F</span>
-          <span className="text-lg font-extrabold tracking-[-0.04em]">foodtopia</span>
+    <div className="min-h-dvh md:flex">
+      {/* Desktop: a quiet left rail. No icons — the words carry it. */}
+      <aside className="sticky top-0 hidden h-dvh w-44 flex-none flex-col border-r border-[var(--hairline)] py-7 md:flex">
+        <Link href="/" className="px-6" aria-label="Foodtopia home">
+          <Wordmark />
         </Link>
-        <div className="flex items-center gap-2 text-xs font-semibold text-[var(--muted)]">
-          {syncState === "syncing" && <RefreshCw className="size-4 animate-spin" aria-hidden="true" />}
-          {outbox.length > 0 && <span>{outbox.length} pending</span>}
-        </div>
-      </header>
-
-      {!online && (
-        <div className="mx-auto mb-2 flex w-[calc(100%-2rem)] max-w-3xl items-center gap-2 rounded-2xl bg-[#fff4cc] px-4 py-2.5 text-sm font-semibold text-[#66531b]" role="status">
-          <CloudOff className="size-4 shrink-0" aria-hidden="true" />
-          Offline — inventory edits will sync when this app is open and reconnected.
-        </div>
-      )}
-      {online && syncState === "error" && syncError && (
-        <div className="mx-auto mb-2 flex w-[calc(100%-2rem)] max-w-3xl items-center gap-2 rounded-2xl bg-[var(--tomato-soft)] px-4 py-2.5 text-sm text-[#7d3829]" role="status">
-          <TriangleAlert className="size-4 shrink-0" aria-hidden="true" />
-          <span className="line-clamp-2">Sync paused: {syncError}</span>
-        </div>
-      )}
-      {conflicts.length > 0 && (
-        <Link href="/inventory#sync-conflicts" className="mx-auto mb-2 flex min-h-11 w-[calc(100%-2rem)] max-w-3xl items-center gap-2 rounded-2xl bg-[#fff0e9] px-4 py-2.5 text-sm font-bold text-[#843b2b]">
-          <TriangleAlert className="size-4 shrink-0" aria-hidden="true" />
-          A household member changed an item. Review {conflicts.length} sync conflict{conflicts.length === 1 ? "" : "s"}.
-        </Link>
-      )}
-
-      {children}
-
-      <nav className="safe-bottom fixed inset-x-0 bottom-0 z-40 mx-auto border-t border-[var(--line)] bg-[rgba(255,253,248,0.94)] px-2 pt-2 shadow-[0_-12px_35px_rgba(42,54,44,0.08)] backdrop-blur-xl md:bottom-5 md:max-w-[680px] md:rounded-[1.5rem] md:border">
-        <ul className="mx-auto grid max-w-3xl grid-cols-5 items-end">
+        <nav className="mt-9 flex flex-col">
           {navItems.map((item) => {
-            const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-            const Icon = item.icon;
+            const active = isActive(pathname, item.href);
             return (
-              <li key={item.href}>
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "flex h-[34px] items-center gap-2.5 px-6 text-[15px] font-light transition",
+                  active ? "text-[var(--ink)]" : "text-[var(--ink-5)] hover:text-[var(--ink)]",
+                )}
+              >
+                <span
+                  className={cn("size-1 rounded-[1px]", active && "bg-[var(--accent)]")}
+                  aria-hidden="true"
+                />
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+        <span className="flex-1" />
+        <div className="flex flex-col gap-2 px-6">
+          <Link href="/settings" className="m text-[10.5px] text-[var(--ink-6)] hover:text-[var(--ink-3)]">
+            settings
+          </Link>
+          <p className="m text-[10.5px] leading-relaxed text-[var(--ink-6)]" role="status">
+            {status}
+          </p>
+        </div>
+      </aside>
+
+      <div className="min-w-0 flex-1 pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
+        {/* Mobile: the same mark and the same one line of status. */}
+        <header className="safe-top flex items-center justify-between px-5 pb-1 md:hidden">
+          <Link href="/" aria-label="Foodtopia home">
+            <Wordmark className="text-[15px]" />
+          </Link>
+          <p className="m text-[10px] text-[var(--ink-6)]" role="status">
+            {status}
+          </p>
+        </header>
+
+        {online && syncState === "error" && syncError && (
+          <p
+            className="m mx-auto w-full max-w-3xl px-5 pt-3 text-[10.5px] leading-relaxed text-[var(--time)] sm:px-8"
+            role="status"
+          >
+            sync paused · {syncError}
+          </p>
+        )}
+        {conflicts.length > 0 && (
+          <Link
+            href="/inventory#sync-conflicts"
+            className="m mx-auto flex w-full max-w-3xl px-5 pt-3 text-[10.5px] leading-relaxed text-[var(--time)] sm:px-8"
+          >
+            a household member changed an item · review {conflicts.length} conflict
+            {conflicts.length === 1 ? "" : "s"}
+          </Link>
+        )}
+
+        {children}
+
+        {/* Mobile: four words on a hairline. The fifth destination is the lit
+            action inside each screen, so it never needs a tab. */}
+        <nav className="safe-bottom fixed inset-x-0 bottom-0 z-40 flex h-16 items-center justify-between border-t border-[var(--hairline)] bg-[var(--page)] px-6 md:hidden">
+          {navItems
+            .filter((item) => !item.desktopOnly)
+            .map((item) => {
+              const active = isActive(pathname, item.href);
+              return (
                 <Link
+                  key={item.href}
                   href={item.href}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "flex min-h-14 flex-col items-center justify-center gap-0.5 rounded-2xl px-1 text-[0.68rem] font-bold transition",
-                    active ? "text-[var(--leaf)]" : "text-[#718078] hover:text-[var(--ink)]",
-                    item.primary && "relative -mt-5",
+                    "flex min-h-11 items-center gap-2 text-[14px] font-light transition",
+                    active ? "text-[var(--ink)]" : "text-[var(--ink-6)]",
                   )}
                 >
-                  <span
-                    className={cn(
-                      "flex size-7 items-center justify-center rounded-xl",
-                      item.primary && "size-12 rounded-2xl bg-[var(--tomato)] text-white shadow-lg shadow-[#e6674e]/20",
-                      active && !item.primary && "bg-[var(--sprout)]",
-                    )}
-                  >
-                    <Icon className={item.primary ? "size-5" : "size-[1.15rem]"} strokeWidth={2.3} aria-hidden="true" />
-                  </span>
+                  {active && <span className="size-1 rounded-[1px] bg-[var(--accent)]" aria-hidden="true" />}
                   {item.label}
                 </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
+              );
+            })}
+        </nav>
+      </div>
     </div>
   );
 }

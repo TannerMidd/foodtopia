@@ -3,17 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
-import {
-  Bell,
-  ChevronRight,
-  Copy,
-  Crown,
-  MailPlus,
-  Settings2,
-  Trash2,
-  UserRound,
-  Users,
-} from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 
 import {
   createHouseholdInvite,
@@ -22,35 +12,22 @@ import {
   getHouseholdMembers,
   removeHouseholdMember,
 } from "@/lib/client/api";
-import {
-  clearFoodtopiaCaches,
-  getAuthenticatedUser,
-  signOut,
-} from "@/lib/client/auth";
+import { clearFoodtopiaCaches, getAuthenticatedUser, signOut } from "@/lib/client/auth";
 import { useOfflineInventory } from "./offline-provider";
-import {
-  Badge,
-  Button,
-  Card,
-  Field,
-  inputClass,
-  Page,
-  PageHeader,
-  StateNotice,
-} from "./ui";
+import { Button, Field, Page, Section, StateNotice, cn, inputClass } from "./ui";
 
-type HouseholdMember = Awaited<
-  ReturnType<typeof getHouseholdMembers>
->["members"][number];
+type HouseholdMember = Awaited<ReturnType<typeof getHouseholdMembers>>["members"][number];
+
+const demoMembers = [
+  { name: "Tanner", role: "owner", you: true },
+  { name: "Alex", role: "member", you: false },
+];
 
 export function HouseholdScreen() {
   const router = useRouter();
   const { apiMode, activeHouseholdId, clear } = useOfflineInventory();
   const [email, setEmail] = useState("");
-  const [result, setResult] = useState<{
-    email: string;
-    delivery: "queued" | "demo";
-  } | null>(null);
+  const [result, setResult] = useState<{ email: string; delivery: "queued" | "demo" } | null>(null);
   const [inviteError, setInviteError] = useState<string | null>(null);
   const [inviting, setInviting] = useState(false);
   const [members, setMembers] = useState<HouseholdMember[] | null>(null);
@@ -62,6 +39,7 @@ export function HouseholdScreen() {
   const [deleteConfirmation, setDeleteConfirmation] = useState("");
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (apiMode !== "connected") return;
@@ -92,23 +70,24 @@ export function HouseholdScreen() {
       setResult({ email: created.email, delivery: created.delivery });
       setEmail("");
     } catch {
-      setInviteError(
-        "The invitation could not be prepared. Check the address and try again.",
-      );
+      setInviteError("The invitation could not be prepared. Check the address and try again.");
     } finally {
       setInviting(false);
     }
   }
 
   async function removeMember(member: HouseholdMember) {
-    if (!window.confirm(`Remove ${member.displayName ?? member.email ?? "this member"} from the household? Their next request will lose access.`)) return;
+    if (
+      !window.confirm(
+        `Remove ${member.displayName ?? member.email ?? "this member"} from the household? Their next request will lose access.`,
+      )
+    )
+      return;
     setRemovingUserId(member.userId);
     setMemberError(null);
     try {
       await removeHouseholdMember(member.userId);
-      setMembers((current) =>
-        current?.filter((item) => item.userId !== member.userId) ?? null,
-      );
+      setMembers((current) => current?.filter((item) => item.userId !== member.userId) ?? null);
     } catch {
       setMemberError("The member could not be removed. Only an owner can revoke another member.");
     } finally {
@@ -122,8 +101,8 @@ export function HouseholdScreen() {
     setDeleteError(null);
     let state: "pending" | "complete";
     try {
-      const result = await deleteCurrentHousehold();
-      state = "status" in result ? "pending" : "complete";
+      const outcome = await deleteCurrentHousehold();
+      state = "status" in outcome ? "pending" : "complete";
     } catch {
       setDeleteError(
         "The household could not be placed into deletion quarantine. No local data was cleared.",
@@ -137,102 +116,184 @@ export function HouseholdScreen() {
   }
 
   const viewerRole = members?.find((member) => member.userId === currentUserId)?.role;
+  const title = apiMode === "demo" ? "Maple Street" : (householdName ?? "Your household");
+
   return (
-    <Page>
-      <PageHeader
-        eyebrow="Shared kitchen"
-        title={apiMode === "demo" ? "Maple Street demo" : householdName ?? "Your household"}
-        description="Members see the same inventory after their device syncs. Offline edits replay in the order they were made."
-        action={
-          <span className="flex size-12 items-center justify-center rounded-2xl bg-[var(--sprout)] text-[var(--leaf)]">
-            <Users className="size-5" aria-hidden="true" />
-          </span>
-        }
-      />
+    <Page className="max-w-[42rem]">
+      <header>
+        <p className="ml">household</p>
+        <h1 className="hd mt-3 text-[clamp(1.5rem,6vw,1.65rem)]">{title}</h1>
+        <p className="bd mt-2.5 max-w-[30rem]">
+          One kitchen, shared. Edits made offline replay in the order they were made.
+        </p>
+      </header>
 
-      {apiMode === "demo" ? (
-        <StateNotice title="Demo household" tone="warning">
-          Member names and invitations on this screen are previews. No
-          invitation email is sent from demo mode.
-        </StateNotice>
-      ) : null}
+      {apiMode === "demo" && (
+        <p className="bd mt-5 text-[12px] text-[var(--time)]">
+          Demo household — the members and invitations below are previews, and no email is sent.
+        </p>
+      )}
 
-      <section className="mt-6">
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-lg font-extrabold">
-            {apiMode === "demo" ? "Example beta members" : "Members"}
-          </h2>
-          <Badge>
-            {apiMode === "demo"
-              ? "2 examples"
-              : members
-                ? `${members.length} active`
-                : "Loading"}
-          </Badge>
-        </div>
-        {apiMode === "demo" ? (
-          <Card className="overflow-hidden p-0">
-            <div className="flex min-h-20 items-center gap-3 px-4 py-3">
-              <span className="flex size-11 items-center justify-center rounded-2xl bg-[var(--leaf)] font-black text-white">T</span>
-              <div className="min-w-0 flex-1"><p className="font-bold">Tanner <span className="font-normal text-[var(--muted)]">(you)</span></p><p className="text-xs text-[var(--muted)]">tanner@example.com</p></div>
-              <Badge tone="yellow"><Crown className="mr-1 size-3" aria-hidden="true" /> Owner</Badge>
-            </div>
-            <div className="flex min-h-20 items-center gap-3 border-t border-[var(--line)] px-4 py-3">
-              <span className="flex size-11 items-center justify-center rounded-2xl bg-[var(--sprout)] font-black text-[var(--leaf)]">A</span>
-              <div className="min-w-0 flex-1"><p className="font-bold">Alex</p><p className="text-xs text-[var(--muted)]">alex@example.com</p></div>
-              <Badge>Member</Badge>
-            </div>
-          </Card>
-        ) : memberError ? (
-          <StateNotice title="Member directory unavailable" tone="error">{memberError}</StateNotice>
-        ) : members ? (
-          <Card className="overflow-hidden p-0">
-            {members.map((member, index) => {
+      <div className="mt-9 flex flex-col gap-8">
+        <Section label="members" labelWidth="78px">
+          {apiMode === "demo" ? (
+            demoMembers.map((member) => (
+              <div key={member.name} className="row px-1">
+                <span className="nm flex-1">
+                  {member.name}{" "}
+                  {member.you && <span className="m text-[10.5px] text-[var(--ink-6)]">you</span>}
+                </span>
+                <span
+                  className={cn(
+                    "m text-[10.5px]",
+                    member.role === "owner" ? "text-[var(--time)]" : "text-[var(--ink-6)]",
+                  )}
+                >
+                  {member.role}
+                </span>
+              </div>
+            ))
+          ) : memberError ? (
+            <p className="bd py-4 text-[var(--time)]" role="alert">
+              {memberError}
+            </p>
+          ) : members ? (
+            members.map((member) => {
               const label = member.displayName ?? member.email ?? "Household member";
-              const canRemove = viewerRole === "owner" && member.role === "member" && member.userId !== currentUserId;
+              const canRemove =
+                viewerRole === "owner" && member.role === "member" && member.userId !== currentUserId;
               return (
-                <div key={member.userId} className={`flex min-h-20 items-center gap-3 px-4 py-3 ${index ? "border-t border-[var(--line)]" : ""}`}>
-                  <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--sprout)] font-black text-[var(--leaf)]">{label.slice(0, 1).toUpperCase()}</span>
-                  <div className="min-w-0 flex-1"><p className="truncate font-bold">{label}{member.userId === currentUserId ? <span className="font-normal text-[var(--muted)]"> (you)</span> : null}</p>{member.displayName && member.email ? <p className="truncate text-xs text-[var(--muted)]">{member.email}</p> : null}</div>
-                  <Badge tone={member.role === "owner" ? "yellow" : "neutral"}>{member.role === "owner" ? <Crown className="mr-1 size-3" aria-hidden="true" /> : null}{member.role === "owner" ? "Owner" : "Member"}</Badge>
-                  {canRemove ? <Button size="icon" variant="ghost" busy={removingUserId === member.userId} aria-label={`Remove ${label}`} onClick={() => void removeMember(member)}><Trash2 className="size-4" aria-hidden="true" /></Button> : null}
+                <div key={member.userId} className="row px-1">
+                  <span className="nm min-w-0 flex-1 truncate">
+                    {label}{" "}
+                    {member.userId === currentUserId && (
+                      <span className="m text-[10.5px] text-[var(--ink-6)]">you</span>
+                    )}
+                  </span>
+                  <span
+                    className={cn(
+                      "m flex-none text-[10.5px]",
+                      member.role === "owner" ? "text-[var(--time)]" : "text-[var(--ink-6)]",
+                    )}
+                  >
+                    {member.role}
+                  </span>
+                  {canRemove && (
+                    <button
+                      type="button"
+                      className="flex size-7 flex-none items-center justify-center text-[var(--ink-5)] hover:text-[var(--time)] disabled:opacity-40"
+                      disabled={removingUserId === member.userId}
+                      aria-label={`Remove ${label}`}
+                      onClick={() => void removeMember(member)}
+                    >
+                      <Trash2 className="size-3.5" aria-hidden="true" />
+                    </button>
+                  )}
                 </div>
               );
-            })}
-          </Card>
-        ) : (
-          <div className="skeleton h-24 rounded-3xl" />
+            })
+          ) : (
+            <div className="skeleton my-3 h-10" />
+          )}
+
+          {/* Inviting is a row, not a form panel — same weight as a member. */}
+          <form className="row min-h-[48px] gap-3.5 px-1" onSubmit={(event) => void sendInvite(event)}>
+            <Plus className="size-4 flex-none text-[var(--ink-6)]" aria-hidden="true" />
+            <label htmlFor="invite-email" className="sr-only">
+              Member email
+            </label>
+            <input
+              id="invite-email"
+              type="email"
+              required
+              className="bd min-w-0 flex-1 bg-transparent italic text-[var(--ink)] focus:outline-none"
+              placeholder="Invite by email…"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+            <button
+              type="submit"
+              className="m flex-none text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)] disabled:opacity-40"
+              disabled={inviting}
+            >
+              {inviting ? "sending…" : "send"}
+            </button>
+          </form>
+        </Section>
+
+        {inviteError && (
+          <StateNotice title="Invitation not sent" tone="error">
+            {inviteError}
+          </StateNotice>
         )}
-      </section>
+        {result && (
+          <StateNotice
+            title={result.delivery === "demo" ? "Demo invitation created" : "Invitation queued"}
+            tone="success"
+          >
+            {result.delivery === "demo"
+              ? `${result.email} was recorded as a demo invite; no email was sent.`
+              : `A passwordless invite for ${result.email} was queued for delivery.`}
+          </StateNotice>
+        )}
 
-      <Card className="mt-6">
-        <div className="flex items-start gap-3">
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--tomato-soft)] text-[var(--tomato)]"><MailPlus className="size-5" aria-hidden="true" /></span>
-          <div><h2 className="font-extrabold">Invite a household member</h2><p className="mt-1 text-xs leading-5 text-[var(--muted)]">Private-beta access is checked server-side against the invited email. Links cannot grant a different email access.</p></div>
-        </div>
-        <form className="mt-4" onSubmit={(event) => void sendInvite(event)}>
-          <Field label="Member email" htmlFor="invite-email"><input id="invite-email" type="email" required className={inputClass} placeholder="person@example.com" value={email} onChange={(event) => setEmail(event.target.value)} /></Field>
-          <Button type="submit" className="mt-3 w-full" variant="secondary" busy={inviting}>Send invitation</Button>
-        </form>
-        {inviteError ? <div className="mt-3"><StateNotice title="Invitation not sent" tone="error">{inviteError}</StateNotice></div> : null}
-        {result ? <div className="mt-3"><StateNotice title={result.delivery === "demo" ? "Demo invitation created" : "Invitation queued"} tone="success">{result.delivery === "demo" ? `${result.email} was recorded as a demo invite; no email was sent.` : `A passwordless invite for ${result.email} was queued for delivery.`}</StateNotice></div> : null}
-      </Card>
+        <p className="bd max-w-[32rem] text-[12px] text-[var(--ink-6)]">
+          Beta access is checked on the server against the invited address. A link cannot let a
+          different email in.
+        </p>
 
-      <section className="mt-7 overflow-hidden rounded-3xl border border-[var(--line)] bg-[var(--card)]">
-        <Link href="/settings" className="flex min-h-16 items-center gap-3 px-4 py-3"><Settings2 className="size-5 text-[var(--leaf)]" aria-hidden="true" /><span className="flex-1 font-bold">Household settings</span><ChevronRight className="size-4 text-[var(--muted)]" aria-hidden="true" /></Link>
-        <button type="button" className="flex min-h-16 w-full items-center gap-3 border-t border-[var(--line)] px-4 py-3 text-left" onClick={() => void navigator.clipboard?.writeText(activeHouseholdId)}><Copy className="size-5 text-[var(--leaf)]" aria-hidden="true" /><span className="flex-1"><span className="block font-bold">Copy household reference</span><span className="block text-xs text-[var(--muted)]">For beta support only</span></span><ChevronRight className="size-4 text-[var(--muted)]" aria-hidden="true" /></button>
-      </section>
+        <Section label="good to know" labelWidth="78px">
+          <div className="row min-h-[46px] px-1">
+            <span className="bd flex-1">Sync runs while the app is open</span>
+            <span className="m text-[10.5px] text-[var(--ink-6)]">every 15 s</span>
+          </div>
+          <div className="row min-h-[46px] px-1">
+            <span className="bd flex-1">Access is limited to this household</span>
+            <span className="m text-[10.5px] text-[var(--ink-6)]">by membership</span>
+          </div>
+          <div className="row min-h-[46px] px-1">
+            <span className="bd flex-1">Household settings and preferences</span>
+            <Link href="/settings" className="m text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]">
+              settings
+            </Link>
+          </div>
+          <div className="row min-h-[46px] px-1">
+            <span className="bd flex-1 text-[var(--ink-4)]">Household reference, for beta support</span>
+            <button
+              type="button"
+              className="m text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+              onClick={() => {
+                void navigator.clipboard?.writeText(activeHouseholdId);
+                setCopied(true);
+              }}
+            >
+              {copied ? "copied" : "copy"}
+            </button>
+          </div>
+          {apiMode === "connected" && viewerRole === "owner" && (
+            <div className="row min-h-[46px] px-1">
+              <span className="bd flex-1 text-[var(--ink-3)]">
+                Deleting quarantines the kitchen for everyone
+              </span>
+              <button
+                type="button"
+                className="m text-[10.5px] text-[var(--ink-4)] hover:text-[var(--time)]"
+                onClick={() => setShowDelete((current) => !current)}
+              >
+                delete
+              </button>
+            </div>
+          )}
+        </Section>
 
-      {apiMode === "connected" && viewerRole === "owner" ? (
-        <Card className="mt-6 border-[#efb9ad]">
-          <h2 className="font-extrabold text-[#963928]">Delete household</h2>
-          <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-            This immediately quarantines the household and schedules permanent
-            deletion after outstanding photo-upload links expire. Every member
-            loses access. This cannot be undone.
-          </p>
-          {showDelete ? (
-            <div className="mt-4">
+        {showDelete && apiMode === "connected" && viewerRole === "owner" && (
+          <div className="border-t border-[var(--hairline)] pt-5 shadow-[inset_2px_0_0_0_var(--time)] pl-5">
+            <h2 className="nm text-[var(--time)]">Delete this household</h2>
+            <p className="bd mt-2 max-w-[32rem]">
+              This immediately quarantines the household and schedules permanent deletion after
+              outstanding photo-upload links expire. Every member loses access. It cannot be undone.
+            </p>
+            <div className="mt-5 max-w-[16rem]">
               <Field label="Type DELETE to confirm" htmlFor="delete-household-confirmation">
                 <input
                   id="delete-household-confirmation"
@@ -242,53 +303,37 @@ export function HouseholdScreen() {
                   onChange={(event) => setDeleteConfirmation(event.target.value)}
                 />
               </Field>
-              <div className="mt-3 flex gap-2">
-                <Button
-                  type="button"
-                  variant="danger"
-                  busy={deleting}
-                  disabled={deleteConfirmation !== "DELETE"}
-                  onClick={() => void deleteHousehold()}
-                >
-                  Quarantine and delete
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  disabled={deleting}
-                  onClick={() => {
-                    setShowDelete(false);
-                    setDeleteConfirmation("");
-                    setDeleteError(null);
-                  }}
-                >
-                  Cancel
-                </Button>
-              </div>
-              {deleteError ? (
-                <div className="mt-3">
-                  <StateNotice title="Deletion not started" tone="error">
-                    {deleteError}
-                  </StateNotice>
-                </div>
-              ) : null}
             </div>
-          ) : (
-            <Button
-              type="button"
-              className="mt-4"
-              variant="danger"
-              onClick={() => setShowDelete(true)}
-            >
-              Delete household
-            </Button>
-          )}
-        </Card>
-      ) : null}
-
-      <div className="mt-6 grid grid-cols-2 gap-3">
-        <div className="rounded-2xl bg-white/45 p-4"><Bell className="size-5 text-[var(--leaf)]" aria-hidden="true" /><p className="mt-3 text-sm font-bold">No background sync promise</p><p className="mt-1 text-xs leading-5 text-[var(--muted)]">Open the PWA to replay offline edits.</p></div>
-        <div className="rounded-2xl bg-white/45 p-4"><UserRound className="size-5 text-[var(--leaf)]" aria-hidden="true" /><p className="mt-3 text-sm font-bold">Household-scoped</p><p className="mt-1 text-xs leading-5 text-[var(--muted)]">Data access is constrained by membership.</p></div>
+            {deleteError && (
+              <p className="bd mt-4 text-[var(--time)]" role="alert">
+                {deleteError}
+              </p>
+            )}
+            <div className="mt-5 flex items-center gap-6">
+              <button
+                type="button"
+                className="m text-[11px] text-[var(--ink-4)] hover:text-[var(--ink)] disabled:opacity-40"
+                disabled={deleting}
+                onClick={() => {
+                  setShowDelete(false);
+                  setDeleteConfirmation("");
+                  setDeleteError(null);
+                }}
+              >
+                cancel
+              </button>
+              <Button
+                type="button"
+                variant="secondary"
+                busy={deleting}
+                disabled={deleteConfirmation !== "DELETE"}
+                onClick={() => void deleteHousehold()}
+              >
+                Quarantine and delete
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </Page>
   );

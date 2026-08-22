@@ -69,7 +69,7 @@ describe("analysis review confirmation", () => {
 
   async function renderReview() {
     render(<AnalysisReview analysisId={analysisId} />);
-    return screen.findByRole("button", { name: "Confirm 1 item" });
+    return screen.findByRole("button", { name: "Save one item" });
   }
 
   it("navigates after an applied analysis even if refreshing inventory fails", async () => {
