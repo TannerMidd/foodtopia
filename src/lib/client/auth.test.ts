@@ -23,7 +23,10 @@ describe("password authentication client", () => {
       },
     });
     mocks.signInWithPassword.mockResolvedValue({ error: null });
-    mocks.signUp.mockResolvedValue({ error: null });
+    mocks.signUp.mockResolvedValue({
+      data: { session: { access_token: "session" }, user: { identities: [{}] } },
+      error: null,
+    });
   });
 
   afterEach(() => {
@@ -33,7 +36,7 @@ describe("password authentication client", () => {
   it("creates a password account with profile metadata and a safe confirmation callback", async () => {
     const { signUpWithPassword } = await import("./auth");
 
-    await signUpWithPassword(
+    const result = await signUpWithPassword(
       "Kitchen Keeper",
       "new@example.test",
       "new-password",
@@ -49,6 +52,23 @@ describe("password authentication client", () => {
           "http://localhost:3000/auth/callback?next=%2Finventory%3Flocation%3Dfridge",
       },
     });
+    expect(result).toEqual({ demo: false, signedIn: true });
+  });
+
+  it("does not expose details from Supabase's privacy-safe repeated-signup response", async () => {
+    mocks.signUp.mockResolvedValue({
+      data: { session: null, user: { identities: [] } },
+      error: null,
+    });
+    const { signUpWithPassword } = await import("./auth");
+
+    const result = await signUpWithPassword(
+      "Kitchen Keeper",
+      "existing@example.test",
+      "new-password",
+    );
+
+    expect(result).toEqual({ demo: false, signedIn: false });
   });
 
   it("signs in with the supplied email and password", async () => {

@@ -38,7 +38,7 @@ export async function signUpWithPassword(
 ) {
   const supabase = getClient();
   if (!supabase) return { demo: true as const };
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -47,7 +47,10 @@ export async function signUpWithPassword(
     },
   });
   if (error) throw error;
-  return { demo: false as const };
+  return {
+    demo: false as const,
+    signedIn: data.session !== null,
+  };
 }
 
 export async function signInWithPassword(email: string, password: string) {

@@ -100,7 +100,10 @@ describe("member password authentication", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     auth.signInWithPassword.mockResolvedValue({ demo: false });
-    auth.signUpWithPassword.mockResolvedValue({ demo: false });
+    auth.signUpWithPassword.mockResolvedValue({
+      demo: false,
+      signedIn: true,
+    });
     offline.clear.mockResolvedValue(undefined);
     auth.clearFoodtopiaCaches.mockResolvedValue(undefined);
   });
@@ -147,7 +150,7 @@ describe("member password authentication", () => {
     expect(screen.getByRole("button", { name: "Sign in" })).toBeInTheDocument();
   });
 
-  it("creates an account with username, email, password, and a confirmation email", async () => {
+  it("creates an account with username, email, and password without requesting confirmation", async () => {
     const user = userEvent.setup();
     render(<SignUpScreen />);
 
@@ -165,7 +168,26 @@ describe("member password authentication", () => {
         "/",
       );
     });
-    expect(await screen.findByText("Confirm your email address.")).toBeInTheDocument();
+    expect(screen.queryByText("Confirm your email address.")).not.toBeInTheDocument();
+  });
+
+  it("handles a no-session signup without revealing whether the email exists", async () => {
+    const user = userEvent.setup();
+    auth.signUpWithPassword.mockResolvedValue({
+      demo: false,
+      signedIn: false,
+    });
+    render(<SignUpScreen />);
+
+    await user.type(screen.getByLabelText("Username"), "Kitchen Keeper");
+    await user.type(screen.getByLabelText("Email"), "existing@example.test");
+    await user.type(screen.getByLabelText("Password"), "new-password");
+    await user.type(screen.getByLabelText("Confirm password"), "new-password");
+    await user.click(screen.getByRole("button", { name: "Create account" }));
+
+    expect(await screen.findByText("Try signing in.")).toBeInTheDocument();
+    expect(document.body.textContent).not.toContain("already exists");
+    expect(screen.queryByText("Confirm your email address.")).not.toBeInTheDocument();
   });
 
   it("rejects mismatched passwords before contacting Supabase", async () => {

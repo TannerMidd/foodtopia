@@ -291,7 +291,7 @@ function PasswordSignInForm({ nextPath }: { nextPath: string }) {
       {state === "error" ? (
         <div className="mt-5">
           <StateNotice title="Sign-in failed" tone="error">
-            Check your email and password, and make sure you confirmed your email address.
+            Check your email and password, then try again.
           </StateNotice>
         </div>
       ) : null}
@@ -324,9 +324,9 @@ function PasswordSignUpForm() {
   const [password, setPassword] = useState("");
   const [confirmation, setConfirmation] = useState("");
   const [busy, setBusy] = useState(false);
-  const [state, setState] = useState<"idle" | "sent" | "demo" | "mismatch" | "error">(
-    "idle",
-  );
+  const [state, setState] = useState<
+    "idle" | "sent" | "sign-in" | "demo" | "mismatch" | "error"
+  >("idle");
 
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -343,7 +343,13 @@ function PasswordSignUpForm() {
         password,
         "/",
       );
-      setState(result.demo ? "demo" : "sent");
+      if (result.demo) {
+        setState("demo");
+      } else if (result.signedIn) {
+        window.location.replace("/pending");
+      } else {
+        setState("sign-in");
+      }
     } catch {
       setState("error");
     } finally {
@@ -361,6 +367,27 @@ function PasswordSignUpForm() {
         <p className="bd mt-2.5">
           Open the confirmation email, then sign in with your email and password. Your account will
           remain in review until an administrator enables it.
+        </p>
+        <Link
+          href="/sign-in"
+          className="m mt-6 inline-flex min-h-9 items-center gap-2 text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+        >
+          go to sign in
+          <ArrowRight className="size-3.5" aria-hidden="true" />
+        </Link>
+      </div>
+    );
+  }
+
+  if (state === "sign-in") {
+    return (
+      <div role="status">
+        <p className="ml">continue securely</p>
+        <h2 className="hd mt-3 text-[22px]">Try signing in.</h2>
+        <p className="bd mt-2.5">
+          Account setup could not continue here. Try the sign-in page. If you previously used an
+          email sign-in link and do not have a password, ask the administrator to migrate your
+          access.
         </p>
         <Link
           href="/sign-in"
@@ -600,7 +627,7 @@ export function SignInScreen({
         <p className="ml">private beta</p>
         <h1 className="hd mt-3 text-[26px] lg:text-[30px]">Welcome back.</h1>
         <p className="bd mt-2.5">
-          Sign in with your confirmed email address and password.
+          Sign in with your email address and password.
         </p>
         <div className="mt-8">
           <PasswordSignInForm nextPath={nextPath} />
@@ -635,8 +662,8 @@ export function SignUpScreen({ signupsOpen = true }: { signupsOpen?: boolean }) 
         <p className="ml">open beta</p>
         <h1 className="hd mt-3 text-[26px] lg:text-[30px]">Set up your shared kitchen.</h1>
         <p className="bd mt-2.5">
-          Choose a username, enter your email, and create a password. We&rsquo;ll email you once to
-          confirm the address.
+          Choose a username, enter your email, and create a password. Your account will enter review
+          immediately.
         </p>
         {signupsOpen ? (
           <>
