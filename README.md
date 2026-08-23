@@ -15,7 +15,7 @@ The repository is a single TypeScript application built with Next.js App Router,
 - Installable PWA shell with a static, data-free offline fallback; authenticated pages and API responses are network-only.
 - Dexie snapshot/outbox sync on launch, focus, reconnect, and every 15 seconds while foregrounded. Logout clears household rows and Foodtopia caches.
 - 80 original project-owned recipe drafts, 103 normalized food concepts, 304 aliases, deterministic evidence-based matching, prompt parsing, and cooking reconciliation.
-- Passwordless Supabase Auth for invited households, an optional server-mapped administrator password login for testing, beta and household invite gates, one-household membership, RLS, and private raw-image storage policies.
+- Passwordless Supabase Auth with an open-beta signup link whose accounts stay pending until an administrator enables them at `/admin/beta`, personal beta-invite fast lane, household invite gates, one-household membership, RLS, and private raw-image storage policies.
 - Durable Inngest analysis and purge functions with household-selectable OpenAI/OpenRouter adapters and strict Zod validation.
 - A local demo that needs no cloud account and a fail-closed production mode that requires real credentials.
 
@@ -43,7 +43,7 @@ Copy `.env.example` to `.env.local` only when connecting cloud services. `FOODTO
 7. Configure at least one platform provider key. Direct OpenAI uses synchronous Responses requests with `store: false`; OpenRouter uses its OpenAI-compatible Chat Completions endpoint with structured outputs, zero-data-retention routing, and provider data collection denied. Owners select the provider and both model IDs in Settings.
 8. To allow owner-supplied household keys, configure the AES-GCM keyring described below. Household keys are optional and are never returned after saving.
 9. Deploy the Next.js application to Vercel and set the environment variables below. Do not set demo mode in production.
-10. Create beta invite rows through a controlled operator process, then share `/onboarding/{raw-token}` only with the invited email owner. Raw tokens are stored only as hashes in Postgres.
+10. Share the open-beta invite link `https://your-foodtopia.example/sign-up`. Anyone with it can request an account; new accounts start **pending** and see an "Account not enabled" screen until admitted. Review and enable accounts in batches at `/admin/beta` (sign in as the configured administrator), where you can also close the signup window entirely. Personal beta-invite rows created through a controlled operator process remain an instant-access fast lane: share `/onboarding/{raw-token}` only with that email owner. Raw tokens are stored only as hashes in Postgres.
 11. Run the security, retention, device, and content gates in `docs/beta-runbook.md` before admitting a household.
 
 Production environment variables (provider and household-key entries are
@@ -77,7 +77,15 @@ When the administrator login flag is `true` and both mapping variables are
 valid, `/sign-in` exposes a testing-only username/password form. The username
 is resolved to the configured email only on the server; authentication still
 uses the normal Supabase user session and does not grant service-role or
-cross-household access.
+cross-household access. The same configured identity is the only account that
+can open the `/admin/beta` admissions console and its APIs.
+
+## Open-beta admissions
+
+- New signups from `/sign-up` (and personal-invite emails) are created by Supabase Auth; profiles start `pending` unless a live invitation pre-approved that email.
+- Pending accounts can sign in but see an "Account not enabled" page and every data API returns `403 ACCOUNT_NOT_ENABLED`; nothing household-scoped is reachable.
+- At `/admin/beta` the administrator enables selected accounts in batches of up to 50, disables access instantly, re-enables, and opens/closes the global signup window. When closed, the database hook admits only live invitation emails.
+- Disabling an account blocks it immediately but keeps the Auth user for audit; full deletion stays an out-of-band Supabase operation per the runbook.
 
 Only the provider selected by a household needs a platform key. If the selected
 source is `platform` and that provider key is absent, or the selected source is

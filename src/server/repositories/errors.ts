@@ -33,11 +33,22 @@ export function asApiError(
   const code = typeof candidate?.code === "string" ? candidate.code : "";
   const status = Number(candidate?.statusCode ?? candidate?.status);
 
-  if (code === "authentication_required" || code === "28000" || status === 401) {
+  if (
+    code === "authentication_required" || code === "28000" || status === 401
+  ) {
     return new ApiFault(
       "AUTHENTICATION_REQUIRED",
       "Authentication is required.",
       401,
+    );
+  }
+  if (code === "account_not_enabled") {
+    return new ApiFault(
+      "ACCOUNT_NOT_ENABLED",
+      typeof candidate?.message === "string"
+        ? candidate.message
+        : "An administrator has not enabled this account yet.",
+      403,
     );
   }
   if (

@@ -1,7 +1,6 @@
 import type { NextRequest } from "next/server";
 import { z } from "zod";
 
-import { serverEnv } from "@/lib/env";
 import { createResponseSupabaseClient } from "@/lib/supabase/server";
 import {
   getAdminLoginConfig,
@@ -15,6 +14,7 @@ import {
   json,
   parseJson,
 } from "@/server/http";
+import { assertSameOrigin } from "@/server/origin";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -30,32 +30,6 @@ function invalidCredentials() {
     "Invalid username or password.",
     401,
   );
-}
-
-function assertSameOrigin(request: NextRequest) {
-  const origin = request.headers.get("origin");
-  let expectedOrigin: string;
-  try {
-    const configured = new URL(serverEnv.appUrl);
-    if (configured.protocol !== "https:" && configured.hostname !== "localhost") {
-      throw new Error("Unsupported application origin");
-    }
-    expectedOrigin = configured.origin;
-  } catch {
-    throw new ApiFault(
-      "AUTH_CONFIGURATION_ERROR",
-      "Administrator sign-in is not configured.",
-      503,
-      true,
-    );
-  }
-  if (!origin || origin !== expectedOrigin) {
-    throw new ApiFault(
-      "INVALID_ORIGIN",
-      "The sign-in request could not be accepted.",
-      403,
-    );
-  }
 }
 
 function rateLimitedResponse(id: string, retryAfterSeconds: number) {

@@ -3,7 +3,7 @@
 ## Before the five-household beta
 
 - [ ] Apply the migration to a disposable Supabase project and run the RLS/storage security suite with two real users in two households.
-- [ ] Configure and exercise the Auth before-user-created hook, beta onboarding, household invite acceptance, expiry, wrong-email rejection, and one-household constraint.
+- [ ] Configure and exercise the Auth before-user-created hook, the open-beta signup window (open and closed), pending-account waiting screen, admin batch enable/disable at `/admin/beta`, beta onboarding, household invite acceptance, expiry, wrong-email rejection, and one-household constraint.
 - [ ] Human-review all 80 recipes and make `pnpm validate:recipes:publication` pass without synthetic reviewer metadata.
 - [ ] Import only reviewed recipes as `published` rows and verify every ingredient resolves to a global food concept.
 - [ ] Build the consented 100-batch image benchmark and meet at least 90% proposal precision and 80% recall.

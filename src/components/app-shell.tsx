@@ -19,9 +19,15 @@ const navItems = [
 export function isPublicAppRoute(pathname: string) {
   return (
     pathname.startsWith("/sign-in") ||
+    pathname.startsWith("/sign-up") ||
     pathname.startsWith("/invite/") ||
     pathname.startsWith("/onboarding/") ||
     pathname.startsWith("/auth/") ||
+    pathname === "/pending" ||
+    // The beta administration console is chrome-less; the proxy still requires
+    // sign-in for it and the page verifies the administrator identity.
+    pathname === "/admin" ||
+    pathname.startsWith("/admin/") ||
     pathname === "/privacy" ||
     pathname === "/~offline"
   );

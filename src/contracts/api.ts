@@ -67,6 +67,52 @@ export const householdBootstrapResponseSchema = z.object({
   householdId: z.uuid(),
 });
 
+export const accountStatusSchema = z.enum(["pending", "enabled", "disabled"]);
+
+export const accountStatusResponseSchema = z.object({
+  status: accountStatusSchema,
+});
+
+export const betaAccountSchema = z.object({
+  userId: z.uuid(),
+  email: z.string().min(3).max(320),
+  displayName: z.string().nullable(),
+  status: accountStatusSchema,
+  createdAt: z.iso.datetime(),
+  lastSignInAt: z.iso.datetime().nullable(),
+  enabledAt: z.iso.datetime().nullable(),
+});
+
+export const betaAccountsResponseSchema = z.object({
+  signupsOpen: z.boolean(),
+  counts: z.object({
+    pending: z.number().int().nonnegative(),
+    enabled: z.number().int().nonnegative(),
+    disabled: z.number().int().nonnegative(),
+  }),
+  accounts: z.array(betaAccountSchema),
+});
+
+export const betaAccountMutationRequestSchema = z
+  .object({
+    userIds: z.array(z.uuid()).min(1).max(50),
+  })
+  .strict();
+
+export const betaAccountMutationResponseSchema = z.object({
+  changedCount: z.number().int().nonnegative(),
+});
+
+export const signupWindowUpdateRequestSchema = z
+  .object({
+    open: z.boolean(),
+  })
+  .strict();
+
+export const signupWindowResponseSchema = z.object({
+  signupsOpen: z.boolean(),
+});
+
 export const householdCurrentResponseSchema = z.object({
   householdId: z.uuid(),
   name: z.string().trim().min(1).max(80),
@@ -362,6 +408,11 @@ export type AnalysisCreateResponse = z.infer<
 >;
 export type AiProvider = z.infer<typeof aiProviderSchema>;
 export type AiCredentialSource = z.infer<typeof aiCredentialSourceSchema>;
+export type AccountStatus = z.infer<typeof accountStatusSchema>;
+export type BetaAccount = z.infer<typeof betaAccountSchema>;
+export type BetaAccountsResponse = z.infer<
+  typeof betaAccountsResponseSchema
+>;
 export type AiSettingsResponse = z.infer<typeof aiSettingsResponseSchema>;
 export type AiSettingsUpdateRequest = z.infer<
   typeof aiSettingsUpdateRequestSchema

@@ -17,6 +17,7 @@ export type Json =
 
 type HouseholdRole = "owner" | "member";
 type InviteStatus = "pending" | "accepted" | "revoked" | "expired";
+type AccountStatus = "pending" | "enabled" | "disabled";
 type QuantityStatus = "unknown" | "estimated" | "known";
 type FoodLocation = "unknown" | "pantry" | "fridge" | "freezer" | "other";
 type FoodForm = "unspecified" | "fresh" | "frozen" | "canned" | "dried" | "cooked" | "opened";
@@ -87,6 +88,17 @@ export type Database = {
         display_name: string | null;
         avatar_url: string | null;
         timezone: string;
+        status: AccountStatus;
+        enabled_at: string | null;
+        enabled_by: string | null;
+        created_at: string;
+        updated_at: string;
+        version: number;
+      }>;
+      beta_signup_settings: Table<{
+        id: number;
+        signups_open: boolean;
+        updated_by: string | null;
         created_at: string;
         updated_at: string;
         version: number;
@@ -548,6 +560,7 @@ export type Database = {
     Enums: {
       household_role: HouseholdRole;
       invite_status: InviteStatus;
+      account_status: AccountStatus;
       food_alias_scope: "global" | "household";
       quantity_status: QuantityStatus;
       food_location: FoodLocation;

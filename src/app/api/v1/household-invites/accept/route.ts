@@ -5,8 +5,8 @@ import {
 import { isDemoMode } from "@/lib/env";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { DEMO_HOUSEHOLD_ID } from "@/server/demo/store";
+import { requireEnabledAccount } from "@/server/auth/session";
 import {
-  ApiFault,
   correlationId,
   errorResponse,
   json,
@@ -28,18 +28,11 @@ export async function POST(request: Request) {
         }),
       );
     }
+    // Household members are pre-approved through their invitation, but the
+    // admission boundary still applies: an administrator-disabled or not-yet-
+    // enabled account cannot join a household.
+    await requireEnabledAccount();
     const client = await createServerSupabaseClient();
-    const {
-      data: { user },
-      error: userError,
-    } = await client.auth.getUser();
-    if (userError || !user) {
-      throw new ApiFault(
-        "AUTHENTICATION_REQUIRED",
-        "Open the invitation from the same verified email account.",
-        401,
-      );
-    }
     const { data: householdId, error } = await client.rpc(
       "accept_household_invite",
       { p_token: token },

@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = public, extensions;
 
-select plan(65);
+select plan(75);
 
 -- Stable fixture identifiers make failures and Storage paths easy to inspect.
 insert into auth.users (id, email, raw_app_meta_data, raw_user_meta_data)
@@ -31,6 +31,47 @@ values
   ('10000000-0000-0000-0000-000000000001', 'a0000000-0000-0000-0000-000000000001', 'owner'),
   ('10000000-0000-0000-0000-000000000001', 'c0000000-0000-0000-0000-000000000003', 'member'),
   ('20000000-0000-0000-0000-000000000002', 'b0000000-0000-0000-0000-000000000002', 'owner');
+
+-- An invited member account: the profile trigger must pre-approve it.
+insert into public.household_invites (
+  id, household_id, email, token_hash, expires_at, created_by
+)
+values (
+  'e1000000-0000-0000-0000-000000000001',
+  '10000000-0000-0000-0000-000000000001',
+  'echo@example.test',
+  encode(extensions.digest('echo-household-token-123456789', 'sha256'), 'hex'),
+  now() + interval '7 days',
+  'a0000000-0000-0000-0000-000000000001'
+);
+
+insert into auth.users (id, email, raw_app_meta_data, raw_user_meta_data)
+values
+  ('e0000000-0000-0000-0000-000000000001', 'echo@example.test', '{}'::jsonb, '{}'::jsonb);
+
+-- An invitation-only email used by the closed-window hook test below.
+insert into public.household_invites (
+  id, household_id, email, token_hash, expires_at, created_by
+)
+values (
+  'f1000000-0000-0000-0000-000000000001',
+  '10000000-0000-0000-0000-000000000001',
+  'foxtrot@example.test',
+  encode(extensions.digest('foxtrot-household-token-12345678', 'sha256'), 'hex'),
+  now() + interval '7 days',
+  'a0000000-0000-0000-0000-000000000001'
+);
+
+select is(
+  (select status::text from public.profiles where id = 'a0000000-0000-0000-0000-000000000001'),
+  'pending',
+  'open-beta signups start pending until an administrator enables them'
+);
+select is(
+  (select status::text from public.profiles where id = 'e0000000-0000-0000-0000-000000000001'),
+  'enabled',
+  'a live invitation pre-approves the invited account'
+);
 
 insert into public.privacy_consents (user_id, household_id, consent_version)
 values (
@@ -625,6 +666,11 @@ select is(
   'household bootstrap creates the required secret-free AI settings row'
 );
 select is(
+  (select status::text from public.profiles where id = auth.uid()),
+  'enabled',
+  'claiming a personal beta token enables the operator-approved account'
+);
+select is(
   (
     select p.prosecdef
       from pg_proc as p
@@ -655,6 +701,57 @@ select ok(
 select ok(
   not has_function_privilege('authenticated', 'private.enforce_household_ai_credential_shape()', 'EXECUTE'),
   'authenticated users cannot directly execute the deferred AI credential invariant'
+);
+
+-- Open-beta admissions: the before_user_created hook honors the singleton
+-- signup window, invitation emails stay authoritative, and clients can neither
+-- read the switch nor change their own admission state.
+reset role;
+select is(
+  public.before_user_created('{"user":{"email":"golf@example.test"}}'::jsonb),
+  '{}'::jsonb,
+  'the hook admits a fresh email while the signup window is open'
+);
+update public.beta_signup_settings set signups_open = false where id = 1;
+select is(
+  public.before_user_created('{"user":{"email":"hotel@example.test"}}'::jsonb) -> 'error' ->> 'http_code',
+  '403',
+  'the hook rejects fresh emails once the window closes'
+);
+select is(
+  public.before_user_created('{"user":{"email":"foxtrot@example.test"}}'::jsonb),
+  '{}'::jsonb,
+  'the hook still admits live invitation emails while the window is closed'
+);
+update public.beta_signup_settings set signups_open = true where id = 1;
+
+reset role;
+set local role service_role;
+select is(
+  (select count(*) from public.beta_signup_settings),
+  1::bigint,
+  'the service role retains singleton signup-window control'
+);
+
+reset role;
+select set_config(
+  'request.jwt.claims',
+  '{"sub":"c0000000-0000-0000-0000-000000000003","email":"charlie@example.test","role":"authenticated"}',
+  true
+);
+select set_config('request.jwt.claim.sub', 'c0000000-0000-0000-0000-000000000003', true);
+set local role authenticated;
+select throws_ok(
+  $$select status from public.beta_signup_settings$$,
+  '42501',
+  'permission denied for table beta_signup_settings',
+  'clients cannot read the signup-window switch'
+);
+select throws_ok(
+  $$update public.profiles set status = 'disabled' where id = auth.uid()$$,
+  '42501',
+  'permission denied for table profiles',
+  'clients cannot change their own admission state'
 );
 
 select * from finish();

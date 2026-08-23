@@ -1,8 +1,11 @@
 import {
   aiSettingsResponseSchema,
+  accountStatusResponseSchema,
   analysisCreateResponseSchema,
   analysisResponseSchema,
   apiErrorSchema,
+  betaAccountMutationResponseSchema,
+  betaAccountsResponseSchema,
   cookSessionCreateResponseSchema,
   householdBootstrapResponseSchema,
   householdCurrentResponseSchema,
@@ -15,11 +18,14 @@ import {
   inviteCreateResponseSchema,
   openRouterModelsResponseSchema,
   recipeSuggestionResponseSchema,
+  signupWindowResponseSchema,
   unfinishedAnalysesResponseSchema,
   visionConsentResponseSchema,
+  type AccountStatus,
   type AiSettingsResponse,
   type AiSettingsUpdateRequest,
   type AnalysisCreateResponse,
+  type BetaAccountsResponse,
   type InventorySyncResponse,
   type OpenRouterModelDiscoveryRequest,
   type OpenRouterModelsResponse,
@@ -147,6 +153,45 @@ export async function bootstrapHousehold(name: string, betaToken: string) {
     await request("/api/v1/households/bootstrap", {
       method: "POST",
       body: JSON.stringify({ name, betaToken }),
+    }),
+  );
+}
+
+export async function getAccountStatus(): Promise<AccountStatus> {
+  return accountStatusResponseSchema.parse(
+    await request("/api/v1/auth/account-status"),
+  ).status;
+}
+
+export async function listBetaAccounts(): Promise<BetaAccountsResponse> {
+  return betaAccountsResponseSchema.parse(
+    await request("/api/v1/admin/beta-accounts"),
+  );
+}
+
+export async function enableBetaAccounts(userIds: string[]) {
+  return betaAccountMutationResponseSchema.parse(
+    await request("/api/v1/admin/beta-accounts/enable", {
+      method: "POST",
+      body: JSON.stringify({ userIds }),
+    }),
+  );
+}
+
+export async function disableBetaAccounts(userIds: string[]) {
+  return betaAccountMutationResponseSchema.parse(
+    await request("/api/v1/admin/beta-accounts/disable", {
+      method: "POST",
+      body: JSON.stringify({ userIds }),
+    }),
+  );
+}
+
+export async function setSignupWindow(open: boolean) {
+  return signupWindowResponseSchema.parse(
+    await request("/api/v1/admin/beta-signup-window", {
+      method: "POST",
+      body: JSON.stringify({ open }),
     }),
   );
 }

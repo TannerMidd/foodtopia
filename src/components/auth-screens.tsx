@@ -3,12 +3,18 @@
 import Link from "next/link";
 import { useEffect, useState, type FormEvent } from "react";
 import { ArrowRight, LoaderCircle, Mail } from "lucide-react";
-import { ApiClientError, acceptHouseholdInvite, bootstrapHousehold } from "@/lib/client/api";
+import {
+  ApiClientError,
+  acceptHouseholdInvite,
+  bootstrapHousehold,
+  getAccountStatus,
+} from "@/lib/client/api";
 import {
   clearFoodtopiaCaches,
   getAuthenticatedUser,
   requestAdminPasswordLogin,
   requestMagicLink,
+  signOut,
 } from "@/lib/client/auth";
 import { normalizeInternalPath } from "@/lib/internal-path";
 import { useOfflineInventory } from "./offline-provider";
@@ -89,7 +95,36 @@ function AuthFrame({ children }: { children: React.ReactNode }) {
   );
 }
 
-function MagicLinkForm({ nextPath = "/", invitation = false }: { nextPath?: string; invitation?: boolean }) {
+type MagicLinkAudience = "member" | "invite" | "open-beta";
+
+const MAGIC_LINK_SENT_COPY: Record<
+  MagicLinkAudience,
+  { title: string; body: string }
+> = {
+  member: {
+    title: "A link is on its way.",
+    body:
+      "If this address has private-beta access, a one-time sign-in link has been sent. It expires, so open it on this device soon.",
+  },
+  invite: {
+    title: "A link is on its way.",
+    body:
+      "If this address was invited to the household, a one-time sign-in link has been sent. It expires, so open it on this device soon.",
+  },
+  "open-beta": {
+    title: "You're on the list.",
+    body:
+      "A one-time link to finish creating your account has been sent. It expires soon, so open it on this device.",
+  },
+};
+
+function MagicLinkForm({
+  nextPath = "/",
+  audience = "member",
+}: {
+  nextPath?: string;
+  audience?: MagicLinkAudience;
+}) {
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
   const [state, setState] = useState<"idle" | "sent" | "demo" | "error">("idle");
@@ -110,14 +145,21 @@ function MagicLinkForm({ nextPath = "/", invitation = false }: { nextPath?: stri
   }
 
   if (state === "sent") {
+    const copy = MAGIC_LINK_SENT_COPY[audience];
     return (
       <div role="status">
         <p className="ml">check your email</p>
-        <h2 className="hd mt-3 text-[22px]">A link is on its way.</h2>
-        <p className="bd mt-2.5">
-          If this address has private-beta access, a one-time sign-in link has been sent. It expires,
-          so open it on this device soon.
-        </p>
+        <h2 className="hd mt-3 text-[22px]">{copy.title}</h2>
+        <p className="bd mt-2.5">{copy.body}</p>
+        {audience === "open-beta" && (
+          <div className="mt-5">
+            <StateNotice title="Accounts start in review" tone="neutral">
+              An administrator enables each new account before it can be used.
+              After opening the link you&rsquo;ll see your account&rsquo;s
+              review status.
+            </StateNotice>
+          </div>
+        )}
         <button
           type="button"
           className="m mt-6 min-h-9 text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
@@ -164,7 +206,11 @@ function MagicLinkForm({ nextPath = "/", invitation = false }: { nextPath?: stri
         </div>
       )}
       <Button type="submit" className="mt-6 w-full" busy={busy}>
-        {invitation ? "Continue with email" : "Send a sign-in link"}
+        {audience === "open-beta"
+          ? "Send a sign-up link"
+          : audience === "invite"
+            ? "Continue with email"
+            : "Send a sign-in link"}
         <ArrowRight className="size-4 text-[var(--accent-ink)]" aria-hidden="true" />
       </Button>
       {state === "demo" && (
@@ -312,12 +358,127 @@ export function SignInScreen({
       </section>
 
       <p className="bd mt-8 text-[13px] text-[var(--ink-5)]">
+        New here?{" "}
+        <Link
+          className="border-b border-[var(--edge-strong)] text-[var(--ink-3)]"
+          href="/sign-up"
+        >
+          Request open-beta access
+        </Link>
+        .
+      </p>
+      <p className="bd mt-4 text-[13px] text-[var(--ink-5)]">
         Continuing means keeping household photos and inventory private, and acknowledging the{" "}
         <Link className="border-b border-[var(--edge-strong)] text-[var(--ink-3)]" href="/privacy">
           beta privacy notice
         </Link>
         . US English for now.
       </p>
+    </AuthFrame>
+  );
+}
+
+export function SignUpScreen({ signupsOpen = true }: { signupsOpen?: boolean }) {
+  return (
+    <AuthFrame>
+      <section className="mt-12">
+        <p className="ml">open beta</p>
+        <h1 className="hd mt-3 text-[26px] lg:text-[30px]">Set up your shared kitchen.</h1>
+        <p className="bd mt-2.5">
+          Enter your email and we&rsquo;ll send a one-time link to create your household&rsquo;s
+          Foodtopia account.
+        </p>
+        {signupsOpen ? (
+          <>
+            <div className="mt-8">
+              <MagicLinkForm audience="open-beta" nextPath="/" />
+            </div>
+            <p className="bd mt-6 text-[13px] text-[var(--ink-5)]">
+              New accounts start in review. An administrator enables each account before it can be
+              used, so expect a short wait after signing up.
+            </p>
+          </>
+        ) : (
+          <div className="mt-8">
+            <StateNotice title="Signups are closed right now" tone="warning">
+              The open beta is not accepting new accounts at the moment. If you received a personal
+              invitation, sign in with the invited email on the{" "}
+              <Link className="border-b border-[var(--edge-strong)]" href="/sign-in">
+                sign-in page
+              </Link>{" "}
+              instead.
+            </StateNotice>
+          </div>
+        )}
+      </section>
+
+      <p className="bd mt-8 text-[13px] text-[var(--ink-5)]">
+        Signing up means keeping household photos and inventory private, and acknowledging the{" "}
+        <Link className="border-b border-[var(--edge-strong)] text-[var(--ink-3)]" href="/privacy">
+          beta privacy notice
+        </Link>
+        . US English for now.
+      </p>
+    </AuthFrame>
+  );
+}
+
+export function PendingAccountScreen({ nextPath = "/" }: { nextPath?: string }) {
+  const [status, setStatus] = useState<"pending" | "disabled" | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    let timer: number | undefined;
+    async function check() {
+      try {
+        const current = await getAccountStatus();
+        if (cancelled) return;
+        if (current === "enabled") {
+          window.location.replace(normalizeInternalPath(nextPath));
+          return;
+        }
+        setStatus(current);
+      } catch (error) {
+        if (!cancelled && error instanceof ApiClientError && error.status === 401) {
+          window.location.replace("/sign-in");
+          return;
+        }
+        // Transient failures keep waiting; the next tick retries quietly.
+      }
+      if (!cancelled) timer = window.setTimeout(() => void check(), 20_000);
+    }
+    void check();
+    return () => {
+      cancelled = true;
+      if (timer !== undefined) window.clearTimeout(timer);
+    };
+  }, [nextPath]);
+
+  const disabled = status === "disabled";
+
+  return (
+    <AuthFrame>
+      <section className="mt-12" role="status">
+        <p className="ml">account review</p>
+        <h1 className="hd mt-3 flex items-center gap-3 text-[26px]">
+          {!disabled && (
+            <LoaderCircle className="size-5 animate-spin text-[var(--accent)]" aria-hidden="true" />
+          )}
+          Account not enabled
+        </h1>
+        <p className="bd mt-2.5">
+          {disabled
+            ? "An administrator disabled this account, so it cannot be used. If you believe this is a mistake, contact the beta coordinator from your invited email."
+            : "Your account was created, but an administrator has not enabled it yet. You'll keep your place in line — this page opens your kitchen automatically once an administrator approves you."}
+        </p>
+        <button
+          type="button"
+          className="m mt-6 min-h-9 text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+          onClick={() => void signOut().then(() => window.location.replace("/sign-in"))}
+        >
+          sign out
+        </button>
+      </section>
     </AuthFrame>
   );
 }
@@ -362,7 +523,7 @@ export function InviteScreen({ token }: { token: string }) {
         </p>
         <div className="mt-8">
           {state === "sign_in" && (
-            <MagicLinkForm invitation nextPath={`/invite/${encodeURIComponent(token)}`} />
+            <MagicLinkForm audience="invite" nextPath={`/invite/${encodeURIComponent(token)}`} />
           )}
           {(state === "checking" || state === "accepting") && (
             <p className="m flex items-center gap-3 text-[11px] text-[var(--ink-4)]" role="status">
@@ -433,7 +594,7 @@ export function OnboardingScreen({ token }: { token: string }) {
             </p>
           )}
           {authState === "sign_in" && (
-            <MagicLinkForm invitation nextPath={`/onboarding/${encodeURIComponent(token)}`} />
+            <MagicLinkForm audience="invite" nextPath={`/onboarding/${encodeURIComponent(token)}`} />
           )}
           {authState === "ready" && (
             <form onSubmit={(event) => void createHousehold(event)}>

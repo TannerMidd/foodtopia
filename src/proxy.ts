@@ -6,7 +6,23 @@ const PUBLIC_PAGE_PREFIXES = [
   "/invite/",
   "/onboarding/",
 ];
-const PUBLIC_PAGES = new Set(["/sign-in", "/privacy", "/~offline"]);
+const PUBLIC_PAGES = new Set([
+  "/sign-in",
+  "/sign-up",
+  "/pending",
+  "/privacy",
+  "/~offline",
+]);
+const PENDING_PAGE = "/pending";
+
+/**
+ * The beta administration console verifies its own administrator identity and
+ * must stay reachable even when the operator's own profile row is pending, or
+ * nobody could ever unlock the unlocker.
+ */
+function isAdminPath(pathname: string) {
+  return pathname === "/admin" || pathname.startsWith("/admin/");
+}
 
 function isPublicPage(pathname: string) {
   return PUBLIC_PAGES.has(pathname) ||
@@ -52,13 +68,41 @@ export async function proxy(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (user) return response;
+  if (!user) {
+    const signInUrl = new URL("/sign-in", request.url);
+    signInUrl.searchParams.set("next", `${request.nextUrl.pathname}${request.nextUrl.search}`);
+    const redirect = NextResponse.redirect(signInUrl);
+    for (const cookie of response.cookies.getAll()) redirect.cookies.set(cookie);
+    return redirect;
+  }
+  if (isAdminPath(request.nextUrl.pathname)) {
+    return response;
+  }
 
-  const signInUrl = new URL("/sign-in", request.url);
-  signInUrl.searchParams.set("next", `${request.nextUrl.pathname}${request.nextUrl.search}`);
-  const redirect = NextResponse.redirect(signInUrl);
-  for (const cookie of response.cookies.getAll()) redirect.cookies.set(cookie);
-  return redirect;
+  // Open-beta admission wall: a signed-in account without an
+  // administrator-enabled profile sees only the waiting page.
+  try {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("status")
+      .eq("id", user.id)
+      .maybeSingle();
+    if (profile?.status !== "enabled") {
+      const pendingUrl = new URL(PENDING_PAGE, request.url);
+      pendingUrl.searchParams.set(
+        "next",
+        `${request.nextUrl.pathname}${request.nextUrl.search}`,
+      );
+      const redirect = NextResponse.redirect(pendingUrl);
+      for (const cookie of response.cookies.getAll()) redirect.cookies.set(cookie);
+      return redirect;
+    }
+  } catch {
+    // A transient profile-lookup failure must not lock out enabled accounts.
+    // Pages may render their shell, but every data API independently enforces
+    // the same admission boundary server-side.
+  }
+  return response;
 }
 
 export const config = {

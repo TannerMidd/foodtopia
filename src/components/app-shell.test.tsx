@@ -41,7 +41,14 @@ describe("AppShell sync errors", () => {
     };
   });
 
-  it.each(["/sign-in", "/auth/complete", "/onboarding/invite-token"])(
+  it.each([
+    "/sign-in",
+    "/sign-up",
+    "/pending",
+    "/auth/complete",
+    "/onboarding/invite-token",
+    "/admin/beta",
+  ])(
     "does not show a household access banner on public route %s",
     (route) => {
       pathname.mockReturnValue(route);

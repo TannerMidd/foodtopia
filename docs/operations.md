@@ -1,5 +1,13 @@
 # Foodtopia beta operations
 
+## Open-beta admissions
+
+- The public invite link is `/sign-up`. Accounts created there start `pending`: they can sign in but see only the "Account not enabled" page, and every data API returns `403 ACCOUNT_NOT_ENABLED`.
+- Enable accounts in reviewable batches at `/admin/beta` (administrator identity = the configured `FOODTOPIA_ADMIN_EMAIL`). Batches are capped at 50 per request so one click cannot admit an unbounded cohort. Record batch decisions in the operator channel using counts and dates, never email contents.
+- **Close signups** before any incident that requires freezing growth; closed windows still admit live invitation emails. Already-pending accounts remain pending until individually enabled.
+- **Disable** revokes access immediately (profile status `disabled`, APIs reject with 403) while keeping the Auth user for audit. Re-enable from the same console. Full Auth-user deletion follows the household-deletion procedure instead.
+- Pending or disabled accounts hold no household data: they cannot create households, accept invitations, or reach Storage. No purge actions are required for admission decisions.
+
 ## Raw-image retention
 
 Raw images live only in the private `raw-images` Supabase bucket. The normal path deletes each object immediately after a batch is applied or cancelled. The Inngest sweeper claims any remaining asset at its `purge_after` deadline, deletes the object, and marks the row deleted. Incomplete uploads are eligible after one hour; no uploaded object may remain after 24 hours.
