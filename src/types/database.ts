@@ -448,7 +448,10 @@ export type Database = {
         };
         Returns: Json;
       };
-      bootstrap_household: { Args: { p_name: string; p_beta_token: string }; Returns: string };
+      bootstrap_household: {
+        Args: { p_name: string; p_beta_token?: string | null };
+        Returns: string;
+      };
       create_household_invite: {
         Args: { p_email: string; p_token: string; p_expires_at?: string };
         Returns: string;

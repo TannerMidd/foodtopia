@@ -923,7 +923,8 @@ export function InviteScreen({ token }: { token: string }) {
   );
 }
 
-export function OnboardingScreen({ token }: { token: string }) {
+export function OnboardingScreen({ token }: { token?: string | null }) {
+  const invited = Boolean(token);
   const { clear } = useOfflineInventory();
   const [authState, setAuthState] = useState<"checking" | "sign_in" | "ready">("checking");
   const [name, setName] = useState("");
@@ -949,7 +950,7 @@ export function OnboardingScreen({ token }: { token: string }) {
     setBusy(true);
     setError(false);
     try {
-      await bootstrapHousehold(name, token);
+      await bootstrapHousehold(name, token ?? undefined);
       await clear();
       window.location.replace("/");
     } catch {
@@ -961,10 +962,12 @@ export function OnboardingScreen({ token }: { token: string }) {
   return (
     <AuthFrame>
       <section className="mt-12">
-        <p className="ml">private-beta invitation</p>
+        <p className="ml">{invited ? "private-beta invitation" : "create your kitchen"}</p>
         <h1 className="hd mt-3 text-[26px]">Create your shared kitchen.</h1>
         <p className="bd mt-2.5">
-          Sign in with the invited email, then choose the household name everyone will see.
+          {invited
+            ? "Sign in with the invited email, then choose the household name everyone will see."
+            : "Choose the household name everyone will see. You can invite people to it later."}
         </p>
         <div className="mt-8">
           {authState === "checking" && (
@@ -974,7 +977,12 @@ export function OnboardingScreen({ token }: { token: string }) {
             </p>
           )}
           {authState === "sign_in" && (
-            <MagicLinkForm audience="invite" nextPath={`/onboarding/${encodeURIComponent(token)}`} />
+            <MagicLinkForm
+              audience="invite"
+              nextPath={
+                invited ? `/onboarding/${encodeURIComponent(token!)}` : "/onboarding"
+              }
+            />
           )}
           {authState === "ready" && (
             <form onSubmit={(event) => void createHousehold(event)}>
@@ -996,8 +1004,9 @@ export function OnboardingScreen({ token }: { token: string }) {
               {error && (
                 <div className="mt-5">
                   <StateNotice title="Household not created" tone="error">
-                    The invitation may be expired, used, or meant for another email. Ask the beta
-                    coordinator for a new link.
+                    {invited
+                      ? "The invitation may be expired, used, or meant for another email. Ask the beta coordinator for a new link."
+                      : "Your account could not be verified as enabled. Refresh and try again, or contact the administrator."}
                   </StateNotice>
                 </div>
               )}

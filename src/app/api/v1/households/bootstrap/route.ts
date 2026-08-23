@@ -40,7 +40,7 @@ export async function POST(request: Request) {
     }
     const { data: householdId, error } = await client.rpc(
       "bootstrap_household",
-      { p_name: input.name, p_beta_token: input.betaToken },
+      { p_name: input.name, p_beta_token: input.betaToken ?? null },
     );
     if (error) throw error;
     return json(

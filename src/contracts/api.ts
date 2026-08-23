@@ -60,7 +60,9 @@ export const householdInviteAcceptResponseSchema = z.object({
 
 export const householdBootstrapRequestSchema = z.object({
   name: z.string().trim().min(2).max(80),
-  betaToken: z.string().min(20).max(512),
+  // Legacy personal invitations carry a token; administrator-enabled open-beta
+  // accounts create their household without one.
+  betaToken: z.string().min(20).max(512).optional(),
 });
 
 export const householdBootstrapResponseSchema = z.object({

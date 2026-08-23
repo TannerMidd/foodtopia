@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Camera } from "lucide-react";
 import { getCurrentHousehold, getUnfinishedAnalyses } from "@/lib/client/api";
+import { ApiClientError } from "@/lib/client/api";
 import type { FoodLocation } from "@/contracts/domain";
 import {
   amountText,
@@ -32,6 +33,7 @@ export function HomeScreen() {
     Awaited<ReturnType<typeof getUnfinishedAnalyses>>["analyses"]
   >([]);
   const [householdName, setHouseholdName] = useState<string | null>(null);
+  const [needsHousehold, setNeedsHousehold] = useState(false);
 
   const active = lots.filter((lot) => lot.status === "active");
   const pressing = active
@@ -50,6 +52,13 @@ export function HomeScreen() {
         if (cancelled) return;
         if (analysesResult.status === "fulfilled") setUnfinished(analysesResult.value.analyses);
         if (householdResult.status === "fulfilled") setHouseholdName(householdResult.value.name);
+        else if (
+          householdResult.reason instanceof ApiClientError &&
+          householdResult.reason.code === "HOUSEHOLD_ACCESS_DENIED"
+        ) {
+          // Authenticated and enabled, but no household membership yet.
+          setNeedsHousehold(true);
+        }
       },
     );
     return () => {
@@ -91,6 +100,24 @@ export function HomeScreen() {
                   </span>
                 </Link>
               ))}
+            </Section>
+          )}
+
+          {needsHousehold && (
+            <Section label="get started">
+              <div className="row row-link px-1">
+                <span className="nm min-w-0 flex-1">Create your household</span>
+                <Link
+                  href="/onboarding"
+                  className="m shrink-0 text-[12px] text-[var(--accent)] underline underline-offset-2"
+                >
+                  set up
+                </Link>
+              </div>
+              <p className="bd pt-3.5 text-[12px] leading-relaxed text-[var(--ink-6)]">
+                Your account is active but no kitchen is linked to it yet. Create one to start
+                capturing inventory.
+              </p>
             </Section>
           )}
 

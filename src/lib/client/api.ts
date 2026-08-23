@@ -148,11 +148,13 @@ export async function acceptHouseholdInvite(token: string) {
   );
 }
 
-export async function bootstrapHousehold(name: string, betaToken: string) {
+export async function bootstrapHousehold(name: string, betaToken?: string) {
   return householdBootstrapResponseSchema.parse(
     await request("/api/v1/households/bootstrap", {
       method: "POST",
-      body: JSON.stringify({ name, betaToken }),
+      body: JSON.stringify(
+        betaToken ? { name, betaToken } : { name },
+      ),
     }),
   );
 }

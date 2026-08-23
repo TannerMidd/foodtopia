@@ -21,7 +21,7 @@ export function isPublicAppRoute(pathname: string) {
     pathname.startsWith("/sign-in") ||
     pathname.startsWith("/sign-up") ||
     pathname.startsWith("/invite/") ||
-    pathname.startsWith("/onboarding/") ||
+    pathname.startsWith("/onboarding") ||
     pathname.startsWith("/auth/") ||
     pathname === "/pending" ||
     // The beta administration console is chrome-less; the proxy still requires
