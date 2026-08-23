@@ -108,8 +108,8 @@ function ShellChrome({ children }: { children: ReactNode }) {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex h-[34px] items-center gap-2.5 px-6 text-[15px] font-light transition",
-                  active ? "text-[var(--ink)]" : "text-[var(--ink-5)] hover:text-[var(--ink)]",
+                  "flex h-[34px] items-center gap-2.5 px-6 text-[15px] transition",
+                  active ? "text-[var(--ink)]" : "text-[var(--ink-4)] hover:text-[var(--ink)]",
                 )}
               >
                 <span
@@ -123,10 +123,10 @@ function ShellChrome({ children }: { children: ReactNode }) {
         </nav>
         <span className="flex-1" />
         <div className="flex flex-col gap-2 px-6">
-          <Link href="/settings" className="m text-[10.5px] text-[var(--ink-6)] hover:text-[var(--ink-3)]">
+          <Link href="/settings" className="m text-[11px] text-[var(--ink-5)] hover:text-[var(--ink-2)]">
             settings
           </Link>
-          <p className="m text-[10.5px] leading-relaxed text-[var(--ink-6)]" role="status">
+          <p className="m text-[11px] leading-relaxed text-[var(--ink-5)]" role="status">
             {status}
           </p>
         </div>
@@ -138,7 +138,7 @@ function ShellChrome({ children }: { children: ReactNode }) {
           <Link href="/" aria-label="Foodtopia home">
             <Wordmark className="text-[15px]" />
           </Link>
-          <p className="m text-[10px] text-[var(--ink-6)]" role="status">
+          <p className="m text-[11px] text-[var(--ink-5)]" role="status">
             {status}
           </p>
         </header>
@@ -176,8 +176,8 @@ function ShellChrome({ children }: { children: ReactNode }) {
                   href={item.href}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "flex min-h-11 items-center gap-2 text-[14px] font-light transition",
-                    active ? "text-[var(--ink)]" : "text-[var(--ink-6)]",
+                    "flex min-h-11 items-center gap-2 text-[14px] transition",
+                    active ? "text-[var(--ink)]" : "text-[var(--ink-5)]",
                   )}
                 >
                   {active && <span className="size-1 rounded-[1px] bg-[var(--accent)]" aria-hidden="true" />}

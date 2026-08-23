@@ -367,7 +367,7 @@ export function CaptureFlow() {
             {/* Prepared images are local blob URLs and cannot use the Next image optimizer. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={photo.url} alt={`Batch photo ${index + 1}`} className="absolute inset-0 size-full object-cover" />
-            <figcaption className="m relative flex w-full items-center justify-between bg-[#100f0e]/70 px-2 py-1 text-[10.5px] text-[var(--ink-2)] backdrop-blur-sm">
+            <figcaption className="m relative flex w-full items-center justify-between bg-[#161411]/70 px-2 py-1 text-[11px] text-[var(--ink-2)] backdrop-blur-sm">
               photo {index + 1} · {formatFileSize(photo.file.size)}
               <button
                 type="button"

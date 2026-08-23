@@ -41,7 +41,7 @@ export function Button({
   return (
     <button
       className={cn(
-        "inline-flex items-center justify-center gap-2.5 font-light transition disabled:cursor-not-allowed disabled:opacity-40",
+        "inline-flex items-center justify-center gap-2.5 transition disabled:cursor-not-allowed disabled:opacity-40",
         variants[variant],
         sizes[size],
         className,
@@ -109,7 +109,7 @@ export function Section({
     <section id={id} className={cn("flex flex-col gap-3 sm:flex-row sm:gap-7", className)}>
       <div className="flex-none pt-0 sm:pt-4" style={{ width: labelWidth }}>
         <p className="ml">{label}</p>
-        {meta && <p className="m mt-1.5 text-[10.5px] text-[var(--ink-6)]">{meta}</p>}
+        {meta && <p className="m mt-1.5 text-[11px] text-[var(--ink-5)]">{meta}</p>}
       </div>
       <div className="ledger min-w-0 flex-1">{children}</div>
     </section>
@@ -135,7 +135,7 @@ export function Badge({
   className?: string;
 }) {
   const tones = {
-    neutral: "text-[var(--ink-6)]",
+    neutral: "text-[var(--ink-5)]",
     green: "text-[var(--ink-2)]",
     orange: "text-[var(--time)]",
     red: "text-[var(--time)]",
@@ -191,7 +191,7 @@ export function EmptyState({
 }) {
   return (
     <div className="border-t border-[var(--hairline)] py-10">
-      <span className="flex text-[var(--ink-6)]" aria-hidden="true">
+      <span className="flex text-[var(--ink-5)]" aria-hidden="true">
         {icon}
       </span>
       <h2 className="hd mt-5 text-[20px]">{title}</h2>
@@ -206,7 +206,7 @@ export function EmptyState({
  * accent on focus.
  */
 export const inputClass =
-  "min-h-11 w-full border-b border-[var(--edge-strong)] bg-transparent pb-2.5 text-[15px] font-light text-[var(--ink)] transition focus:border-[var(--accent)] focus:outline-none focus:ring-0 disabled:opacity-45";
+  "min-h-11 w-full border-b border-[var(--edge-strong)] bg-transparent pb-2.5 text-[15px] text-[var(--ink)] transition focus:border-[var(--accent)] focus:outline-none focus:ring-0 disabled:opacity-45";
 
 export const selectClass = `${inputClass} m appearance-none pr-7 text-[13px]`;
 
@@ -227,7 +227,7 @@ export function Field({
         {label}
       </label>
       {children}
-      {hint && <p className="bd mt-2 text-[12px] text-[var(--ink-6)]">{hint}</p>}
+      {hint && <p className="bd mt-2 text-[12.5px] text-[var(--ink-5)]">{hint}</p>}
     </div>
   );
 }
@@ -248,7 +248,7 @@ export function Modal({
   if (!open) return null;
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-[#100f0e]/75 p-0 backdrop-blur-[2px] sm:items-center sm:p-6"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-[#161411]/75 p-0 backdrop-blur-[2px] sm:items-center sm:p-6"
       onMouseDown={onClose}
     >
       <section

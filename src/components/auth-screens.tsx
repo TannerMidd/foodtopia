@@ -12,21 +12,78 @@ import {
 } from "@/lib/client/auth";
 import { normalizeInternalPath } from "@/lib/internal-path";
 import { useOfflineInventory } from "./offline-provider";
-import { Button, Field, StateNotice, inputClass } from "./ui";
+import { Button, Field, StateNotice, cn, inputClass } from "./ui";
 
 /*
- * The sign-in surface is the one place the app shows a frame: a single quiet
- * sheet, centred, with the lit mark at the top.
+ * The sign-in surfaces are the one place the app shows a frame. On phones it
+ * stays a single quiet, centred sheet with the lit mark on top. From `lg` up
+ * the frame becomes a two-panel spread: a brand rail that gives the page real
+ * desktop presence, and the form sheet on a hairline of its own.
  */
+
+/* The lit mark: one small lamp and the wordmark, nothing heavier. */
+function Mark({ className }: { className?: string }) {
+  return (
+    <Link href="/" className={cn("inline-flex items-center gap-2.5", className)} aria-label="Foodtopia home">
+      <span className="lamp size-[7px] rounded-[1px]" aria-hidden="true" />
+      <span className="text-[16px] font-light tracking-[0.01em]">foodtopia</span>
+    </Link>
+  );
+}
+
+const BRAND_FACTS = [
+  ["photograph", "Grocery photos are read and counted into a live inventory."],
+  ["together", "One household shares one list — what's running low, who's cooking."],
+  ["private", "Photos and stock stay inside your household. Nothing is public."],
+] as const;
+
+function BrandRail() {
+  return (
+    <aside className="relative hidden overflow-hidden border-r border-[var(--hairline)] lg:flex lg:flex-col">
+      {/* Accent as light: one wide, faint halo entering from the top left. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(56rem_30rem_at_10%_-10%,var(--accent-halo),transparent_70%)]"
+      />
+      <div className="relative flex h-full flex-col justify-between px-14 py-10 xl:px-20 xl:py-12">
+        <Mark />
+        <div className="max-w-[36rem] py-12">
+          <p className="ml">a quieter kitchen ledger</p>
+          <h2 className="hd mt-5 text-[clamp(1.9rem,3vw,2.7rem)]">
+            From grocery photo to tonight&rsquo;s dinner.
+          </h2>
+          <p className="bd mt-5 max-w-[30rem] text-[15px]">
+            Foodtopia keeps a calm, countable record of your household&rsquo;s food — what you
+            have, what it will become, and what to buy next.
+          </p>
+          <div className="ledger mt-10 max-w-[32rem]">
+            {BRAND_FACTS.map(([label, text]) => (
+              <div className="row" key={label}>
+                <p className="ml w-24 flex-none pt-0.5">{label}</p>
+                <p className="bd flex-1">{text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <p className="m text-[11px] lowercase tracking-[0.14em] text-[var(--ink-6)]">private beta</p>
+      </div>
+    </aside>
+  );
+}
+
 function AuthFrame({ children }: { children: React.ReactNode }) {
   return (
-    <main className="safe-top safe-bottom mx-auto flex min-h-dvh w-full max-w-[26rem] items-center px-6 py-10">
-      <div className="w-full">
-        <Link href="/" className="inline-flex items-center gap-2.5" aria-label="Foodtopia home">
-          <span className="lamp size-[7px] rounded-[1px]" aria-hidden="true" />
-          <span className="text-[16px] font-light">foodtopia</span>
-        </Link>
-        {children}
+    <main className="safe-top safe-bottom flex min-h-dvh w-full flex-col lg:grid lg:grid-cols-[minmax(0,1fr)_30rem] xl:grid-cols-[minmax(0,1fr)_34rem]">
+      <BrandRail />
+      <div className="relative flex flex-1 items-center justify-center px-6 py-10 sm:px-10 lg:px-14">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(30rem_14rem_at_50%_-20%,var(--accent-halo),transparent_70%)] lg:hidden"
+        />
+        <div className="relative w-full max-w-[24rem]">
+          <Mark className="lg:hidden" />
+          {children}
+        </div>
       </div>
     </main>
   );
@@ -245,7 +302,7 @@ export function SignInScreen({
 
       <section className={adminLoginEnabled ? "mt-10" : "mt-12"}>
         <p className="ml">private beta</p>
-        <h1 className="hd mt-3 text-[26px]">Welcome back.</h1>
+        <h1 className="hd mt-3 text-[26px] lg:text-[30px]">Welcome back.</h1>
         <p className="bd mt-2.5">
           Use the address that was invited to your household. There&rsquo;s no password to remember.
         </p>
@@ -254,7 +311,7 @@ export function SignInScreen({
         </div>
       </section>
 
-      <p className="bd mt-8 text-[12px] text-[var(--ink-6)]">
+      <p className="bd mt-8 text-[13px] text-[var(--ink-5)]">
         Continuing means keeping household photos and inventory private, and acknowledging the{" "}
         <Link className="border-b border-[var(--edge-strong)] text-[var(--ink-3)]" href="/privacy">
           beta privacy notice

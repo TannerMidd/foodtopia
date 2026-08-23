@@ -22,32 +22,34 @@
 
 @layer base {
   :root {
-    /* Ground */
-    --page: #100f0e;
-    --ground: #181715;
-    --ground-hi: #1d1c19;
-    --ground-tint: #211f1c;
+    /* Ground — lifted just enough off true black that large dark surfaces
+       stop glowing harshly against bright text. Still warm charcoal. */
+    --page: #161411;
+    --ground: #1e1b18;
+    --ground-hi: #252220;
+    --ground-tint: #2a2724;
 
     /* Edges */
-    --hairline: #232220;
-    --edge: #2b2a26;
-    --edge-strong: #383630;
+    --hairline: #2d2b27;
+    --edge: #37342e;
+    --edge-strong: #454138;
 
-    /* Ink, brightest to faintest */
-    --ink: #eceae5;
-    --ink-2: #c9c3b9;
-    --ink-3: #a49e94;
-    --ink-4: #8f8a80;
-    --ink-5: #7c776d;
-    --ink-6: #6d6960;
+    /* Ink, brightest to faintest. The faint stops stay above ~4:1 against
+       --page so labels and meta text never disappear into the ground. */
+    --ink: #f2efe8;
+    --ink-2: #d9d3c7;
+    --ink-3: #bcb4a6;
+    --ink-4: #a49c8e;
+    --ink-5: #90887a;
+    --ink-6: #7e7668;
 
     /* Accent behaves like light, never paint */
-    --accent: #5b7fb8;
-    --accent-ink: #dfe6f2;
+    --accent: #6b8ec6;
+    --accent-ink: #e4eaf6;
     --accent-on: #0f1319;
 
     /* Printed dates and anything time-bound */
-    --time: #c99a5b;
+    --time: #d4a469;
 
     /* Derived accent washes, so every surface mixes it the same way */
     --accent-line: color-mix(in oklab, var(--accent) 55%, transparent);
@@ -76,7 +78,8 @@
     background: var(--page);
     color: var(--ink);
     font-family: var(--font-newsreader), Newsreader, Georgia, serif;
-    font-weight: 300;
+    /* Regular weight: light serifs halate on dark ground and tire the eyes. */
+    font-weight: 400;
     font-synthesis-weight: none;
   }
 
@@ -112,8 +115,7 @@
   }
 
   ::placeholder {
-    color: var(--ink-6);
-    font-style: italic;
+    color: var(--ink-5);
   }
 }
 
@@ -124,11 +126,11 @@
   .ml {
     margin: 0;
     font-family: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
-    font-size: 10.5px;
+    font-size: 11px;
     font-weight: 400;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.14em;
     text-transform: lowercase;
-    color: var(--ink-6);
+    color: var(--ink-5);
   }
 
   /* Mono: numbers, amounts, and any machine-recorded fact. */
@@ -139,22 +141,22 @@
 
   /* The name of a thing. */
   .nm {
-    font-size: 15px;
-    font-weight: 300;
+    font-size: 16px;
+    font-weight: 400;
     letter-spacing: 0.005em;
   }
 
   /* Running prose. */
   .bd {
-    font-size: 13.5px;
-    font-weight: 300;
-    line-height: 1.7;
+    font-size: 14.5px;
+    font-weight: 400;
+    line-height: 1.65;
     color: var(--ink-3);
   }
 
   .hd {
     margin: 0;
-    font-weight: 200;
+    font-weight: 250;
     letter-spacing: -0.015em;
     line-height: 1.15;
     color: var(--ink);
