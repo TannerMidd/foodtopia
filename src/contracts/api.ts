@@ -69,6 +69,10 @@ export const householdBootstrapResponseSchema = z.object({
 
 export const accountStatusSchema = z.enum(["pending", "enabled", "disabled"]);
 
+// Timestamps sourced from Supabase (PostgREST/GoTrue) may carry a "+00:00"
+// offset rather than "Z" depending on how a row was written; accept both.
+const supabaseDatetime = z.iso.datetime({ offset: true });
+
 export const accountStatusResponseSchema = z.object({
   status: accountStatusSchema,
 });
@@ -78,10 +82,10 @@ export const betaAccountSchema = z.object({
   email: z.string().min(3).max(320),
   displayName: z.string().nullable(),
   status: accountStatusSchema,
-  createdAt: z.iso.datetime(),
-  emailConfirmedAt: z.iso.datetime().nullable(),
-  lastSignInAt: z.iso.datetime().nullable(),
-  enabledAt: z.iso.datetime().nullable(),
+  createdAt: supabaseDatetime,
+  emailConfirmedAt: supabaseDatetime.nullable(),
+  lastSignInAt: supabaseDatetime.nullable(),
+  enabledAt: supabaseDatetime.nullable(),
 });
 
 export const betaAccountsResponseSchema = z.object({
