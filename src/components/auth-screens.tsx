@@ -14,6 +14,7 @@ import {
   getAuthenticatedUser,
   requestAdminPasswordLogin,
   requestMagicLink,
+  setCurrentUserPassword,
   signInWithPassword,
   signOut,
   signUpWithPassword,
@@ -472,8 +473,9 @@ function PasswordSignUpForm() {
       ) : null}
       {state === "error" ? (
         <div className="mt-5">
-          <StateNotice title="Account not created" tone="error">
-            Check the details and try again. If this email already has an account, sign in instead.
+          <StateNotice title="Account setup could not continue" tone="error">
+            Check the details and try again. If you previously used an email sign-in link and do not
+            have a password, ask the administrator to migrate your access.
           </StateNotice>
         </div>
       ) : null}
@@ -696,6 +698,107 @@ export function SignUpScreen({ signupsOpen = true }: { signupsOpen?: boolean }) 
         </Link>
         . US English for now.
       </p>
+    </AuthFrame>
+  );
+}
+
+export function SetPasswordScreen() {
+  const [password, setPassword] = useState("");
+  const [confirmation, setConfirmation] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [state, setState] = useState<"idle" | "mismatch" | "error" | "demo">("idle");
+
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    if (password !== confirmation) {
+      setState("mismatch");
+      return;
+    }
+    setBusy(true);
+    setState("idle");
+    try {
+      const result = await setCurrentUserPassword(password);
+      if (result.demo) {
+        setState("demo");
+        return;
+      }
+      window.location.replace("/pending");
+    } catch {
+      setState("error");
+    } finally {
+      setPassword("");
+      setConfirmation("");
+      setBusy(false);
+    }
+  }
+
+  return (
+    <AuthFrame>
+      <section className="mt-12">
+        <p className="ml">secure account migration</p>
+        <h1 className="hd mt-3 text-[26px] lg:text-[30px]">Choose your password.</h1>
+        <p className="bd mt-2.5">
+          This one-time step converts your earlier email-link account to password access. Your
+          account will remain in administrator review.
+        </p>
+        <form className="mt-8" onSubmit={(event) => void submit(event)}>
+          <Field label="Password" htmlFor="migration-password" hint="At least 8 characters">
+            <input
+              id="migration-password"
+              name="password"
+              type="password"
+              autoComplete="new-password"
+              required
+              minLength={8}
+              maxLength={256}
+              className={inputClass}
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </Field>
+          <div className="mt-6">
+            <Field label="Confirm password" htmlFor="migration-password-confirmation">
+              <input
+                id="migration-password-confirmation"
+                name="passwordConfirmation"
+                type="password"
+                autoComplete="new-password"
+                required
+                minLength={8}
+                maxLength={256}
+                className={inputClass}
+                value={confirmation}
+                onChange={(event) => setConfirmation(event.target.value)}
+              />
+            </Field>
+          </div>
+          {state === "mismatch" ? (
+            <div className="mt-5">
+              <StateNotice title="Passwords do not match" tone="error">
+                Enter the same password in both fields.
+              </StateNotice>
+            </div>
+          ) : null}
+          {state === "error" ? (
+            <div className="mt-5">
+              <StateNotice title="Password not saved" tone="error">
+                This migration link is invalid or expired. Ask the administrator for a fresh link.
+              </StateNotice>
+            </div>
+          ) : null}
+          {state === "demo" ? (
+            <div className="mt-5">
+              <StateNotice title="Accounts are off in this demo" tone="warning">
+                This build has no account provider connected.
+              </StateNotice>
+            </div>
+          ) : null}
+          <Button type="submit" className="mt-6 w-full" busy={busy}>
+            Save password
+            <ArrowRight className="size-4 text-[var(--accent-ink)]" aria-hidden="true" />
+          </Button>
+        </form>
+      </section>
     </AuthFrame>
   );
 }

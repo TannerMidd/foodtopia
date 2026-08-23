@@ -8,6 +8,7 @@ const auth = vi.hoisted(() => ({
   getAuthenticatedUser: vi.fn(),
   requestAdminPasswordLogin: vi.fn(),
   requestMagicLink: vi.fn(),
+  setCurrentUserPassword: vi.fn(),
   signInWithPassword: vi.fn(),
   signOut: vi.fn(),
   signUpWithPassword: vi.fn(),
@@ -24,7 +25,7 @@ vi.mock("./offline-provider", () => ({
   useOfflineInventory: () => offline,
 }));
 
-import { SignInScreen, SignUpScreen } from "./auth-screens";
+import { SetPasswordScreen, SignInScreen, SignUpScreen } from "./auth-screens";
 
 describe("administrator password sign-in", () => {
   beforeEach(() => {
@@ -202,5 +203,37 @@ describe("member password authentication", () => {
 
     expect(await screen.findByText("Passwords do not match")).toBeInTheDocument();
     expect(auth.signUpWithPassword).not.toHaveBeenCalled();
+  });
+});
+
+describe("legacy account password migration", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    auth.setCurrentUserPassword.mockResolvedValue({ demo: false });
+  });
+
+  it("sets the authenticated account password", async () => {
+    const user = userEvent.setup();
+    render(<SetPasswordScreen />);
+
+    await user.type(screen.getByLabelText("Password"), "replacement-password");
+    await user.type(screen.getByLabelText("Confirm password"), "replacement-password");
+    await user.click(screen.getByRole("button", { name: "Save password" }));
+
+    await waitFor(() => {
+      expect(auth.setCurrentUserPassword).toHaveBeenCalledWith("replacement-password");
+    });
+  });
+
+  it("rejects mismatched migration passwords before contacting Supabase", async () => {
+    const user = userEvent.setup();
+    render(<SetPasswordScreen />);
+
+    await user.type(screen.getByLabelText("Password"), "replacement-password");
+    await user.type(screen.getByLabelText("Confirm password"), "different-password");
+    await user.click(screen.getByRole("button", { name: "Save password" }));
+
+    expect(await screen.findByText("Passwords do not match")).toBeInTheDocument();
+    expect(auth.setCurrentUserPassword).not.toHaveBeenCalled();
   });
 });

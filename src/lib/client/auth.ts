@@ -61,6 +61,19 @@ export async function signInWithPassword(email: string, password: string) {
   return { demo: false as const };
 }
 
+export async function setCurrentUserPassword(password: string) {
+  const supabase = getClient();
+  if (!supabase) return { demo: true as const };
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+  if (userError || !user) throw userError ?? new Error("Authentication required.");
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) throw error;
+  return { demo: false as const };
+}
+
 export async function requestAdminPasswordLogin(
   username: string,
   password: string,

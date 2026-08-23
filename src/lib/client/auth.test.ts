@@ -2,8 +2,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   createBrowserClient: vi.fn(),
+  getUser: vi.fn(),
   signInWithPassword: vi.fn(),
   signUp: vi.fn(),
+  updateUser: vi.fn(),
 }));
 
 vi.mock("@supabase/ssr", () => ({
@@ -18,11 +20,15 @@ describe("password authentication client", () => {
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "public-key");
     mocks.createBrowserClient.mockReturnValue({
       auth: {
+        getUser: mocks.getUser,
         signInWithPassword: mocks.signInWithPassword,
         signUp: mocks.signUp,
+        updateUser: mocks.updateUser,
       },
     });
     mocks.signInWithPassword.mockResolvedValue({ error: null });
+    mocks.getUser.mockResolvedValue({ data: { user: { id: "legacy-user" } }, error: null });
+    mocks.updateUser.mockResolvedValue({ error: null });
     mocks.signUp.mockResolvedValue({
       data: { session: { access_token: "session" }, user: { identities: [{}] } },
       error: null,
@@ -80,6 +86,25 @@ describe("password authentication client", () => {
       email: "member@example.test",
       password: "member-password",
     });
+  });
+
+  it("sets a password only for the authenticated migration session", async () => {
+    const { setCurrentUserPassword } = await import("./auth");
+
+    await setCurrentUserPassword("replacement-password");
+
+    expect(mocks.getUser).toHaveBeenCalledTimes(1);
+    expect(mocks.updateUser).toHaveBeenCalledWith({ password: "replacement-password" });
+  });
+
+  it("refuses to set a password without an authenticated migration session", async () => {
+    mocks.getUser.mockResolvedValue({ data: { user: null }, error: null });
+    const { setCurrentUserPassword } = await import("./auth");
+
+    await expect(setCurrentUserPassword("replacement-password")).rejects.toThrow(
+      "Authentication required.",
+    );
+    expect(mocks.updateUser).not.toHaveBeenCalled();
   });
 
   it("forwards provider failures without logging credentials", async () => {
