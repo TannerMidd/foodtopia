@@ -50,6 +50,7 @@ export async function GET(request: Request) {
       id: string;
       email: string;
       createdAt: string;
+      emailConfirmedAt: string | null;
       lastSignInAt: string | null;
     }> = [];
     for (let page = 1; page <= MAX_PAGES; page += 1) {
@@ -63,6 +64,7 @@ export async function GET(request: Request) {
           id: user.id,
           email: user.email ?? "",
           createdAt: user.created_at ?? new Date(0).toISOString(),
+          emailConfirmedAt: user.email_confirmed_at ?? null,
           lastSignInAt: user.last_sign_in_at ?? null,
         });
       }
@@ -85,6 +87,7 @@ export async function GET(request: Request) {
         displayName: profile?.display_name ?? null,
         status: profile?.status ?? "pending",
         createdAt: user.createdAt,
+        emailConfirmedAt: user.emailConfirmedAt,
         lastSignInAt: user.lastSignInAt,
         enabledAt: profile?.enabled_at ?? null,
       };

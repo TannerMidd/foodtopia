@@ -79,6 +79,7 @@ export const betaAccountSchema = z.object({
   displayName: z.string().nullable(),
   status: accountStatusSchema,
   createdAt: z.iso.datetime(),
+  emailConfirmedAt: z.iso.datetime().nullable(),
   lastSignInAt: z.iso.datetime().nullable(),
   enabledAt: z.iso.datetime().nullable(),
 });

@@ -74,7 +74,7 @@ function isInstalledDisplayMode() {
   );
 }
 
-export function SettingsScreen() {
+export function SettingsScreen({ isAdmin = false }: { isAdmin?: boolean }) {
   const router = useRouter();
   const { apiMode, clear } = useOfflineInventory();
   const [preferences, setPreferences] = useState<string[]>([]);
@@ -340,6 +340,17 @@ export function SettingsScreen() {
               read
             </Link>
           </div>
+          {isAdmin && (
+            <div className="row min-h-[50px] px-1">
+              <span className="bd flex-1 text-[var(--ink-3)]">Beta admissions</span>
+              <Link
+                href="/admin/beta"
+                className="m text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+              >
+                review signups
+              </Link>
+            </div>
+          )}
           <div className="row min-h-[50px] px-1">
             <span className="bd flex-1 text-[var(--ink-3)]">Sign out and clear this device</span>
             <button

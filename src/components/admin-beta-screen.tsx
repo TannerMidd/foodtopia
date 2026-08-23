@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import Link from "next/link";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { Inbox, LoaderCircle, RefreshCw } from "lucide-react";
 
 import {
@@ -12,6 +13,9 @@ import {
 } from "@/lib/client/api";
 import type { BetaAccount, BetaAccountsResponse } from "@/contracts/api";
 import { Button, EmptyState, Page, PageHeader, StateNotice, cn } from "./ui";
+
+const REFRESH_INTERVAL_MS = 30_000;
+const MAX_ENABLE_BATCH = 50;
 
 /*
  * Beta admissions console. One operator surface: open or close the public
@@ -58,27 +62,57 @@ export function AdminBetaScreen() {
   const [roster, setRoster] = useState<BetaAccountsResponse | null>(null);
   const [loadFailed, setLoadFailed] = useState(false);
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
-  const [working, setWorking] = useState<"load" | "enable" | "disable" | "window" | null>("load");
+  const [refreshing, setRefreshing] = useState(true);
+  const [lastRefreshedAt, setLastRefreshedAt] = useState<string | null>(null);
+  const [working, setWorking] = useState<"enable" | "disable" | "window" | null>(null);
   const [confirmingDisable, setConfirmingDisable] = useState<string | null>(null);
   const [notice, setNotice] = useState<{ tone: "success" | "error"; text: string } | null>(null);
+  const mutationInFlight = useRef(false);
+  const loadInFlight = useRef<Promise<void> | null>(null);
 
-  const load = useCallback(async () => {
-    setWorking("load");
+  const load = useCallback(() => {
+    if (mutationInFlight.current) return Promise.resolve();
+    if (loadInFlight.current) return loadInFlight.current;
+    setRefreshing(true);
     setLoadFailed(false);
-    try {
-      setRoster(await listBetaAccounts());
-    } catch {
-      setLoadFailed(true);
-    } finally {
-      setWorking(null);
-    }
+    const task = listBetaAccounts()
+      .then((nextRoster) => {
+        setRoster(nextRoster);
+        const eligibleIds = new Set(
+          nextRoster.accounts
+            .filter((account) => account.status === "pending" && account.emailConfirmedAt)
+            .map((account) => account.userId),
+        );
+        setSelected((current) =>
+          new Set([...current].filter((userId) => eligibleIds.has(userId)).slice(0, MAX_ENABLE_BATCH)),
+        );
+        setLastRefreshedAt(new Date().toISOString());
+      })
+      .catch(() => {
+        setLoadFailed(true);
+      })
+      .finally(() => {
+        loadInFlight.current = null;
+        setRefreshing(false);
+      });
+    loadInFlight.current = task;
+    return task;
   }, []);
 
   useEffect(() => {
-    // Deferred like the other screens so the effect body never sets state
-    // synchronously; the roster arrives through promise callbacks.
-    const timer = window.setTimeout(() => void load(), 0);
-    return () => window.clearTimeout(timer);
+    function refreshWhenVisible() {
+      if (document.visibilityState === "visible") void load();
+    }
+    const initialTimer = window.setTimeout(() => void load(), 0);
+    const interval = window.setInterval(refreshWhenVisible, REFRESH_INTERVAL_MS);
+    window.addEventListener("focus", refreshWhenVisible);
+    document.addEventListener("visibilitychange", refreshWhenVisible);
+    return () => {
+      window.clearTimeout(initialTimer);
+      window.clearInterval(interval);
+      window.removeEventListener("focus", refreshWhenVisible);
+      document.removeEventListener("visibilitychange", refreshWhenVisible);
+    };
   }, [load]);
 
   function errorMessage(error: unknown, fallback: string) {
@@ -86,27 +120,50 @@ export function AdminBetaScreen() {
   }
 
   async function enable(userIds: string[]) {
-    if (userIds.length === 0 || working) return;
+    if (userIds.length === 0 || mutationInFlight.current || loadInFlight.current) return;
+    const eligibleIds = new Set(
+      (roster?.accounts ?? [])
+        .filter(
+          (account) =>
+            (account.status === "pending" || account.status === "disabled") &&
+            account.emailConfirmedAt,
+        )
+        .map((account) => account.userId),
+    );
+    const confirmedPendingIds = userIds
+      .filter((userId) => eligibleIds.has(userId))
+      .slice(0, MAX_ENABLE_BATCH);
+    if (confirmedPendingIds.length === 0) {
+      setSelected(new Set());
+      return;
+    }
+    mutationInFlight.current = true;
     setWorking("enable");
     setNotice(null);
+    let succeeded = false;
     try {
-      const { changedCount } = await enableBetaAccounts(userIds);
+      const { changedCount } = await enableBetaAccounts(confirmedPendingIds);
       setSelected(new Set());
       setNotice({
         tone: "success",
-        text: `Enabled ${changedCount} of ${userIds.length} selected account${userIds.length === 1 ? "" : "s"}.`,
+        text: `Enabled ${changedCount} of ${confirmedPendingIds.length} selected account${confirmedPendingIds.length === 1 ? "" : "s"}.`,
       });
-      await load();
+      succeeded = true;
     } catch (error) {
       setNotice({ tone: "error", text: errorMessage(error, "The accounts could not be enabled.") });
+    } finally {
+      mutationInFlight.current = false;
       setWorking(null);
     }
+    if (succeeded) await load();
   }
 
   async function disable(userIds: string[]) {
-    if (userIds.length === 0 || working) return;
+    if (userIds.length === 0 || mutationInFlight.current || loadInFlight.current) return;
+    mutationInFlight.current = true;
     setWorking("disable");
     setNotice(null);
+    let succeeded = false;
     try {
       const { changedCount } = await disableBetaAccounts(userIds);
       setConfirmingDisable(null);
@@ -114,20 +171,25 @@ export function AdminBetaScreen() {
         tone: "success",
         text: `Disabled ${changedCount} account${changedCount === 1 ? "" : "s"}. Their access ends immediately.`,
       });
-      await load();
+      succeeded = true;
     } catch (error) {
       setNotice({
         tone: "error",
         text: errorMessage(error, "The accounts could not be disabled."),
       });
+    } finally {
+      mutationInFlight.current = false;
       setWorking(null);
     }
+    if (succeeded) await load();
   }
 
   async function toggleWindow(open: boolean) {
-    if (working) return;
+    if (mutationInFlight.current || loadInFlight.current) return;
+    mutationInFlight.current = true;
     setWorking("window");
     setNotice(null);
+    let succeeded = false;
     try {
       await setSignupWindow(open);
       setNotice({
@@ -136,29 +198,40 @@ export function AdminBetaScreen() {
           ? "The open-beta signup window is open."
           : "The open-beta signup window is closed. Existing requests stay pending.",
       });
-      await load();
+      succeeded = true;
     } catch (error) {
       setNotice({
         tone: "error",
         text: errorMessage(error, "The signup window could not be updated."),
       });
+    } finally {
+      mutationInFlight.current = false;
       setWorking(null);
     }
+    if (succeeded) await load();
   }
 
   function toggleSelected(userId: string) {
     setSelected((current) => {
       const next = new Set(current);
       if (next.has(userId)) next.delete(userId);
-      else next.add(userId);
+      else if (next.size < MAX_ENABLE_BATCH) next.add(userId);
       return next;
     });
   }
 
-  const pending = roster?.accounts.filter((a) => a.status === "pending") ?? [];
+  const pending = roster?.accounts.filter(
+    (account) => account.status === "pending" && account.emailConfirmedAt,
+  ) ?? [];
+  const awaitingEmail = roster?.accounts.filter(
+    (account) => account.status === "pending" && !account.emailConfirmedAt,
+  ) ?? [];
   const enabledAccounts = roster?.accounts.filter((a) => a.status === "enabled") ?? [];
   const disabledAccounts = roster?.accounts.filter((a) => a.status === "disabled") ?? [];
-  const allPendingSelected = pending.length > 0 && pending.every((a) => selected.has(a.userId));
+  const selectableBatch = pending.slice(0, MAX_ENABLE_BATCH);
+  const allPendingSelected = selectableBatch.length > 0 &&
+    selectableBatch.every((account) => selected.has(account.userId));
+  const controlsDisabled = Boolean(working) || refreshing;
 
   return (
     <Page className="max-w-[52rem]">
@@ -167,10 +240,24 @@ export function AdminBetaScreen() {
         title="Admissions"
         description="Review open-beta signups and enable exactly who should get in, in batches you choose."
         action={
-          <Button variant="ghost" size="small" onClick={() => void load()} busy={working === "load"}>
-            <RefreshCw className="size-3.5" aria-hidden="true" />
-            refresh
-          </Button>
+          <div className="flex flex-col items-end gap-1 sm:flex-row sm:items-center sm:gap-2">
+            <Link
+              href="/settings"
+              className="m inline-flex min-h-11 items-center px-2 text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+            >
+              back to settings
+            </Link>
+            <Button
+              variant="ghost"
+              size="small"
+              onClick={() => void load()}
+              busy={refreshing}
+              disabled={Boolean(working)}
+            >
+              <RefreshCw className="size-3.5" aria-hidden="true" />
+              refresh
+            </Button>
+          </div>
         }
       />
 
@@ -208,6 +295,7 @@ export function AdminBetaScreen() {
                   variant="secondary"
                   size="small"
                   busy={working === "window"}
+                  disabled={refreshing}
                   onClick={() => void toggleWindow(!roster.signupsOpen)}
                 >
                   {roster.signupsOpen ? "Close signups" : "Open signups"}
@@ -217,11 +305,18 @@ export function AdminBetaScreen() {
             <div className="row">
               <p className="ml w-28 flex-none pt-0.5">accounts</p>
               <p className="bd">
-                {roster.counts.pending} waiting · {roster.counts.enabled} enabled ·{" "}
+                {pending.length} waiting · {awaitingEmail.length} awaiting email ·{" "}
+                {roster.counts.enabled} enabled ·{" "}
                 {roster.counts.disabled} disabled
               </p>
             </div>
           </section>
+
+          {lastRefreshedAt && (
+            <p className="m -mt-6 mb-9 text-right text-[10.5px] text-[var(--ink-6)]" role="status">
+              refreshed {stamp(lastRefreshedAt)} · updates automatically
+            </p>
+          )}
 
           <section className="mt-9">
             <div className="flex items-baseline justify-between gap-4">
@@ -231,12 +326,16 @@ export function AdminBetaScreen() {
                   type="checkbox"
                   className="size-3.5 accent-[var(--accent-solid)]"
                   checked={allPendingSelected}
-                  disabled={pending.length === 0}
+                  disabled={selectableBatch.length === 0 || controlsDisabled}
                   onChange={() =>
-                    setSelected(allPendingSelected ? new Set() : new Set(pending.map((a) => a.userId)))
+                    setSelected(
+                      allPendingSelected
+                        ? new Set()
+                        : new Set(selectableBatch.map((account) => account.userId)),
+                    )
                   }
                 />
-                select all
+                {pending.length > MAX_ENABLE_BATCH ? "select first 50" : "select all"}
               </label>
             </div>
             <div className="mt-4 border-t border-[var(--hairline)]">
@@ -254,6 +353,10 @@ export function AdminBetaScreen() {
                       className="size-4 accent-[var(--accent-solid)]"
                       aria-label={`Enable ${account.email}`}
                       checked={selected.has(account.userId)}
+                      disabled={
+                        controlsDisabled ||
+                        (!selected.has(account.userId) && selected.size >= MAX_ENABLE_BATCH)
+                      }
                       onChange={() => toggleSelected(account.userId)}
                     />
                   </AccountRow>
@@ -265,16 +368,31 @@ export function AdminBetaScreen() {
                 <Button
                   onClick={() => void enable([...selected])}
                   busy={working === "enable"}
-                  disabled={selected.size === 0}
+                  disabled={selected.size === 0 || refreshing}
                 >
                   Enable selected ({selected.size})
                 </Button>
                 <p className="m text-[10.5px] text-[var(--ink-5)]">
-                  Enabled accounts can sign in immediately.
+                  Enabled accounts can sign in immediately. Up to 50 per batch.
                 </p>
               </div>
             )}
           </section>
+
+          {awaitingEmail.length > 0 && (
+            <section className="mt-12">
+              <p className="ml">awaiting email confirmation</p>
+              <div className="mt-4 border-t border-[var(--hairline)]">
+                {awaitingEmail.map((account) => (
+                  <AccountRow key={account.userId} account={account}>
+                    <span className="m flex-none text-[10.5px] text-[var(--ink-6)]">
+                      not approvable yet
+                    </span>
+                  </AccountRow>
+                ))}
+              </div>
+            </section>
+          )}
 
           <section className="mt-12">
             <p className="ml">enabled</p>
@@ -287,6 +405,7 @@ export function AdminBetaScreen() {
                         variant="danger"
                         size="small"
                         busy={working === "disable"}
+                        disabled={refreshing}
                         onClick={() => void disable([account.userId])}
                       >
                         confirm
@@ -304,9 +423,9 @@ export function AdminBetaScreen() {
                       type="button"
                       className={cn(
                         "m flex-none min-h-11 text-[10.5px]",
-                        working ? "text-[var(--ink-6)]" : "text-[var(--ink-4)] hover:text-[var(--time)]",
+                        controlsDisabled ? "text-[var(--ink-6)]" : "text-[var(--ink-4)] hover:text-[var(--time)]",
                       )}
-                      disabled={Boolean(working)}
+                      disabled={controlsDisabled}
                       onClick={() => setConfirmingDisable(account.userId)}
                     >
                       disable
@@ -326,7 +445,7 @@ export function AdminBetaScreen() {
                     <button
                       type="button"
                       className="m flex-none min-h-11 text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)] disabled:text-[var(--ink-6)]"
-                      disabled={Boolean(working)}
+                      disabled={controlsDisabled}
                       onClick={() => void enable([account.userId])}
                     >
                       re-enable
@@ -339,7 +458,7 @@ export function AdminBetaScreen() {
         </>
       )}
 
-      {!roster && !loadFailed && (
+      {!roster && !loadFailed && refreshing && (
         <p className="m flex items-center gap-3 text-[11px] text-[var(--ink-4)]" role="status">
           <LoaderCircle className="size-4 animate-spin text-[var(--accent)]" aria-hidden="true" />
           loading accounts…

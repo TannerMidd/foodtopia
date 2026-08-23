@@ -1,5 +1,5 @@
 import { NextRequest, type NextResponse } from "next/server";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   createAuthCallbackSupabaseClient: vi.fn(),
@@ -13,10 +13,12 @@ vi.mock("@/lib/supabase/server", () => ({
 
 describe("GET /auth/callback", () => {
   let callbackResponse: NextResponse | undefined;
+  let consoleError: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
     vi.resetModules();
     vi.clearAllMocks();
+    consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);
 
     mocks.createAuthCallbackSupabaseClient.mockImplementation(
       (_request: NextRequest, response: NextResponse) => {
@@ -29,6 +31,10 @@ describe("GET /auth/callback", () => {
         };
       },
     );
+  });
+
+  afterEach(() => {
+    consoleError.mockRestore();
   });
 
   it("exchanges the code server-side, preserves a safe next path, and forwards auth cookies", async () => {
@@ -97,7 +103,9 @@ describe("GET /auth/callback", () => {
     );
   });
 
-  it("verifies an admin-generated magic-link token once, preserves cookies, and redirects through completion", async () => {
+  it.each(["email", "signup", "invite", "magiclink"] as const)(
+    "verifies a %s token hash once, preserves cookies, and redirects through completion",
+    async (linkType) => {
     mocks.verifyOtp.mockImplementation(async () => {
       callbackResponse?.cookies.set({
         name: "sb-foodtopia-auth-token",
@@ -112,14 +120,14 @@ describe("GET /auth/callback", () => {
 
     const response = await GET(
       new NextRequest(
-        "https://foodtopia.example/auth/callback?token_hash=admin-generated-hash&type=magiclink&next=%2Fonboarding%2Fabc",
+        `https://foodtopia.example/auth/callback?token_hash=server-verified-hash&type=${linkType}&next=%2Fonboarding%2Fabc`,
       ),
     );
 
     expect(mocks.verifyOtp).toHaveBeenCalledTimes(1);
     expect(mocks.verifyOtp).toHaveBeenCalledWith({
-      token_hash: "admin-generated-hash",
-      type: "magiclink",
+      token_hash: "server-verified-hash",
+      type: linkType,
     });
     expect(mocks.exchangeCodeForSession).not.toHaveBeenCalled();
     expect(response.status).toBe(307);
@@ -133,12 +141,15 @@ describe("GET /auth/callback", () => {
       httpOnly: true,
       path: "/",
     });
-  });
+    expect(consoleError).not.toHaveBeenCalled();
+  },
+  );
 
   it.each([
     "https://foodtopia.example/auth/callback?type=magiclink",
     "https://foodtopia.example/auth/callback?token_hash=admin-generated-hash",
     "https://foodtopia.example/auth/callback?token_hash=admin-generated-hash&type=recovery",
+    "https://foodtopia.example/auth/callback?token_hash=admin-generated-hash&type=email_change",
     "https://foodtopia.example/auth/callback?code=one&code=two",
     "https://foodtopia.example/auth/callback?code=one&token_hash=admin-generated-hash&type=magiclink",
     "https://foodtopia.example/auth/callback?token_hash=one&token_hash=two&type=magiclink",
@@ -157,5 +168,60 @@ describe("GET /auth/callback", () => {
       "https://foodtopia.example/sign-in?authError=invalid_link",
     );
     expect(response.headers.get("cache-control")).toBe("private, no-store");
+  });
+
+  it("logs only bounded provider metadata when an exchange fails", async () => {
+    mocks.verifyOtp.mockResolvedValue({
+      error: {
+        code: "otp_expired",
+        status: 403,
+        message: "expired for private-user@example.test with server-verified-hash",
+        session: { access_token: "private-session" },
+      },
+    });
+    const { GET } = await import("./route");
+
+    const response = await GET(
+      new NextRequest(
+        "https://foodtopia.example/auth/callback?token_hash=server-verified-hash&type=email",
+      ),
+    );
+
+    expect(response.headers.get("location")).toBe(
+      "https://foodtopia.example/sign-in?authError=invalid_link",
+    );
+    expect(consoleError).toHaveBeenCalledWith("Auth callback failed", {
+      mechanism: "token_hash",
+      verificationType: "email",
+      phase: "exchange",
+      code: "otp_expired",
+      status: 403,
+    });
+    const logged = JSON.stringify(consoleError.mock.calls);
+    expect(logged).not.toContain("server-verified-hash");
+    expect(logged).not.toContain("private-user@example.test");
+    expect(logged).not.toContain("private-session");
+    expect(logged).not.toContain("expired for");
+  });
+
+  it("does not log attacker-controlled unsupported verification types", async () => {
+    const attackerType = "recovery-private-user@example.test-server-verified-hash";
+    const { GET } = await import("./route");
+
+    await GET(
+      new NextRequest(
+        `https://foodtopia.example/auth/callback?token_hash=server-verified-hash&type=${encodeURIComponent(attackerType)}`,
+      ),
+    );
+
+    expect(consoleError).toHaveBeenCalledWith("Auth callback failed", {
+      mechanism: "invalid",
+      verificationType: "unsupported",
+      phase: "validation",
+    });
+    const logged = JSON.stringify(consoleError.mock.calls);
+    expect(logged).not.toContain(attackerType);
+    expect(logged).not.toContain("server-verified-hash");
+    expect(logged).not.toContain("private-user@example.test");
   });
 });

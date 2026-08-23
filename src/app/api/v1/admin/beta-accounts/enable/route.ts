@@ -7,7 +7,7 @@ import {
 import { isDemoMode } from "@/lib/env";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { requireAdminSession } from "@/server/auth/admin-user";
-import { correlationId, errorResponse, json, parseJson } from "@/server/http";
+import { ApiFault, correlationId, errorResponse, json, parseJson } from "@/server/http";
 import { asApiError } from "@/server/repositories/errors";
 import { assertSameOrigin } from "@/server/origin";
 
@@ -27,6 +27,20 @@ export async function POST(request: NextRequest) {
     if (!isDemoMode) {
       const admin = await requireAdminSession();
       const serviceRole = createAdminSupabaseClient();
+      const authUsers = await Promise.all(
+        input.userIds.map(async (userId) => {
+          const { data, error } = await serviceRole.auth.admin.getUserById(userId);
+          if (error) throw error;
+          return data.user;
+        }),
+      );
+      if (authUsers.some((user) => !user?.email_confirmed_at)) {
+        throw new ApiFault(
+          "BETA_ACCOUNT_EMAIL_UNCONFIRMED",
+          "Every selected account must confirm its email before it can be enabled.",
+          422,
+        );
+      }
       const { data, error } = await serviceRole
         .from("profiles")
         .update({
