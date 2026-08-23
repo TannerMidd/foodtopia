@@ -8,6 +8,9 @@ const auth = vi.hoisted(() => ({
   getAuthenticatedUser: vi.fn(),
   requestAdminPasswordLogin: vi.fn(),
   requestMagicLink: vi.fn(),
+  signInWithPassword: vi.fn(),
+  signOut: vi.fn(),
+  signUpWithPassword: vi.fn(),
 }));
 const offline = vi.hoisted(() => ({ clear: vi.fn() }));
 
@@ -21,7 +24,7 @@ vi.mock("./offline-provider", () => ({
   useOfflineInventory: () => offline,
 }));
 
-import { SignInScreen } from "./auth-screens";
+import { SignInScreen, SignUpScreen } from "./auth-screens";
 
 describe("administrator password sign-in", () => {
   beforeEach(() => {
@@ -41,7 +44,7 @@ describe("administrator password sign-in", () => {
     );
 
     await user.type(screen.getByLabelText("Username"), "Admin");
-    const passwordInput = screen.getByLabelText("Password");
+    const passwordInput = screen.getAllByLabelText("Password")[0];
     expect(passwordInput).toHaveAttribute("type", "password");
     expect(passwordInput).toHaveAttribute("autocomplete", "current-password");
     await user.type(passwordInput, "a-test-password");
@@ -66,7 +69,7 @@ describe("administrator password sign-in", () => {
     render(<SignInScreen adminLoginEnabled />);
 
     await user.type(screen.getByLabelText("Username"), "Admin");
-    await user.type(screen.getByLabelText("Password"), "wrong-password");
+    await user.type(screen.getAllByLabelText("Password")[0], "wrong-password");
     await user.click(screen.getByRole("button", { name: "Sign in as admin" }));
 
     expect(await screen.findByText("Invalid username or password.")).toBeInTheDocument();
@@ -82,7 +85,7 @@ describe("administrator password sign-in", () => {
     render(<SignInScreen adminLoginEnabled />);
 
     await user.type(screen.getByLabelText("Username"), "Admin");
-    await user.type(screen.getByLabelText("Password"), "a-test-password");
+    await user.type(screen.getAllByLabelText("Password")[0], "a-test-password");
     await user.click(screen.getByRole("button", { name: "Sign in as admin" }));
 
     await waitFor(() => {
@@ -90,5 +93,92 @@ describe("administrator password sign-in", () => {
       expect(auth.clearFoodtopiaCaches).toHaveBeenCalledTimes(1);
     });
     expect(screen.queryByText("Invalid username or password.")).toBeNull();
+  });
+});
+
+describe("member password authentication", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    auth.signInWithPassword.mockResolvedValue({ demo: false });
+    auth.signUpWithPassword.mockResolvedValue({ demo: false });
+    offline.clear.mockResolvedValue(undefined);
+    auth.clearFoodtopiaCaches.mockResolvedValue(undefined);
+  });
+
+  it("signs in with email and password, then clears offline tenant data", async () => {
+    const user = userEvent.setup();
+    render(<SignInScreen nextPath="/inventory" />);
+
+    await user.type(screen.getByLabelText("Email"), "member@example.test");
+    const passwordInput = screen.getByLabelText("Password");
+    expect(passwordInput).toHaveAttribute("autocomplete", "current-password");
+    await user.type(passwordInput, "member-password");
+    await user.click(screen.getByRole("button", { name: "Sign in" }));
+
+    await waitFor(() => {
+      expect(auth.signInWithPassword).toHaveBeenCalledWith(
+        "member@example.test",
+        "member-password",
+      );
+      expect(offline.clear).toHaveBeenCalledTimes(1);
+      expect(auth.clearFoodtopiaCaches).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it("does not expose Supabase details when member sign-in fails", async () => {
+    const user = userEvent.setup();
+    auth.signInWithPassword.mockRejectedValue(
+      new Error("Email not confirmed for private-member@example.test"),
+    );
+    render(<SignInScreen />);
+
+    await user.type(screen.getByLabelText("Email"), "member@example.test");
+    await user.type(screen.getByLabelText("Password"), "member-password");
+    await user.click(screen.getByRole("button", { name: "Sign in" }));
+
+    expect(await screen.findByText("Sign-in failed")).toBeInTheDocument();
+    expect(document.body.textContent).not.toContain("private-member@example.test");
+  });
+
+  it("shows a successful email-confirmation notice above password sign-in", () => {
+    render(<SignInScreen emailConfirmed />);
+
+    expect(screen.getByText("Email confirmed")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Sign in" })).toBeInTheDocument();
+  });
+
+  it("creates an account with username, email, password, and a confirmation email", async () => {
+    const user = userEvent.setup();
+    render(<SignUpScreen />);
+
+    await user.type(screen.getByLabelText("Username"), "Kitchen Keeper");
+    await user.type(screen.getByLabelText("Email"), "new@example.test");
+    await user.type(screen.getByLabelText("Password"), "new-password");
+    await user.type(screen.getByLabelText("Confirm password"), "new-password");
+    await user.click(screen.getByRole("button", { name: "Create account" }));
+
+    await waitFor(() => {
+      expect(auth.signUpWithPassword).toHaveBeenCalledWith(
+        "Kitchen Keeper",
+        "new@example.test",
+        "new-password",
+        "/",
+      );
+    });
+    expect(await screen.findByText("Confirm your email address.")).toBeInTheDocument();
+  });
+
+  it("rejects mismatched passwords before contacting Supabase", async () => {
+    const user = userEvent.setup();
+    render(<SignUpScreen />);
+
+    await user.type(screen.getByLabelText("Username"), "Kitchen Keeper");
+    await user.type(screen.getByLabelText("Email"), "new@example.test");
+    await user.type(screen.getByLabelText("Password"), "new-password");
+    await user.type(screen.getByLabelText("Confirm password"), "other-password");
+    await user.click(screen.getByRole("button", { name: "Create account" }));
+
+    expect(await screen.findByText("Passwords do not match")).toBeInTheDocument();
+    expect(auth.signUpWithPassword).not.toHaveBeenCalled();
   });
 });

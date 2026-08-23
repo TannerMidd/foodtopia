@@ -13,15 +13,47 @@ function getClient() {
   return client;
 }
 
+function authCallback(next: string) {
+  const callback = new URL("/auth/callback", window.location.origin);
+  callback.searchParams.set("next", normalizeInternalPath(next));
+  return callback.toString();
+}
+
 export async function requestMagicLink(email: string, next = "/") {
   const supabase = getClient();
   if (!supabase) return { demo: true as const };
-  const callback = new URL("/auth/callback", window.location.origin);
-  callback.searchParams.set("next", normalizeInternalPath(next));
   const { error } = await supabase.auth.signInWithOtp({
     email,
-    options: { emailRedirectTo: callback.toString(), shouldCreateUser: true },
+    options: { emailRedirectTo: authCallback(next), shouldCreateUser: true },
   });
+  if (error) throw error;
+  return { demo: false as const };
+}
+
+export async function signUpWithPassword(
+  displayName: string,
+  email: string,
+  password: string,
+  next = "/",
+) {
+  const supabase = getClient();
+  if (!supabase) return { demo: true as const };
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { display_name: displayName },
+      emailRedirectTo: authCallback(next),
+    },
+  });
+  if (error) throw error;
+  return { demo: false as const };
+}
+
+export async function signInWithPassword(email: string, password: string) {
+  const supabase = getClient();
+  if (!supabase) return { demo: true as const };
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) throw error;
   return { demo: false as const };
 }

@@ -24,6 +24,12 @@ function signInError(request: NextRequest) {
   return preventCaching(NextResponse.redirect(url));
 }
 
+function emailConfirmed(request: NextRequest) {
+  const url = new URL("/sign-in", request.url);
+  url.searchParams.set("emailConfirmed", "1");
+  return preventCaching(NextResponse.redirect(url));
+}
+
 function tokenHashLinkType(value: string | undefined): TokenHashLinkType | null {
   return TOKEN_HASH_LINK_TYPES.find((candidate) => candidate === value) ?? null;
 }
@@ -117,6 +123,18 @@ export async function GET(request: NextRequest) {
           type: supportedLinkType!,
         });
     if (error) {
+      // The default hosted Supabase confirmation email verifies the address
+      // before redirecting here. If the link opens in another browser, that
+      // browser cannot finish the optional PKCE session exchange because it
+      // does not have the original verifier. Confirmation still succeeded,
+      // so send the user to the normal password sign-in instead of presenting
+      // a broken-link error.
+      if (
+        hasValidCode &&
+        providerErrorDetails(error).code === "pkce_code_verifier_not_found"
+      ) {
+        return emailConfirmed(request);
+      }
       reportAuthFailure({
         mechanism,
         verificationType: supportedLinkType,

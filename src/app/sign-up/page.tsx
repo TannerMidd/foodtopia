@@ -4,7 +4,7 @@ import { SignUpScreen } from "@/components/auth-screens";
 import { isDemoMode } from "@/lib/env";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 
-export const metadata: Metadata = { title: "Request beta access" };
+export const metadata: Metadata = { title: "Create account" };
 
 export const dynamic = "force-dynamic";
 

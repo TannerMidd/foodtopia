@@ -14,7 +14,9 @@ import {
   getAuthenticatedUser,
   requestAdminPasswordLogin,
   requestMagicLink,
+  signInWithPassword,
   signOut,
+  signUpWithPassword,
 } from "@/lib/client/auth";
 import { normalizeInternalPath } from "@/lib/internal-path";
 import { useOfflineInventory } from "./offline-provider";
@@ -225,6 +227,244 @@ function MagicLinkForm({
   );
 }
 
+function PasswordSignInForm({ nextPath }: { nextPath: string }) {
+  const { clear } = useOfflineInventory();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [state, setState] = useState<"idle" | "demo" | "error">("idle");
+
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    setBusy(true);
+    setState("idle");
+    try {
+      const result = await signInWithPassword(email.trim(), password);
+      if (result.demo) {
+        setState("demo");
+        setBusy(false);
+        return;
+      }
+    } catch {
+      setPassword("");
+      setState("error");
+      setBusy(false);
+      return;
+    }
+
+    setPassword("");
+    await Promise.allSettled([clear(), clearFoodtopiaCaches()]);
+    window.location.replace(normalizeInternalPath(nextPath));
+  }
+
+  return (
+    <form onSubmit={(event) => void submit(event)}>
+      <Field label="Email" htmlFor="member-email">
+        <input
+          id="member-email"
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
+          maxLength={320}
+          className={inputClass}
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+        />
+      </Field>
+      <div className="mt-6">
+        <Field label="Password" htmlFor="member-password">
+          <input
+            id="member-password"
+            name="password"
+            type="password"
+            autoComplete="current-password"
+            required
+            minLength={8}
+            maxLength={256}
+            className={inputClass}
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+          />
+        </Field>
+      </div>
+      {state === "error" ? (
+        <div className="mt-5">
+          <StateNotice title="Sign-in failed" tone="error">
+            Check your email and password, and make sure you confirmed your email address.
+          </StateNotice>
+        </div>
+      ) : null}
+      {state === "demo" ? (
+        <div className="mt-5">
+          <StateNotice title="Accounts are off in this demo" tone="warning">
+            This build has no account provider connected. You can still explore the demo household.
+          </StateNotice>
+        </div>
+      ) : null}
+      <Button type="submit" className="mt-6 w-full" busy={busy}>
+        Sign in
+        <ArrowRight className="size-4 text-[var(--accent-ink)]" aria-hidden="true" />
+      </Button>
+      {state === "demo" ? (
+        <Link
+          href="/"
+          className="m mt-5 flex min-h-9 items-center justify-center text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+        >
+          explore the demo household
+        </Link>
+      ) : null}
+    </form>
+  );
+}
+
+function PasswordSignUpForm() {
+  const [displayName, setDisplayName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmation, setConfirmation] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [state, setState] = useState<"idle" | "sent" | "demo" | "mismatch" | "error">(
+    "idle",
+  );
+
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    if (password !== confirmation) {
+      setState("mismatch");
+      return;
+    }
+    setBusy(true);
+    setState("idle");
+    try {
+      const result = await signUpWithPassword(
+        displayName.trim(),
+        email.trim(),
+        password,
+        "/",
+      );
+      setState(result.demo ? "demo" : "sent");
+    } catch {
+      setState("error");
+    } finally {
+      setPassword("");
+      setConfirmation("");
+      setBusy(false);
+    }
+  }
+
+  if (state === "sent") {
+    return (
+      <div role="status">
+        <p className="ml">check your email</p>
+        <h2 className="hd mt-3 text-[22px]">Confirm your email address.</h2>
+        <p className="bd mt-2.5">
+          Open the confirmation email, then sign in with your email and password. Your account will
+          remain in review until an administrator enables it.
+        </p>
+        <Link
+          href="/sign-in"
+          className="m mt-6 inline-flex min-h-9 items-center gap-2 text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+        >
+          go to sign in
+          <ArrowRight className="size-3.5" aria-hidden="true" />
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={(event) => void submit(event)}>
+      <Field label="Username" htmlFor="signup-display-name" hint="Shown to your household">
+        <input
+          id="signup-display-name"
+          name="displayName"
+          type="text"
+          autoComplete="nickname"
+          required
+          minLength={2}
+          maxLength={80}
+          className={inputClass}
+          value={displayName}
+          onChange={(event) => setDisplayName(event.target.value)}
+        />
+      </Field>
+      <div className="mt-6">
+        <Field label="Email" htmlFor="signup-email">
+          <input
+            id="signup-email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            required
+            maxLength={320}
+            className={inputClass}
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+          />
+        </Field>
+      </div>
+      <div className="mt-6">
+        <Field label="Password" htmlFor="signup-password" hint="At least 8 characters">
+          <input
+            id="signup-password"
+            name="password"
+            type="password"
+            autoComplete="new-password"
+            required
+            minLength={8}
+            maxLength={256}
+            className={inputClass}
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+          />
+        </Field>
+      </div>
+      <div className="mt-6">
+        <Field label="Confirm password" htmlFor="signup-password-confirmation">
+          <input
+            id="signup-password-confirmation"
+            name="passwordConfirmation"
+            type="password"
+            autoComplete="new-password"
+            required
+            minLength={8}
+            maxLength={256}
+            className={inputClass}
+            value={confirmation}
+            onChange={(event) => setConfirmation(event.target.value)}
+          />
+        </Field>
+      </div>
+      {state === "mismatch" ? (
+        <div className="mt-5">
+          <StateNotice title="Passwords do not match" tone="error">
+            Enter the same password in both fields.
+          </StateNotice>
+        </div>
+      ) : null}
+      {state === "error" ? (
+        <div className="mt-5">
+          <StateNotice title="Account not created" tone="error">
+            Check the details and try again. If this email already has an account, sign in instead.
+          </StateNotice>
+        </div>
+      ) : null}
+      {state === "demo" ? (
+        <div className="mt-5">
+          <StateNotice title="Accounts are off in this demo" tone="warning">
+            This build has no account provider connected.
+          </StateNotice>
+        </div>
+      ) : null}
+      <Button type="submit" className="mt-6 w-full" busy={busy}>
+        Create account
+        <ArrowRight className="size-4 text-[var(--accent-ink)]" aria-hidden="true" />
+      </Button>
+    </form>
+  );
+}
+
 function AdminPasswordForm({ nextPath }: { nextPath: string }) {
   const { clear } = useOfflineInventory();
   const [username, setUsername] = useState("");
@@ -304,11 +544,13 @@ export function SignInScreen({
   nextPath = "/",
   householdDeletion,
   authError,
+  emailConfirmed = false,
   adminLoginEnabled = false,
 }: {
   nextPath?: string;
   householdDeletion?: "pending" | "complete";
   authError?: "invalid_link";
+  emailConfirmed?: boolean;
   adminLoginEnabled?: boolean;
 }) {
   return (
@@ -334,6 +576,14 @@ export function SignInScreen({
           </StateNotice>
         </div>
       ) : null}
+      {emailConfirmed ? (
+        <div className="mt-10">
+          <StateNotice title="Email confirmed" tone="success">
+            Your email address is confirmed. Sign in with the password you chose when creating the
+            account.
+          </StateNotice>
+        </div>
+      ) : null}
 
       {adminLoginEnabled ? (
         <section className="mt-12 border-b border-[var(--hairline)] pb-10">
@@ -350,10 +600,10 @@ export function SignInScreen({
         <p className="ml">private beta</p>
         <h1 className="hd mt-3 text-[26px] lg:text-[30px]">Welcome back.</h1>
         <p className="bd mt-2.5">
-          Use the address that was invited to your household. There&rsquo;s no password to remember.
+          Sign in with your confirmed email address and password.
         </p>
         <div className="mt-8">
-          <MagicLinkForm nextPath={nextPath} />
+          <PasswordSignInForm nextPath={nextPath} />
         </div>
       </section>
 
@@ -385,13 +635,13 @@ export function SignUpScreen({ signupsOpen = true }: { signupsOpen?: boolean }) 
         <p className="ml">open beta</p>
         <h1 className="hd mt-3 text-[26px] lg:text-[30px]">Set up your shared kitchen.</h1>
         <p className="bd mt-2.5">
-          Enter your email and we&rsquo;ll send a one-time link to create your household&rsquo;s
-          Foodtopia account.
+          Choose a username, enter your email, and create a password. We&rsquo;ll email you once to
+          confirm the address.
         </p>
         {signupsOpen ? (
           <>
             <div className="mt-8">
-              <MagicLinkForm audience="open-beta" nextPath="/" />
+              <PasswordSignUpForm />
             </div>
             <p className="bd mt-6 text-[13px] text-[var(--ink-5)]">
               New accounts start in review. An administrator enables each account before it can be

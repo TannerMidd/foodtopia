@@ -103,6 +103,31 @@ describe("GET /auth/callback", () => {
     );
   });
 
+  it("treats a cross-browser password confirmation as confirmed without creating a session", async () => {
+    mocks.exchangeCodeForSession.mockResolvedValue({
+      error: {
+        code: "pkce_code_verifier_not_found",
+        status: 400,
+        message: "Private verifier details must not be exposed",
+      },
+    });
+    const { GET } = await import("./route");
+
+    const response = await GET(
+      new NextRequest(
+        "https://foodtopia.example/auth/callback?code=confirmed-email-code&next=%2Finventory",
+      ),
+    );
+
+    expect(mocks.exchangeCodeForSession).toHaveBeenCalledWith("confirmed-email-code");
+    expect(response.status).toBe(307);
+    expect(response.headers.get("location")).toBe(
+      "https://foodtopia.example/sign-in?emailConfirmed=1",
+    );
+    expect(response.headers.get("cache-control")).toBe("private, no-store");
+    expect(consoleError).not.toHaveBeenCalled();
+  });
+
   it.each(["email", "signup", "invite", "magiclink"] as const)(
     "verifies a %s token hash once, preserves cookies, and redirects through completion",
     async (linkType) => {

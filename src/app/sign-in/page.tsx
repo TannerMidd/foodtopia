@@ -13,6 +13,7 @@ export default async function SignInPage({ searchParams }: PageProps<"/sign-in">
     ? query.householdDeletion
     : undefined;
   const authError = query.authError === "invalid_link" ? "invalid_link" : undefined;
+  const emailConfirmed = query.emailConfirmed === "1";
   // ?admin=1 reveals the administrator sign-in on demand, even when the env
   // config is absent. The admin-login API itself stays gated and rate-limited.
   const adminReveal = query.admin === "1";
@@ -21,6 +22,7 @@ export default async function SignInPage({ searchParams }: PageProps<"/sign-in">
       nextPath={nextPath}
       householdDeletion={householdDeletion}
       authError={authError}
+      emailConfirmed={emailConfirmed}
       adminLoginEnabled={adminReveal || isAdminLoginEnabled()}
     />
   );
