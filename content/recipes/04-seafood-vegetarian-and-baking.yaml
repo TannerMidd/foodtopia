@@ -18,12 +18,12 @@
   steps:
     - "Toss the broccoli with half the olive oil, garlic, salt, and black pepper, then spread it on a sheet pan."
     - "Add the salmon, brush it with the remaining olive oil and juice from the lemon, and roast until the broccoli is tender and the salmon is cooked through."
-  rights: &draft-rights
+  rights: &reviewed-rights
     owner: "Foodtopia"
     author: "Foodtopia Editorial"
-    reviewer: null
-    reviewedAt: null
-    status: "draft"
+    reviewer: "Foodtopia Owner"
+    reviewedAt: "2026-08-23"
+    status: "reviewed"
 
 - id: "recipe-062"
   slug: "paprika-salmon-sweet-potato-plates"
@@ -44,7 +44,7 @@
   steps:
     - "Toss the sweet potato with two tablespoons olive oil, half the paprika, and half the salt, then roast until nearly tender."
     - "Season the salmon with the remaining olive oil, paprika, and salt, roast until cooked through, and serve the salmon and sweet potato over the spinach."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-063"
   slug: "lemon-paprika-shrimp-pasta"
@@ -67,7 +67,7 @@
   steps:
     - "Boil the water with the salt, cook the pasta until tender, reserve a little water, and drain."
     - "Melt the butter with the garlic and paprika, cook the shrimp until opaque, then toss with the pasta, juice from the lemon, and enough reserved water to coat."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-064"
   slug: "mustard-tuna-potato-patties"
@@ -90,7 +90,7 @@
   steps:
     - "Cook the potato until tender, mash it, then mix in the tuna, egg, onion, mustard, salt, and black pepper and shape into patties."
     - "Heat the vegetable oil and cook the tuna-potato patties until firm and browned on both sides."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-065"
   slug: "sesame-tofu-cabbage-stir-fry"
@@ -112,7 +112,7 @@
   steps:
     - "Brown the tofu in the vegetable oil, then transfer the tofu to a plate."
     - "Stir-fry the cabbage, carrot, and garlic, return the tofu, and toss everything with the soy sauce and sesame oil."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-066"
   slug: "avocado-black-bean-tacos"
@@ -136,7 +136,7 @@
   steps:
     - "Warm the black beans in the olive oil with the cumin and salt, lightly mashing a few beans."
     - "Fill the tortillas with the black beans, cabbage, salsa, and avocado, then finish with juice from the lime."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-067"
   slug: "lentil-sloppy-sandwiches"
@@ -161,7 +161,7 @@
   steps:
     - "Cook the onion and bell pepper in the olive oil, then stir in the tomato paste, mustard, chili powder, and salt."
     - "Add the lentils and canned tomatoes, simmer until thick, then spoon the lentil filling between pairs of bread."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-068"
   slug: "cauliflower-chickpea-coconut-curry"
@@ -184,7 +184,7 @@
   steps:
     - "Soften the onion in the vegetable oil, then stir in the curry powder."
     - "Add the cauliflower, chickpeas, coconut milk, canned tomatoes, and salt, then simmer until the cauliflower is tender."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-069"
   slug: "zucchini-white-bean-spinach-skillet"
@@ -207,7 +207,7 @@
   steps:
     - "Brown the zucchini in the olive oil, then add the garlic, tomato, oregano, and salt."
     - "Fold in the white beans and spinach and cook until the white beans are hot and the spinach has wilted."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-070"
   slug: "black-bean-corn-stuffed-sweet-potatoes"
@@ -228,7 +228,7 @@
   steps:
     - "Bake the sweet potatoes until soft, then split them and season their centers with the salt."
     - "Warm the black beans and corn, spoon them into the sweet potatoes with the salsa, add the cheddar cheese, and bake until melted."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-071"
   slug: "lentil-spinach-loaded-potatoes"
@@ -251,7 +251,7 @@
   steps:
     - "Bake the potatoes until tender, while warming the lentils and wilting the spinach in the olive oil with the salt and black pepper."
     - "Split the potatoes, add the lentils and spinach, melt the cheddar cheese over the tops, and finish with the yogurt."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-072"
   slug: "banana-oat-breakfast-bites"
@@ -272,7 +272,7 @@
   steps:
     - "Mash the banana, then mix it thoroughly with the oats, peanut butter, honey, cinnamon, and salt."
     - "Scoop the oat mixture onto a lined pan, flatten each bite slightly, and bake until set at the edges."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-073"
   slug: "brown-sugar-apple-crisp"
@@ -294,7 +294,7 @@
   steps:
     - "Spread the apple in a baking dish and toss it with half the cinnamon and a spoonful of the brown sugar."
     - "Rub the oats, flour, butter, salt, remaining cinnamon, and remaining brown sugar into crumbs, scatter over the apple, and bake until bubbling."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-074"
   slug: "berry-yogurt-freezer-pops"
@@ -313,7 +313,7 @@
   steps:
     - "Blend the berries, yogurt, honey, and vanilla extract until mostly smooth."
     - "Pour the berry-yogurt mixture into pop molds and freeze until solid."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-075"
   slug: "peanut-butter-oat-energy-bites"
@@ -333,7 +333,7 @@
   steps:
     - "Stir the oats, peanut butter, honey, cinnamon, and salt until no dry oats remain."
     - "Chill the oat mixture briefly, then roll it into small, firm bites."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-076"
   slug: "apple-cinnamon-baked-oatmeal"
@@ -357,7 +357,7 @@
   steps:
     - "Coat a baking dish with the butter, then combine the oats, apple, cinnamon, baking powder, and salt in the dish."
     - "Whisk the milk, eggs, and maple syrup, pour over the oats and apple, and bake until the center is set."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-077"
   slug: "classic-cinnamon-banana-bread"
@@ -380,7 +380,7 @@
   steps:
     - "Mash the banana, whisk in the sugar, eggs, and butter, then fold in the flour, baking soda, cinnamon, and salt."
     - "Spread the banana batter in a lined loaf pan and bake until the center is set and a tester comes out clean."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-078"
   slug: "berry-oat-crumble"
@@ -401,7 +401,7 @@
   steps:
     - "Spread the berries in a baking dish and sprinkle them with one quarter of the brown sugar."
     - "Rub the oats, flour, butter, cinnamon, and remaining brown sugar into crumbs, scatter over the berries, and bake until bubbling."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-079"
   slug: "maple-cinnamon-baked-apples"
@@ -421,7 +421,7 @@
   steps:
     - "Core the apples without cutting through the bottoms, then mix the oats, maple syrup, butter, and cinnamon."
     - "Pack the oat mixture into the apples and bake until the apples are tender but still hold their shape."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-080"
   slug: "cheddar-cornmeal-muffins"
@@ -444,4 +444,4 @@
   steps:
     - "Whisk the cornmeal, flour, baking powder, and salt, then stir in the milk, eggs, butter, and cheddar cheese just until combined."
     - "Divide the cornmeal batter among muffin cups and bake until the tops are golden and the centers are set."
-  rights: *draft-rights
+  rights: *reviewed-rights

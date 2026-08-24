@@ -16,12 +16,12 @@
   steps:
     - "Bring the milk to a gentle simmer, then stir in the oats and salt."
     - "Cook until the oats are creamy, then fold in the maple syrup and cinnamon before serving."
-  rights: &draft-rights
+  rights: &reviewed-rights
     owner: "Foodtopia"
     author: "Foodtopia Editorial"
-    reviewer: null
-    reviewedAt: null
-    status: "draft"
+    reviewer: "Foodtopia Owner"
+    reviewedAt: "2026-08-23"
+    status: "reviewed"
 
 - id: "recipe-002"
   slug: "banana-peanut-butter-oats"
@@ -41,7 +41,7 @@
   steps:
     - "Simmer the oats, milk, and salt until the oats soften and the mixture thickens."
     - "Mash the banana into the oats, divide between bowls, and swirl peanut butter through each portion."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-003"
   slug: "berry-yogurt-crunch-bowls"
@@ -60,7 +60,7 @@
   steps:
     - "Spoon the yogurt into two bowls and scatter the berries evenly over the top."
     - "Finish each bowl with the oats and a thin ribbon of honey."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-004"
   slug: "spinach-tomato-scrambled-eggs"
@@ -81,7 +81,7 @@
   steps:
     - "Melt the butter in a skillet and wilt the spinach with the tomato for two minutes."
     - "Beat the eggs with the salt and black pepper, pour them into the skillet, and stir gently until softly set."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-005"
   slug: "spinach-cheddar-omelet"
@@ -101,7 +101,7 @@
   steps:
     - "Melt the butter, wilt the spinach, and transfer the spinach to a small plate."
     - "Whisk the eggs with salt, cook until nearly set, add the spinach and cheddar cheese to one side, then fold the omelet closed."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-006"
   slug: "egg-and-salsa-breakfast-quesadilla"
@@ -121,7 +121,7 @@
   steps:
     - "Melt the butter and scramble the eggs just until set, then move the eggs to a plate."
     - "Fill the tortillas with the eggs, cheddar cheese, and salsa, then brown both sides in the skillet and cut into wedges."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-007"
   slug: "cinnamon-maple-french-toast"
@@ -142,7 +142,7 @@
   steps:
     - "Whisk the eggs, milk, and cinnamon in a shallow dish, then soak each piece of bread briefly on both sides."
     - "Melt the butter in a skillet, cook the bread until browned on both sides, and serve with maple syrup."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-008"
   slug: "banana-oat-blender-pancakes"
@@ -163,7 +163,7 @@
   steps:
     - "Blend the banana, oats, eggs, milk, and baking powder until a thick, mostly smooth batter forms."
     - "Brush a skillet with vegetable oil and cook small pancakes until bubbles appear, then flip and brown the second side."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-009"
   slug: "apple-brown-sugar-oats"
@@ -184,7 +184,7 @@
   steps:
     - "Simmer the apple in the milk for three minutes, then add the oats and salt."
     - "Cook until the oats soften, then stir in the brown sugar and cinnamon."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-010"
   slug: "paprika-potato-egg-skillet"
@@ -206,7 +206,7 @@
   steps:
     - "Heat the olive oil and cook the potato with the onion, paprika, salt, and black pepper until browned and tender."
     - "Make four spaces among the potatoes, crack in the eggs, cover, and cook until the egg whites set."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-011"
   slug: "lemon-chickpea-chopped-salad"
@@ -228,7 +228,7 @@
   steps:
     - "Combine the chickpeas, cucumber, tomato, and onion in a wide bowl."
     - "Juice the lemon over the salad, add the olive oil and salt, and toss thoroughly."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-012"
   slug: "crunchy-tuna-salad-sandwiches"
@@ -249,7 +249,7 @@
   steps:
     - "Mix the tuna with the mayonnaise, mustard, celery, and black pepper until evenly dressed."
     - "Divide the tuna mixture between two pieces of bread and close each sandwich with the remaining bread."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-013"
   slug: "mustardy-egg-salad-sandwiches"
@@ -270,7 +270,7 @@
   steps:
     - "Chop the eggs and fold them together with the mayonnaise, mustard, salt, and black pepper."
     - "Spread the egg salad over two pieces of bread and top with the remaining bread."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-014"
   slug: "avocado-chickpea-toast"
@@ -291,7 +291,7 @@
   steps:
     - "Mash the avocado and chickpeas with the lemon, salt, and black pepper, leaving some chickpeas chunky."
     - "Toast the bread until crisp and spoon the avocado-chickpea mixture over each piece."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-015"
   slug: "tomato-cucumber-chickpea-salad"
@@ -313,7 +313,7 @@
   steps:
     - "Place the tomato, cucumber, and chickpeas in a serving bowl."
     - "Whisk the vinegar, olive oil, oregano, and salt, pour the dressing over the salad, and toss."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-016"
   slug: "kale-apple-cheddar-salad"
@@ -335,7 +335,7 @@
   steps:
     - "Massage the kale with the olive oil and salt until the leaves become darker and more tender."
     - "Whisk the vinegar with the honey, toss it with the kale, and fold in the apple and cheddar cheese."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-017"
   slug: "lime-black-bean-corn-salad"
@@ -357,7 +357,7 @@
   steps:
     - "Combine the black beans, corn, and tomato in a large bowl."
     - "Juice the lime over the bowl, add the olive oil, cumin, and salt, and toss until evenly coated."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-018"
   slug: "lemon-tuna-rice-salad"
@@ -378,7 +378,7 @@
   steps:
     - "Fluff the rice in a bowl, then fold in the tuna and cucumber."
     - "Stir the mayonnaise with juice from the lemon and the black pepper, then toss the dressing through the rice salad."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-019"
   slug: "warm-lentil-spinach-salad"
@@ -400,7 +400,7 @@
   steps:
     - "Warm the lentils with the onion and olive oil until the onion softens slightly."
     - "Whisk the vinegar, mustard, and salt, pour it over the lentils, then toss the warm mixture with the spinach."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-020"
   slug: "skillet-cheddar-tomato-sandwiches"
@@ -419,4 +419,4 @@
   steps:
     - "Layer the cheddar cheese and tomato between pairs of bread, then spread butter over the outer bread surfaces."
     - "Cook the sandwiches in a covered skillet until the bread is browned and the cheddar cheese has melted."
-  rights: *draft-rights
+  rights: *reviewed-rights

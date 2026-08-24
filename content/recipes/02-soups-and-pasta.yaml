@@ -18,12 +18,12 @@
   steps:
     - "Warm the olive oil and cook the onion until translucent, then add the garlic for one minute."
     - "Add the canned tomatoes, vegetable broth, basil, and salt, simmer for twenty minutes, then blend to the desired texture."
-  rights: &draft-rights
+  rights: &reviewed-rights
     owner: "Foodtopia"
     author: "Foodtopia Editorial"
-    reviewer: null
-    reviewedAt: null
-    status: "draft"
+    reviewer: "Foodtopia Owner"
+    reviewedAt: "2026-08-23"
+    status: "reviewed"
 
 - id: "recipe-022"
   slug: "lentil-carrot-soup"
@@ -47,7 +47,7 @@
   steps:
     - "Heat the olive oil and soften the onion, carrot, and celery, then stir in the cumin."
     - "Add the lentils, canned tomatoes, vegetable broth, and salt, then simmer until the lentils are tender."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-023"
   slug: "smoky-black-bean-soup"
@@ -70,7 +70,7 @@
   steps:
     - "Cook the onion in the olive oil until soft, then stir in the cumin and chili powder."
     - "Add the black beans, canned tomatoes, vegetable broth, and salt, simmer for twenty minutes, and mash some beans to thicken the soup."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-024"
   slug: "thyme-chicken-rice-soup"
@@ -94,7 +94,7 @@
   steps:
     - "Warm the olive oil and cook the chicken breast until opaque, then add the onion, carrot, and celery."
     - "Pour in the chicken broth, stir in the rice, thyme, and salt, and simmer until the rice and chicken breast are fully cooked."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-025"
   slug: "broccoli-cheddar-soup"
@@ -118,7 +118,7 @@
   steps:
     - "Melt the butter, soften the onion, stir in the flour, then gradually whisk in the vegetable broth and milk."
     - "Add the broccoli, salt, and black pepper, simmer until tender, then remove from heat and stir in the cheddar cheese."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-026"
   slug: "white-bean-cabbage-soup"
@@ -141,7 +141,7 @@
   steps:
     - "Heat the olive oil and soften the onion and carrot, then add the cabbage and cook until it begins to collapse."
     - "Stir in the white beans, vegetable broth, thyme, and salt, then simmer until the cabbage is tender."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-027"
   slug: "paprika-chickpea-tomato-stew"
@@ -164,7 +164,7 @@
   steps:
     - "Cook the onion in the olive oil until soft, then add the garlic, cumin, and paprika."
     - "Stir in the chickpeas, canned tomatoes, and salt, then simmer until the mixture becomes thick and glossy."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-028"
   slug: "mushroom-barley-soup"
@@ -187,7 +187,7 @@
   steps:
     - "Brown the mushrooms in the olive oil, then add the onion and carrot and cook until softened."
     - "Add the barley, vegetable broth, thyme, and salt, then simmer until the barley is tender and plump."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-029"
   slug: "coconut-sweet-potato-lentil-soup"
@@ -210,7 +210,7 @@
   steps:
     - "Cook the onion in the vegetable oil until soft, then stir in the curry powder."
     - "Add the sweet potato, lentils, vegetable broth, coconut milk, and salt, then simmer until the sweet potato and lentils are very tender."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-030"
   slug: "corn-potato-chowder"
@@ -234,7 +234,7 @@
   steps:
     - "Melt the butter, soften the onion, stir in the flour, then slowly add the vegetable broth and milk."
     - "Add the potato, corn, salt, and black pepper, and simmer until the potato is tender and the chowder thickens."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-031"
   slug: "simple-marinara-spaghetti"
@@ -255,7 +255,7 @@
   steps:
     - "Bring the water and salt to a boil, cook the pasta until tender, then drain it."
     - "Warm the marinara sauce with the olive oil, toss it with the pasta, and finish with parmesan cheese."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-032"
   slug: "garlic-butter-parmesan-pasta"
@@ -277,7 +277,7 @@
   steps:
     - "Boil the water with the salt, cook the pasta until tender, reserve a little water, and drain."
     - "Melt the butter with the garlic, toss in the pasta and parmesan cheese with enough reserved water to coat, then add black pepper."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-033"
   slug: "spinach-pesto-pasta"
@@ -298,7 +298,7 @@
   steps:
     - "Boil the water with the salt, cook the pasta until nearly tender, and add the spinach for the final minute before draining."
     - "Toss the hot pasta and spinach with the pesto, then scatter parmesan cheese over each portion."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-034"
   slug: "creamy-mushroom-pasta"
@@ -321,7 +321,7 @@
   steps:
     - "Boil the water with the salt, cook the pasta until tender, and drain."
     - "Brown the mushrooms in the butter, add the garlic and heavy cream, then toss with the pasta and parmesan cheese."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-035"
   slug: "tuna-tomato-pasta"
@@ -344,7 +344,7 @@
   steps:
     - "Boil the water with the salt, cook the pasta until tender, and drain."
     - "Soften the onion in the olive oil, add the canned tomatoes, oregano, and tuna, then simmer briefly and toss with the pasta."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-036"
   slug: "sausage-bell-pepper-pasta"
@@ -367,7 +367,7 @@
   steps:
     - "Boil the water with the salt, cook the pasta until tender, and drain."
     - "Brown the sausage in the olive oil, soften the bell pepper and onion, add the marinara sauce, then toss with the pasta."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-037"
   slug: "lemon-broccoli-pasta"
@@ -390,7 +390,7 @@
   steps:
     - "Boil the water with the salt, add the pasta, and cook the broccoli in the same pot during the final four minutes before draining."
     - "Warm the garlic in the olive oil, toss with the pasta and broccoli, then add juice from the lemon and the parmesan cheese."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-038"
   slug: "fresh-tomato-zucchini-pasta"
@@ -413,7 +413,7 @@
   steps:
     - "Boil the water with half the salt, cook the pasta until tender, and drain."
     - "Cook the zucchini and garlic in the olive oil, add the tomato, basil, and remaining salt, then toss the quick sauce with the pasta."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-039"
   slug: "stovetop-cheddar-macaroni"
@@ -435,7 +435,7 @@
   steps:
     - "Boil the water with half the salt, cook the pasta until tender, and drain."
     - "Melt the butter, whisk in the flour, slowly add the milk, then melt in the cheddar cheese and toss with the pasta and remaining salt."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-040"
   slug: "peanut-sesame-noodles"
@@ -457,4 +457,4 @@
   steps:
     - "Boil the water, cook the noodles until tender, drain, and rinse briefly."
     - "Whisk the peanut butter, soy sauce, sesame oil, and juice from the lime, then toss with the noodles and carrot."
-  rights: *draft-rights
+  rights: *reviewed-rights

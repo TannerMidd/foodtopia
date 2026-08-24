@@ -19,12 +19,12 @@
   steps:
     - "Simmer the rice with the water and salt until tender, then let it rest covered for five minutes."
     - "Warm the black beans and corn, divide them over the rice, and top each bowl with salsa, avocado, and juice from the lime."
-  rights: &draft-rights
+  rights: &reviewed-rights
     owner: "Foodtopia"
     author: "Foodtopia Editorial"
-    reviewer: null
-    reviewedAt: null
-    status: "draft"
+    reviewer: "Foodtopia Owner"
+    reviewedAt: "2026-08-23"
+    status: "reviewed"
 
 - id: "recipe-042"
   slug: "chicken-vegetable-fried-rice"
@@ -47,7 +47,7 @@
   steps:
     - "Heat half the vegetable oil and cook the chicken breast completely, then add the carrot and peas and move everything to one side."
     - "Add the remaining vegetable oil, scramble the eggs, then fold in the rice, soy sauce, sesame oil, chicken breast, carrot, and peas until hot."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-043"
   slug: "corn-pea-vegetable-fried-rice"
@@ -70,7 +70,7 @@
   steps:
     - "Heat half the vegetable oil and cook the carrot, peas, and corn until hot, then move the vegetables aside and scramble the eggs."
     - "Add the remaining vegetable oil, rice, soy sauce, and sesame oil, and toss with the eggs, carrot, peas, and corn until evenly heated."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-044"
   slug: "chickpea-coconut-curry-rice"
@@ -94,7 +94,7 @@
   steps:
     - "Simmer the rice with the water and half the salt until tender, then rest it covered."
     - "Soften the onion in the vegetable oil, add the curry powder, chickpeas, canned tomatoes, coconut milk, and remaining salt, and simmer before serving over the rice."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-045"
   slug: "tofu-broccoli-rice-plates"
@@ -117,7 +117,7 @@
   steps:
     - "Simmer the rice with the water until tender, while browning the tofu in the vegetable oil."
     - "Add the broccoli and garlic to the tofu, cover until the broccoli is tender, then toss with soy sauce and sesame oil and serve over the rice."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-046"
   slug: "lime-shrimp-corn-rice-bowls"
@@ -141,7 +141,7 @@
   steps:
     - "Simmer the rice with the water and half the salt until tender, then rest it covered."
     - "Cook the bell pepper and corn in the olive oil, add the shrimp, cumin, and remaining salt until the shrimp is opaque, then finish with the lime and serve over rice."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-047"
   slug: "quinoa-chickpea-lemon-bowls"
@@ -164,7 +164,7 @@
   steps:
     - "Simmer the quinoa with the water and half the salt until the grains open, then cool for five minutes."
     - "Divide the quinoa into bowls, add the chickpeas, cucumber, and tomato, then dress with the lemon, olive oil, and remaining salt."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-048"
   slug: "cumin-vegetable-couscous"
@@ -187,7 +187,7 @@
   steps:
     - "Bring the water and half the salt to a boil, stir in the couscous, cover, remove from heat, and let it stand."
     - "Cook the zucchini and bell pepper in the olive oil with the cumin, add the chickpeas and remaining salt, then fold everything into the couscous."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-049"
   slug: "lentil-onion-rice-pilaf"
@@ -209,7 +209,7 @@
   steps:
     - "Cook the onion slowly in the olive oil until deeply golden, then reserve half and stir the cumin into the rest."
     - "Add the rice, lentils, vegetable broth, and salt, simmer until tender, and finish the pilaf with the reserved onion."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-050"
   slug: "stuffed-bell-pepper-skillet"
@@ -234,7 +234,7 @@
   steps:
     - "Brown the ground beef in the olive oil, then add the onion, bell pepper, chili powder, and salt."
     - "Stir in the rice, canned tomatoes, and beef broth, cover until the rice is tender, then melt the cheddar cheese over the skillet."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-051"
   slug: "paprika-chicken-thighs-and-potatoes"
@@ -258,7 +258,7 @@
   steps:
     - "Toss the potato, carrot, and onion with the olive oil, paprika, thyme, salt, and black pepper on a sheet pan."
     - "Nestle the chicken thighs among the vegetables and roast until the vegetables are tender and the chicken thighs are fully cooked."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-052"
   slug: "lemon-garlic-chicken-and-broccoli"
@@ -280,7 +280,7 @@
   steps:
     - "Season the chicken breast with the salt and black pepper, then cook it completely in the olive oil and move it to a plate."
     - "Cook the broccoli and garlic in the skillet, return the chicken breast, and finish everything with juice from the lemon."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-053"
   slug: "lime-chicken-fajitas"
@@ -304,7 +304,7 @@
   steps:
     - "Cook the bell pepper and onion in half the vegetable oil until browned, then transfer them to a plate."
     - "Cook the chicken breast completely in the remaining vegetable oil with the cumin, chili powder, and salt, return the vegetables, add the lime, and serve in tortillas."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-054"
   slug: "tomato-spinach-chicken-thigh-skillet"
@@ -327,7 +327,7 @@
   steps:
     - "Brown the chicken thighs in the olive oil, then add the onion and garlic around them."
     - "Add the canned tomatoes, oregano, and salt, simmer until the chicken thighs are fully cooked, then wilt in the spinach."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-055"
   slug: "skillet-beef-tacos"
@@ -351,7 +351,7 @@
   steps:
     - "Brown the ground beef in the vegetable oil with the cumin, chili powder, and salt until completely cooked."
     - "Fill the tortillas with the ground beef, onion, salsa, and cheddar cheese."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-056"
   slug: "beef-potato-pea-skillet"
@@ -375,7 +375,7 @@
   steps:
     - "Brown the potato in the olive oil, then add the onion and ground beef and cook the ground beef completely."
     - "Stir in the peas, beef broth, paprika, salt, and black pepper, cover, and cook until the potato is tender."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-057"
   slug: "apple-onion-pork-chops"
@@ -397,7 +397,7 @@
   steps:
     - "Season the pork chops with the salt and black pepper, then cook them in half the butter until done and rest them on a plate."
     - "Cook the apple and onion in the remaining butter with the thyme until tender, then spoon them over the pork chops."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-058"
   slug: "mustard-sausage-cabbage-skillet"
@@ -419,7 +419,7 @@
   steps:
     - "Brown the sausage in the vegetable oil, then add the onion and cook until soft."
     - "Add the cabbage, salt, and black pepper, cover until tender, then stir the mustard through the sausage and cabbage."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-059"
   slug: "soy-beef-bell-pepper-rice"
@@ -442,7 +442,7 @@
   steps:
     - "Simmer the rice with the water until tender, while searing the beef steak in half the vegetable oil."
     - "Cook the bell pepper, onion, and garlic in the remaining vegetable oil, return the beef steak, add the soy sauce, and serve over the rice."
-  rights: *draft-rights
+  rights: *reviewed-rights
 
 - id: "recipe-060"
   slug: "pesto-tomato-chicken-bake"
@@ -463,4 +463,4 @@
   steps:
     - "Coat a baking dish with the olive oil, arrange the chicken breast, season with salt, and spread the pesto over it."
     - "Layer the tomato and mozzarella cheese over the chicken breast and bake until the chicken breast is fully cooked and the mozzarella cheese is browned."
-  rights: *draft-rights
+  rights: *reviewed-rights
