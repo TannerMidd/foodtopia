@@ -12,7 +12,6 @@ import {
 import {
   clearFoodtopiaCaches,
   getAuthenticatedUser,
-  requestAdminPasswordLogin,
   requestMagicLink,
   setCurrentUserPassword,
   signInWithPassword,
@@ -494,93 +493,16 @@ function PasswordSignUpForm() {
   );
 }
 
-function AdminPasswordForm({ nextPath }: { nextPath: string }) {
-  const { clear } = useOfflineInventory();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [failed, setFailed] = useState(false);
-
-  async function submit(event: FormEvent) {
-    event.preventDefault();
-    setBusy(true);
-    setFailed(false);
-    try {
-      await requestAdminPasswordLogin(username, password);
-    } catch {
-      setPassword("");
-      setFailed(true);
-      setBusy(false);
-      return;
-    }
-
-    // Authentication has already succeeded and its response contains the new
-    // session cookies. Mobile browsers can reject IndexedDB or CacheStorage
-    // cleanup independently; that must not be reported as bad credentials.
-    setPassword("");
-    await Promise.allSettled([clear(), clearFoodtopiaCaches()]);
-    window.location.replace(normalizeInternalPath(nextPath));
-  }
-
-  return (
-    <form onSubmit={(event) => void submit(event)}>
-      <Field label="Username" htmlFor="admin-username">
-        <input
-          id="admin-username"
-          name="username"
-          type="text"
-          autoComplete="username"
-          required
-          minLength={1}
-          maxLength={64}
-          className={inputClass}
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
-        />
-      </Field>
-      <div className="mt-6">
-        <Field label="Password" htmlFor="admin-password">
-          <input
-            id="admin-password"
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            required
-            minLength={8}
-            maxLength={256}
-            className={inputClass}
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-        </Field>
-      </div>
-      {failed ? (
-        <div className="mt-5">
-          <StateNotice title="Admin sign-in failed" tone="error">
-            Invalid username or password.
-          </StateNotice>
-        </div>
-      ) : null}
-      <Button type="submit" className="mt-6 w-full" busy={busy}>
-        Sign in as admin
-        <ArrowRight className="size-4 text-[var(--accent-ink)]" aria-hidden="true" />
-      </Button>
-    </form>
-  );
-}
-
 export function SignInScreen({
   nextPath = "/",
   householdDeletion,
   authError,
   emailConfirmed = false,
-  adminLoginEnabled = false,
 }: {
   nextPath?: string;
   householdDeletion?: "pending" | "complete";
   authError?: "invalid_link";
   emailConfirmed?: boolean;
-  adminLoginEnabled?: boolean;
 }) {
   return (
     <AuthFrame>
@@ -614,18 +536,7 @@ export function SignInScreen({
         </div>
       ) : null}
 
-      {adminLoginEnabled ? (
-        <section className="mt-12 border-b border-[var(--hairline)] pb-10">
-          <p className="ml">testing access</p>
-          <h1 className="hd mt-3 text-[22px]">Administrator sign-in</h1>
-          <p className="bd mt-2.5">Use the configured administrator username and password.</p>
-          <div className="mt-7">
-            <AdminPasswordForm nextPath={nextPath} />
-          </div>
-        </section>
-      ) : null}
-
-      <section className={adminLoginEnabled ? "mt-10" : "mt-12"}>
+      <section className="mt-12">
         <p className="ml">private beta</p>
         <h1 className="hd mt-3 text-[26px] lg:text-[30px]">Welcome back.</h1>
         <p className="bd mt-2.5">

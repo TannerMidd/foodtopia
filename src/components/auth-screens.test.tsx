@@ -6,7 +6,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const auth = vi.hoisted(() => ({
   clearFoodtopiaCaches: vi.fn(),
   getAuthenticatedUser: vi.fn(),
-  requestAdminPasswordLogin: vi.fn(),
   requestMagicLink: vi.fn(),
   setCurrentUserPassword: vi.fn(),
   signInWithPassword: vi.fn(),
@@ -26,76 +25,6 @@ vi.mock("./offline-provider", () => ({
 }));
 
 import { SetPasswordScreen, SignInScreen, SignUpScreen } from "./auth-screens";
-
-describe("administrator password sign-in", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    auth.requestAdminPasswordLogin.mockResolvedValue(undefined);
-    offline.clear.mockResolvedValue(undefined);
-    auth.clearFoodtopiaCaches.mockResolvedValue(undefined);
-  });
-
-  it("posts the supplied credentials to the server login helper, then clears offline tenant data", async () => {
-    const user = userEvent.setup();
-    render(
-      <SignInScreen
-        nextPath="/inventory?location=fridge"
-        adminLoginEnabled
-      />,
-    );
-
-    await user.type(screen.getByLabelText("Username"), "Admin");
-    const passwordInput = screen.getAllByLabelText("Password")[0];
-    expect(passwordInput).toHaveAttribute("type", "password");
-    expect(passwordInput).toHaveAttribute("autocomplete", "current-password");
-    await user.type(passwordInput, "a-test-password");
-    await user.click(screen.getByRole("button", { name: "Sign in as admin" }));
-
-    await waitFor(() => {
-      expect(auth.requestAdminPasswordLogin).toHaveBeenCalledWith(
-        "Admin",
-        "a-test-password",
-      );
-      expect(offline.clear).toHaveBeenCalledTimes(1);
-      expect(auth.clearFoodtopiaCaches).toHaveBeenCalledTimes(1);
-    });
-    expect(offline.clear).toHaveBeenCalledBefore(auth.clearFoodtopiaCaches);
-  });
-
-  it("does not expose provider errors for an unsuccessful administrator sign-in", async () => {
-    const user = userEvent.setup();
-    auth.requestAdminPasswordLogin.mockRejectedValue(
-      new Error("Invalid login credentials for private-admin@example.test"),
-    );
-    render(<SignInScreen adminLoginEnabled />);
-
-    await user.type(screen.getByLabelText("Username"), "Admin");
-    await user.type(screen.getAllByLabelText("Password")[0], "wrong-password");
-    await user.click(screen.getByRole("button", { name: "Sign in as admin" }));
-
-    expect(await screen.findByText("Invalid username or password.")).toBeInTheDocument();
-    expect(document.body.textContent).not.toContain("private-admin@example.test");
-  });
-
-  it("does not relabel a successful login when mobile storage cleanup fails", async () => {
-    const user = userEvent.setup();
-    offline.clear.mockRejectedValue(new Error("IndexedDB unavailable"));
-    auth.clearFoodtopiaCaches.mockRejectedValue(
-      new Error("CacheStorage unavailable"),
-    );
-    render(<SignInScreen adminLoginEnabled />);
-
-    await user.type(screen.getByLabelText("Username"), "Admin");
-    await user.type(screen.getAllByLabelText("Password")[0], "a-test-password");
-    await user.click(screen.getByRole("button", { name: "Sign in as admin" }));
-
-    await waitFor(() => {
-      expect(offline.clear).toHaveBeenCalledTimes(1);
-      expect(auth.clearFoodtopiaCaches).toHaveBeenCalledTimes(1);
-    });
-    expect(screen.queryByText("Invalid username or password.")).toBeNull();
-  });
-});
 
 describe("member password authentication", () => {
   beforeEach(() => {
