@@ -101,7 +101,7 @@ function ShellChrome({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-dvh md:flex">
       {/* Desktop: a quiet left rail. No icons — the words carry it. */}
-      <aside className="sticky top-0 hidden h-dvh w-44 flex-none flex-col border-r border-[var(--hairline)] py-7 md:flex">
+      <aside className="sticky top-0 hidden h-dvh w-44 flex-none flex-col border-r border-[var(--hairline)] bg-[var(--ground)] py-7 md:flex">
         <Link href="/" className="px-6" aria-label="Foodtopia home">
           <Wordmark />
         </Link>
@@ -171,7 +171,7 @@ function ShellChrome({ children }: { children: ReactNode }) {
 
         {/* Mobile: four words on a hairline. The fifth destination is the lit
             action inside each screen, so it never needs a tab. */}
-        <nav className="safe-bottom fixed inset-x-0 bottom-0 z-40 flex h-16 items-center justify-between border-t border-[var(--hairline)] bg-[var(--page)] px-6 md:hidden">
+        <nav className="safe-bottom fixed inset-x-0 bottom-0 z-40 flex h-16 items-center justify-between border-t border-[var(--hairline)] bg-[var(--ground)] px-6 md:hidden">
           {navItems
             .filter((item) => !item.desktopOnly)
             .map((item) => {

@@ -106,12 +106,20 @@ export function Section({
   id?: string;
 }) {
   return (
-    <section id={id} className={cn("flex flex-col gap-3 sm:flex-row sm:gap-7", className)}>
-      <div className="flex-none pt-0 sm:pt-4" style={{ width: labelWidth }}>
+    // The rule spans the whole group — label included — so each section reads
+    // as one bounded block, clearly cut off from its neighbours.
+    <section
+      id={id}
+      className={cn(
+        "flex flex-col gap-3 border-t border-[var(--hairline)] pt-4 sm:flex-row sm:gap-7",
+        className,
+      )}
+    >
+      <div className="flex-none" style={{ width: labelWidth }}>
         <p className="ml">{label}</p>
         {meta && <p className="m mt-1.5 text-[11px] text-[var(--ink-5)]">{meta}</p>}
       </div>
-      <div className="ledger min-w-0 flex-1">{children}</div>
+      <div className="min-w-0 flex-1">{children}</div>
     </section>
   );
 }

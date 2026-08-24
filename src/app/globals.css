@@ -29,10 +29,11 @@
     --ground-hi: #252220;
     --ground-tint: #2a2724;
 
-    /* Edges */
-    --hairline: #2d2b27;
-    --edge: #37342e;
-    --edge-strong: #454138;
+    /* Edges. Lifted one visible step off the ground so rules and underlines
+       actually read as boundaries instead of vanishing into the page. */
+    --hairline: #35322c;
+    --edge: #403c34;
+    --edge-strong: #4d483e;
 
     /* Ink, brightest to faintest. The faint stops stay above ~4:1 against
        --page so labels and meta text never disappear into the ground. */
