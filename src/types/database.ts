@@ -71,7 +71,6 @@ type RateLimitAction =
   | "inventory_command"
   | "cook_reconcile";
 type AiProvider = "openai" | "openrouter";
-type AiCredentialSource = "platform" | "household";
 
 type Table<Row extends Record<string, unknown>> = {
   Row: Row;
@@ -379,7 +378,7 @@ export type Database = {
         provider: AiProvider;
         vision_model_id: string;
         recipe_model_id: string;
-        credential_source: AiCredentialSource;
+        credential_source: "household";
         updated_by: string;
         created_at: string;
         updated_at: string;
@@ -539,7 +538,6 @@ export type Database = {
           p_provider: AiProvider;
           p_vision_model_id: string;
           p_recipe_model_id: string;
-          p_credential_source: AiCredentialSource;
           p_credential_action: "retain" | "replace" | "clear";
           p_encrypted_api_key: string | null;
           p_encryption_key_id: string | null;

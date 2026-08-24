@@ -286,14 +286,13 @@ select ok(
   not (public.get_household_ai_settings() ? 'encryptedApiKey')
     and public.get_household_ai_settings() ->> 'provider' = 'openai'
     and (public.get_household_ai_settings() ->> 'householdCredentialConfigured')::boolean = false,
-  'member-readable AI settings DTO is secret-free and starts platform-backed'
+  'member-readable AI settings DTO is secret-free and starts unconfigured'
 );
 select ok(
   public.write_household_ai_settings(
     'openrouter',
     'openrouter/vision-v1',
     'openrouter/recipe-v1',
-    'household',
     'replace',
     'v1.aabbccddeeff.aabbccddeeff.ciphertextmore',
     'test-key-v1',

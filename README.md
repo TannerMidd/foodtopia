@@ -40,8 +40,8 @@ Copy `.env.example` to `.env.local` only when connecting cloud services. `FOODTO
 4. Confirm the private `raw-images` bucket and storage policies created by the migration. Never make this bucket public.
 5. After genuine recipe review metadata is committed, generate and apply the reviewed-recipe import with `pnpm generate:recipe-import -- --output path/to/reviewed-recipes.sql`. The command validates every source YAML file in publication mode and refuses to write SQL while any recipe remains a draft.
 6. Create an Inngest application pointed at `/api/inngest` and set its event/signing keys.
-7. Configure at least one platform provider key. Direct OpenAI uses synchronous Responses requests with `store: false`; OpenRouter uses its OpenAI-compatible Chat Completions endpoint with structured outputs, zero-data-retention routing, and provider data collection denied. Owners select the provider and both model IDs in Settings.
-8. To allow owner-supplied household keys, configure the AES-GCM keyring described below. Household keys are optional and are never returned after saving.
+7. Configure the deployment-wide default model IDs (optional pre-fill hints). Direct OpenAI uses synchronous Responses requests with `store: false`; OpenRouter uses its OpenAI-compatible Chat Completions endpoint with structured outputs, zero-data-retention routing, and provider data collection denied. Owners select the provider and both model IDs in Settings.
+8. Configure the AES-GCM keyring described below — it is required. Foodtopia is BYO-only: every household owner supplies their own OpenAI or OpenRouter API key in Settings, encrypted before storage and never returned after saving. The deployment never holds a provider key, so AI stays unconfigured until each household adds one.
 9. Deploy the Next.js application to Vercel and set the environment variables below. Do not set demo mode in production.
 10. Share the open-beta invite link `https://your-foodtopia.example/sign-up`. Anyone with it can request an account; new accounts start **pending** and see an "Account not enabled" screen until admitted. Review and enable accounts in batches at `/admin/beta` (sign in as the configured administrator), where you can also close the signup window entirely. Personal beta-invite rows created through a controlled operator process remain an instant-access fast lane: share `/onboarding/{raw-token}` only with that email owner. Raw tokens are stored only as hashes in Postgres.
 11. Run the security, retention, device, and content gates in `docs/beta-runbook.md` before admitting a household.
@@ -59,10 +59,8 @@ SUPABASE_SERVICE_ROLE_KEY=...
 FOODTOPIA_ADMIN_LOGIN_ENABLED=true
 FOODTOPIA_ADMIN_USERNAME=Admin
 FOODTOPIA_ADMIN_EMAIL=admin@example.com
-OPENAI_API_KEY=...
 OPENAI_VISION_MODEL=gpt-5.6-terra
 OPENAI_RECIPE_MODEL=gpt-5.6-luna
-OPENROUTER_API_KEY=...
 OPENROUTER_VISION_MODEL=provider/vision-model
 OPENROUTER_RECIPE_MODEL=provider/recipe-model
 HOUSEHOLD_AI_CREDENTIAL_KEYRING={"2026-08":"<32-byte-base64-key>"}
@@ -87,10 +85,9 @@ can open the `/admin/beta` admissions console and its APIs.
 - At `/admin/beta` the administrator enables selected accounts in batches of up to 50, disables access instantly, re-enables, and opens/closes the global signup window. When closed, the database hook admits only live invitation emails.
 - Disabling an account blocks it immediately but keeps the Auth user for audit; full deletion stays an out-of-band Supabase operation per the runbook.
 
-Only the provider selected by a household needs a platform key. If the selected
-source is `platform` and that provider key is absent, or the selected source is
-`household` and its encrypted credential cannot be opened, AI calls fail closed;
-they never fall back to another provider or deployment key.
+Every AI call uses the household's own encrypted credential. If that credential
+cannot be opened, or no key has been saved yet, the call fails closed; it never
+falls back to another provider or any deployment-level key.
 
 Generate every keyring value from 32 random bytes and keep the JSON and active
 key ID in server-only environment variables. To rotate, deploy the old and new

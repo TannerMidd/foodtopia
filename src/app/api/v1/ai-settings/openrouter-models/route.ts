@@ -2,7 +2,7 @@ import {
   openRouterModelDiscoveryRequestSchema,
   openRouterModelsResponseSchema,
 } from "@/contracts/api";
-import { isDemoMode, serverEnv } from "@/lib/env";
+import { isDemoMode } from "@/lib/env";
 import { requireHouseholdSession } from "@/server/auth/session";
 import { discoverOpenRouterModels } from "@/server/ai/openrouter-models";
 import {
@@ -41,11 +41,9 @@ export async function POST(request: Request) {
       openRouterModelDiscoveryRequestSchema,
     );
 
+    // A freshly entered key wins; otherwise reuse the saved household key.
     let apiKey = input.apiKey;
-    if (!apiKey && input.credentialSource === "platform") {
-      apiKey = serverEnv.openrouterApiKey ?? undefined;
-    }
-    if (!apiKey && input.credentialSource === "household") {
+    if (!apiKey) {
       const runtimeConfig = await resolveHouseholdAiRuntimeConfig(
         session.householdId,
       );

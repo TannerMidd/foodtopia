@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   aiSettingsResponseSchema,
   aiSettingsUpdateRequestSchema,
+  openRouterModelDiscoveryRequestSchema,
 } from "./api";
 
 const base = {
@@ -13,22 +14,20 @@ const base = {
 };
 
 describe("AI settings HTTP contracts", () => {
-  it("accepts a one-way household credential replacement", () => {
+  it("accepts a household credential replacement", () => {
     expect(
       aiSettingsUpdateRequestSchema.parse({
         ...base,
-        credentialSource: "household",
         credentialAction: "replace",
         apiKey: "sk-or-household-secret",
       }),
     ).toMatchObject({ provider: "openrouter", credentialAction: "replace" });
   });
 
-  it("rejects credentials outside a household replacement", () => {
+  it("rejects credentials outside a replacement", () => {
     expect(
       aiSettingsUpdateRequestSchema.safeParse({
         ...base,
-        credentialSource: "platform",
         credentialAction: "retain",
         apiKey: "must-not-be-accepted",
       }).success,
@@ -36,8 +35,16 @@ describe("AI settings HTTP contracts", () => {
     expect(
       aiSettingsUpdateRequestSchema.safeParse({
         ...base,
-        credentialSource: "household",
         credentialAction: "clear",
+      }).success,
+    ).toBe(true);
+  });
+
+  it("requires an API key for a replacement action", () => {
+    expect(
+      aiSettingsUpdateRequestSchema.safeParse({
+        ...base,
+        credentialAction: "replace",
       }).success,
     ).toBe(false);
   });
@@ -47,7 +54,6 @@ describe("AI settings HTTP contracts", () => {
       aiSettingsUpdateRequestSchema.safeParse({
         ...base,
         visionModelId: "vendor/model?debug=true",
-        credentialSource: "platform",
         credentialAction: "retain",
       }).success,
     ).toBe(false);
@@ -58,9 +64,7 @@ describe("AI settings HTTP contracts", () => {
       provider: "openai",
       visionModelId: "gpt-vision",
       recipeModelId: "gpt-recipes",
-      credentialSource: "household",
       credentialConfigured: true,
-      platformCredentials: { openai: true, openrouter: false },
       modelDefaults: {
         openai: {
           visionModelId: "gpt-vision",
@@ -75,5 +79,19 @@ describe("AI settings HTTP contracts", () => {
       apiKey: "must-never-return",
     };
     expect(aiSettingsResponseSchema.safeParse(response).success).toBe(false);
+  });
+
+  it("keeps OpenRouter discovery key optional with no platform route", () => {
+    expect(openRouterModelDiscoveryRequestSchema.parse({})).toEqual({});
+    expect(
+      openRouterModelDiscoveryRequestSchema.safeParse({
+        apiKey: "sk-or-household-secret",
+      }).success,
+    ).toBe(true);
+    expect(
+      openRouterModelDiscoveryRequestSchema.safeParse({
+        credentialSource: "platform",
+      }).success,
+    ).toBe(false);
   });
 });

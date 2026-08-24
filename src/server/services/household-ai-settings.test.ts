@@ -11,10 +11,8 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@/lib/env", () => ({
   serverEnv: {
-    openaiApiKey: "platform-openai-key",
     openaiVisionModel: "openai-vision-env",
     openaiRecipeModel: "openai-recipe-env",
-    openrouterApiKey: "platform-openrouter-key",
     openrouterVisionModel: "vendor/vision-default",
     openrouterRecipeModel: "vendor/recipe-default",
   },
@@ -50,33 +48,11 @@ beforeEach(() => {
 });
 
 describe("household AI runtime resolution", () => {
-  it("uses only the selected OpenRouter platform key and models", async () => {
+  it("fails closed when no household key is stored", async () => {
     mocks.readRuntime.mockResolvedValue({
       provider: "openrouter",
       visionModelId: "vendor/vision",
       recipeModelId: "vendor/recipe",
-      credentialSource: "platform",
-      encryptedApiKey: null,
-      encryptionKeyId: null,
-      updatedAt,
-      version: 2,
-    });
-
-    await expect(resolveHouseholdAiRuntimeConfig("household-1")).resolves.toEqual({
-      provider: "openrouter",
-      apiKey: "platform-openrouter-key",
-      visionModelId: "vendor/vision",
-      recipeModelId: "vendor/recipe",
-    });
-    expect(mocks.decryptCredential).not.toHaveBeenCalled();
-  });
-
-  it("fails closed instead of falling back to an OpenAI deployment key", async () => {
-    mocks.readRuntime.mockResolvedValue({
-      provider: "openrouter",
-      visionModelId: "vendor/vision",
-      recipeModelId: "vendor/recipe",
-      credentialSource: "household",
       encryptedApiKey: null,
       encryptionKeyId: null,
       updatedAt,
@@ -94,7 +70,6 @@ describe("household AI runtime resolution", () => {
       provider: "openai",
       visionModelId: "vision-custom",
       recipeModelId: "recipe-custom",
-      credentialSource: "household",
       encryptedApiKey: "v1.old.tag.ciphertext",
       encryptionKeyId: "old",
       updatedAt,
@@ -130,7 +105,6 @@ describe("household AI runtime resolution", () => {
         provider: "openai",
         visionModelId: "vision-custom",
         recipeModelId: "recipe-custom",
-        credentialSource: "household",
         householdCredentialConfigured: true,
         updatedAt,
         version: 2,
@@ -143,13 +117,33 @@ describe("household AI runtime resolution", () => {
     expect(JSON.stringify(result)).not.toMatch(/apiKey|encrypted|keyId|secret/i);
   });
 
+  it("reports an unconfigured household when the keyring is unavailable", () => {
+    mocks.keyringStatus.mockImplementation(() => {
+      throw new Error("keyring misconfigured");
+    });
+
+    const result = presentHouseholdAiSettings(
+      {
+        provider: "openai",
+        visionModelId: "vision-custom",
+        recipeModelId: "recipe-custom",
+        householdCredentialConfigured: true,
+        updatedAt,
+        version: 2,
+      },
+      false,
+    );
+
+    expect(result.credentialConfigured).toBe(false);
+    expect(result.householdCredentialsAvailable).toBe(false);
+  });
+
   it("normalizes PostgreSQL timestamp offsets at the public API boundary", () => {
     const result = presentHouseholdAiSettings(
       {
         provider: "openai",
         visionModelId: "vision-custom",
         recipeModelId: "recipe-custom",
-        credentialSource: "platform",
         householdCredentialConfigured: false,
         updatedAt: "2026-08-14T12:00:00+00:00",
         version: 2,

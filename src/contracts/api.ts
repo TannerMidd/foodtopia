@@ -133,7 +133,6 @@ export const visionConsentResponseSchema = z.object({
 });
 
 export const aiProviderSchema = z.enum(["openai", "openrouter"]);
-export const aiCredentialSourceSchema = z.enum(["platform", "household"]);
 export const aiModelIdSchema = z
   .string()
   .trim()
@@ -149,12 +148,7 @@ export const aiSettingsResponseSchema = z
     provider: aiProviderSchema,
     visionModelId: aiModelIdSchema,
     recipeModelId: aiModelIdSchema,
-    credentialSource: aiCredentialSourceSchema,
     credentialConfigured: z.boolean(),
-    platformCredentials: z.object({
-      openai: z.boolean(),
-      openrouter: z.boolean(),
-    }),
     modelDefaults: z.object({
       openai: z.object({
         visionModelId: aiModelIdSchema,
@@ -177,7 +171,6 @@ export const aiSettingsUpdateRequestSchema = z
     provider: aiProviderSchema,
     visionModelId: aiModelIdSchema,
     recipeModelId: aiModelIdSchema,
-    credentialSource: aiCredentialSourceSchema,
     credentialAction: z.enum(["retain", "replace", "clear"]),
     apiKey: z.string().trim().min(8).max(1024).optional(),
     expectedVersion: z.number().int().positive(),
@@ -198,31 +191,10 @@ export const aiSettingsUpdateRequestSchema = z
         message: "An API key is accepted only when replacing the credential.",
       });
     }
-    if (
-      value.credentialSource === "platform" &&
-      value.credentialAction === "replace"
-    ) {
-      context.addIssue({
-        code: "custom",
-        path: ["credentialAction"],
-        message: "Platform credentials cannot be replaced from the household UI.",
-      });
-    }
-    if (
-      value.credentialSource === "household" &&
-      value.credentialAction === "clear"
-    ) {
-      context.addIssue({
-        code: "custom",
-        path: ["credentialAction"],
-        message: "Switch to platform credentials before clearing the household key.",
-      });
-    }
   });
 
 export const openRouterModelDiscoveryRequestSchema = z
   .object({
-    credentialSource: aiCredentialSourceSchema,
     apiKey: z
       .string()
       .trim()
@@ -234,16 +206,7 @@ export const openRouterModelDiscoveryRequestSchema = z
       )
       .optional(),
   })
-  .strict()
-  .superRefine((value, context) => {
-    if (value.credentialSource === "platform" && value.apiKey !== undefined) {
-      context.addIssue({
-        code: "custom",
-        path: ["apiKey"],
-        message: "Platform model discovery uses the deployment credential.",
-      });
-    }
-  });
+  .strict();
 
 export const openRouterModelChoiceSchema = z
   .object({
@@ -414,7 +377,6 @@ export type AnalysisCreateResponse = z.infer<
   typeof analysisCreateResponseSchema
 >;
 export type AiProvider = z.infer<typeof aiProviderSchema>;
-export type AiCredentialSource = z.infer<typeof aiCredentialSourceSchema>;
 export type AccountStatus = z.infer<typeof accountStatusSchema>;
 export type BetaAccount = z.infer<typeof betaAccountSchema>;
 export type BetaAccountsResponse = z.infer<

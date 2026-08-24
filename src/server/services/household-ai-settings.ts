@@ -53,12 +53,6 @@ function effectiveModels(settings: StoredHouseholdAiSettings) {
       };
 }
 
-function platformApiKey(provider: AiProvider) {
-  return provider === "openai"
-    ? serverEnv.openaiApiKey
-    : serverEnv.openrouterApiKey;
-}
-
 function keyringAvailability() {
   try {
     return getCredentialKeyringStatus();
@@ -73,18 +67,12 @@ export function presentHouseholdAiSettings(
 ): AiSettingsResponse {
   const models = effectiveModels(settings);
   const keyring = keyringAvailability();
-  const credentialConfigured = settings.credentialSource === "platform"
-    ? Boolean(platformApiKey(settings.provider))
-    : settings.householdCredentialConfigured && keyring.available;
+  const credentialConfigured =
+    settings.householdCredentialConfigured && keyring.available;
   return {
     ...models,
     provider: settings.provider,
-    credentialSource: settings.credentialSource,
     credentialConfigured,
-    platformCredentials: {
-      openai: Boolean(serverEnv.openaiApiKey),
-      openrouter: Boolean(serverEnv.openrouterApiKey),
-    },
     modelDefaults: {
       openai: {
         visionModelId: serverEnv.openaiVisionModel,
@@ -110,16 +98,6 @@ export async function resolveHouseholdAiRuntimeConfig(
     ...settings,
     householdCredentialConfigured: settings.encryptedApiKey !== null,
   });
-
-  if (settings.credentialSource === "platform") {
-    const apiKey = platformApiKey(settings.provider);
-    if (!apiKey) throw new AiConfigurationError();
-    return {
-      provider: settings.provider,
-      apiKey,
-      ...models,
-    };
-  }
 
   if (!settings.encryptedApiKey || !settings.encryptionKeyId) {
     throw new AiConfigurationError();

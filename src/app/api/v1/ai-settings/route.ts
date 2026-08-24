@@ -31,9 +31,7 @@ function demoSettings() {
     provider: "openai",
     visionModelId: "local-demo-vision",
     recipeModelId: "local-demo-recipes",
-    credentialSource: "platform",
     credentialConfigured: true,
-    platformCredentials: { openai: false, openrouter: false },
     modelDefaults: {
       openai: {
         visionModelId: "local-demo-vision",
@@ -96,7 +94,7 @@ export async function PUT(request: Request) {
       encryptedApiKey: string;
       encryptionKeyId: string;
     } | null = null;
-    if (input.credentialSource === "household") {
+    if (input.credentialAction === "replace") {
       const keyring = getCredentialKeyringStatus();
       if (!keyring.available) {
         throw new ApiFault(
@@ -105,7 +103,7 @@ export async function PUT(request: Request) {
           503,
         );
       }
-      if (input.credentialAction === "replace" && input.apiKey) {
+      if (input.apiKey) {
         credential = encryptHouseholdApiKey(input.apiKey, {
           householdId: session.householdId,
           provider: input.provider,

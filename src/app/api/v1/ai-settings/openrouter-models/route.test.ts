@@ -49,10 +49,7 @@ describe("POST /api/v1/ai-settings/openrouter-models", () => {
         {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({
-            credentialSource: "household",
-            apiKey: "fake-private-openrouter-key",
-          }),
+          body: JSON.stringify({ apiKey: "fake-private-openrouter-key" }),
         },
       ),
     );
@@ -79,7 +76,7 @@ describe("POST /api/v1/ai-settings/openrouter-models", () => {
         {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ credentialSource: "household" }),
+          body: JSON.stringify({}),
         },
       ),
     );
@@ -106,10 +103,7 @@ describe("POST /api/v1/ai-settings/openrouter-models", () => {
         {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({
-            credentialSource: "household",
-            apiKey: "fake-private-openrouter-key",
-          }),
+          body: JSON.stringify({ apiKey: "fake-private-openrouter-key" }),
         },
       ),
     );

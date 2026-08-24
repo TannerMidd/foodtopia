@@ -10,11 +10,9 @@ import {
 } from "react";
 
 import type {
-  AiCredentialSource,
   AiProvider,
   AiSettingsResponse,
   OpenRouterModelChoice,
-  OpenRouterModelDiscoveryRequest,
 } from "@/contracts/api";
 import {
   discoverOpenRouterModelChoices,
@@ -27,7 +25,6 @@ type Draft = {
   provider: AiProvider;
   visionModelId: string;
   recipeModelId: string;
-  credentialSource: AiCredentialSource;
 };
 
 function toDraft(settings: AiSettingsResponse): Draft {
@@ -35,7 +32,6 @@ function toDraft(settings: AiSettingsResponse): Draft {
     provider: settings.provider,
     visionModelId: settings.visionModelId,
     recipeModelId: settings.recipeModelId,
-    credentialSource: settings.credentialSource,
   };
 }
 
@@ -46,24 +42,16 @@ function providerLabel(provider: AiProvider) {
 function discoveryInput(
   settings: AiSettingsResponse | null,
   provider: AiProvider | null,
-  credentialSource: AiCredentialSource | null,
   apiKey: string,
-): OpenRouterModelDiscoveryRequest | null {
-  if (!settings || provider !== "openrouter" || !credentialSource) return null;
-  if (credentialSource === "platform") {
-    return settings.platformCredentials.openrouter
-      ? { credentialSource: "platform" }
-      : null;
-  }
+): { apiKey?: string } | null {
+  if (!settings || provider !== "openrouter") return null;
   const enteredKey = apiKey.trim();
   if (enteredKey.length >= 8) {
-    return { credentialSource: "household", apiKey: enteredKey };
+    return { apiKey: enteredKey };
   }
   const savedHouseholdKey =
-    settings.provider === "openrouter" &&
-    settings.credentialSource === "household" &&
-    settings.credentialConfigured;
-  return savedHouseholdKey ? { credentialSource: "household" } : null;
+    settings.provider === "openrouter" && settings.credentialConfigured;
+  return savedHouseholdKey ? {} : null;
 }
 
 function OpenRouterModelField({
@@ -140,6 +128,7 @@ export function AiProviderSettings({
   const [apiKey, setApiKey] = useState("");
   const [loading, setLoading] = useState(apiMode === "connected");
   const [saving, setSaving] = useState(false);
+  const [clearing, setClearing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
   const [openRouterModels, setOpenRouterModels] = useState<
@@ -173,7 +162,7 @@ export function AiProviderSettings({
   }, [apiMode]);
 
   const loadOpenRouterModels = useCallback(
-    async (input: OpenRouterModelDiscoveryRequest) => {
+    async (input: { apiKey?: string }) => {
       const generation = ++discoveryGeneration.current;
       setModelsLoading(true);
       setModelsError(null);
@@ -200,13 +189,8 @@ export function AiProviderSettings({
 
   const selectedDiscoveryInput = useMemo(
     () =>
-      discoveryInput(
-        settings,
-        draft?.provider ?? null,
-        draft?.credentialSource ?? null,
-        apiKey,
-      ),
-    [apiKey, draft?.credentialSource, draft?.provider, settings],
+      discoveryInput(settings, draft?.provider ?? null, apiKey),
+    [apiKey, draft?.provider, settings],
   );
 
   useEffect(() => {
@@ -257,29 +241,28 @@ export function AiProviderSettings({
     setSaved(false);
   }
 
+  // A saved key is bound to the provider it was entered for, so switching
+  // providers always requires a fresh key.
+  function householdKeyStillValid() {
+    return Boolean(
+      settings &&
+        settings.credentialConfigured &&
+        settings.provider === draft?.provider,
+    );
+  }
+
   function credentialAction() {
-    if (!settings || !draft) return "retain" as const;
-    if (draft.credentialSource === "platform") {
-      return settings.credentialSource === "household" ||
-        settings.provider !== draft.provider
-        ? ("clear" as const)
-        : ("retain" as const);
-    }
     if (apiKey.trim()) return "replace" as const;
-    return "retain" as const;
+    return householdKeyStillValid() ? ("retain" as const) : null;
   }
 
   async function save(event: FormEvent) {
     event.preventDefault();
     if (!settings || !draft || !settings.canEdit) return;
     const action = credentialAction();
-    const householdCredentialNeedsReplacement =
-      draft.credentialSource === "household" &&
-      (settings.credentialSource !== "household" ||
-        settings.provider !== draft.provider);
-    if (householdCredentialNeedsReplacement && !apiKey.trim()) {
+    if (!action) {
       setError(
-        "Enter a new API key when choosing household credentials or changing their provider.",
+        `Enter a ${providerLabel(draft.provider)} API key to finish this configuration.`,
       );
       return;
     }
@@ -309,15 +292,33 @@ export function AiProviderSettings({
     }
   }
 
-  const selectedPlatformAvailable = draft
-    ? settings?.platformCredentials[draft.provider] ?? false
-    : false;
-  const householdCredentialNeedsReplacement = Boolean(
-    settings &&
-      draft?.credentialSource === "household" &&
-      (settings.credentialSource !== "household" ||
-        settings.provider !== draft.provider),
-  );
+  async function removeSavedKey() {
+    if (!settings || !draft || !settings.canEdit) return;
+    setClearing(true);
+    setSaved(false);
+    setError(null);
+    try {
+      const next = await updateAiSettings({
+        ...draft,
+        credentialAction: "clear",
+        expectedVersion: settings.version,
+      });
+      setSettings(next);
+      setDraft(toDraft(next));
+      setSaved(true);
+    } catch (caught) {
+      setError(
+        caught instanceof Error
+          ? caught.message
+          : "The saved API key could not be removed.",
+      );
+    } finally {
+      setApiKey("");
+      setClearing(false);
+    }
+  }
+
+  const keyIsBoundToCurrentProvider = householdKeyStillValid();
 
   return (
     <div>
@@ -365,7 +366,7 @@ export function AiProviderSettings({
           <Field
             label="Provider"
             htmlFor="ai-provider"
-            hint="API keys and model choices belong to the provider selected here."
+            hint="Your own API key and model choices belong to the provider selected here."
           >
             <select
               id="ai-provider"
@@ -381,96 +382,53 @@ export function AiProviderSettings({
             </select>
           </Field>
 
-          <fieldset disabled={!settings.canEdit || saving}>
-            <legend className="ml">Credential source</legend>
-            <div className="mt-3 flex flex-wrap gap-x-8 gap-y-3">
-              <label className="flex min-h-9 cursor-pointer items-center gap-2.5 text-[13.5px] font-light">
-                <input
-                  type="radio"
-                  name="ai-credential-source"
-                  value="platform"
-                  checked={draft.credentialSource === "platform"}
-                  onChange={() => {
-                    setDraft({ ...draft, credentialSource: "platform" });
-                    setApiKey("");
-                    setOpenRouterModels(null);
-                    setModelsError(null);
-                    discoveryGeneration.current += 1;
-                    setSaved(false);
-                  }}
-                />
-                Platform key
-              </label>
-              <label className="flex min-h-9 cursor-pointer items-center gap-2.5 text-[13.5px] font-light">
-                <input
-                  type="radio"
-                  name="ai-credential-source"
-                  value="household"
-                  checked={draft.credentialSource === "household"}
-                  disabled={!settings.householdCredentialsAvailable}
-                  onChange={() => {
-                    setDraft({ ...draft, credentialSource: "household" });
-                    setOpenRouterModels(null);
-                    setModelsError(null);
-                    discoveryGeneration.current += 1;
-                    setSaved(false);
-                  }}
-                />
-                Household key
-              </label>
-            </div>
-          </fieldset>
+          <Field
+            label={
+              keyIsBoundToCurrentProvider
+                ? `Replace ${providerLabel(draft.provider)} API key`
+                : `${providerLabel(draft.provider)} API key`
+            }
+            htmlFor="ai-api-key"
+            hint={
+              keyIsBoundToCurrentProvider
+                ? "Leave blank to retain the encrypted household key. Model choices load from the saved key, which is never shown again."
+                : "Foodtopia never holds a shared key; each household supplies its own. Compatible model choices load automatically after entry."
+            }
+          >
+            <input
+              id="ai-api-key"
+              className={inputClass}
+              type="password"
+              autoComplete="new-password"
+              maxLength={1024}
+              spellCheck={false}
+              value={apiKey}
+              disabled={!settings.canEdit || saving}
+              onChange={(event) => {
+                setApiKey(event.target.value);
+                setOpenRouterModels(null);
+                setModelsError(null);
+                setSaved(false);
+              }}
+              required={!keyIsBoundToCurrentProvider}
+            />
+          </Field>
 
-          {draft.credentialSource === "platform" ? (
-            <div className="flex flex-col gap-4">
-              <StateNotice
-                title={`${providerLabel(draft.provider)} platform key ${selectedPlatformAvailable ? "available" : "missing"}`}
-                tone={selectedPlatformAvailable ? "success" : "warning"}
-              >
-                The deployment operator manages this key. It is never sent to
-                the browser.
-              </StateNotice>
-              {settings.credentialSource === "household" ? (
-                <StateNotice title="Household key will be cleared" tone="warning">
-                  Saving this platform route permanently removes the encrypted
-                  household credential.
-                </StateNotice>
-              ) : null}
-            </div>
-          ) : (
-            <Field
-              label={
-                settings.credentialSource === "household" &&
-                settings.provider === draft.provider
-                  ? `Replace ${providerLabel(draft.provider)} API key`
-                  : `${providerLabel(draft.provider)} API key`
-              }
-              htmlFor="ai-api-key"
-              hint={
-                householdCredentialNeedsReplacement
-                  ? "A new key is required for this provider. Compatible model choices load automatically after entry."
-                  : "Leave blank to retain the encrypted household key. Model choices load from the saved key, which is never shown again."
-              }
+          {keyIsBoundToCurrentProvider && settings.canEdit ? (
+            <Button
+              type="button"
+              size="small"
+              variant="secondary"
+              busy={clearing}
+              disabled={saving}
+              className="self-start"
+              onClick={() => {
+                void removeSavedKey();
+              }}
             >
-              <input
-                id="ai-api-key"
-                className={inputClass}
-                type="password"
-                autoComplete="new-password"
-                maxLength={1024}
-                spellCheck={false}
-                value={apiKey}
-                disabled={!settings.canEdit || saving}
-                onChange={(event) => {
-                  setApiKey(event.target.value);
-                  setOpenRouterModels(null);
-                  setModelsError(null);
-                  setSaved(false);
-                }}
-                required={householdCredentialNeedsReplacement}
-              />
-            </Field>
-          )}
+              Remove saved key
+            </Button>
+          ) : null}
 
           {draft.provider === "openrouter" ? (
             <>

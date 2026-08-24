@@ -69,7 +69,7 @@ If the provider is impaired, keep manual inventory available, use the deployment
 
 Provider selection and credential handling are household-scoped. Never copy a
 household API key into an incident note, log, query result, browser store, or
-Inngest event. A missing selected platform key, an unavailable household
+Inngest event. A missing or unavailable household credential, an unknown
 credential, an unknown encryption key ID, or an unsupported model must fail
 closed without trying a different provider.
 

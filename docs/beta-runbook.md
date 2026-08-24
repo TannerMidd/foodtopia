@@ -11,7 +11,7 @@
 - [ ] Run `pnpm check`, `pnpm build`, and both Playwright mobile projects.
 - [ ] Manually install and exercise camera/offline/reconnect behavior on current iOS Safari and Android Chrome.
 - [ ] Configure the operational alerts in `docs/operations.md` and rehearse household deletion.
-- [ ] Exercise OpenAI and OpenRouter with both platform and encrypted household credentials; verify a missing/invalid selected key never falls back to the other provider.
+- [ ] Exercise OpenAI and OpenRouter with encrypted household credentials; verify a missing/invalid selected key never falls back to another provider or any deployment key.
 - [ ] Review the provider-inclusive privacy notice with the beta coordinator and obtain `vision-v2` first-scan consent before any production photo. Confirm the current provider/model route is visible before consent.
 
 ## Two-week success gates

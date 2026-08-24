@@ -3,7 +3,6 @@ import "server-only";
 import { z } from "zod";
 
 import {
-  aiCredentialSourceSchema,
   aiModelIdSchema,
   aiProviderSchema,
   type AiSettingsUpdateRequest,
@@ -18,7 +17,6 @@ const storedSettingsSchema = z
     provider: aiProviderSchema,
     visionModelId: aiModelIdSchema,
     recipeModelId: aiModelIdSchema,
-    credentialSource: aiCredentialSourceSchema,
     householdCredentialConfigured: z.boolean(),
     // PostgreSQL JSON encodes timestamptz values with an explicit +00:00
     // offset. Accept offsets at the storage boundary, then normalize the
@@ -59,7 +57,6 @@ export async function writeHouseholdAiSettings(
     p_provider: input.provider,
     p_vision_model_id: input.visionModelId,
     p_recipe_model_id: input.recipeModelId,
-    p_credential_source: input.credentialSource,
     p_credential_action: input.credentialAction,
     p_encrypted_api_key: credential?.encryptedApiKey ?? null,
     p_encryption_key_id: credential?.encryptionKeyId ?? null,

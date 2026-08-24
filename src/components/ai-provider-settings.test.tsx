@@ -18,9 +18,7 @@ const initial: AiSettingsResponse = {
   provider: "openai",
   visionModelId: "gpt-vision",
   recipeModelId: "gpt-recipes",
-  credentialSource: "platform",
   credentialConfigured: true,
-  platformCredentials: { openai: true, openrouter: false },
   modelDefaults: {
     openai: {
       visionModelId: "gpt-vision",
@@ -68,7 +66,6 @@ describe("AI provider settings", () => {
       provider: "openrouter",
       visionModelId: "acme/custom-vision-v3",
       recipeModelId: "acme/custom-recipe-v7",
-      credentialSource: "household",
       credentialConfigured: true,
     });
     render(<AiProviderSettings apiMode="connected" />);
@@ -83,7 +80,6 @@ describe("AI provider settings", () => {
     expect(screen.getByLabelText("Recipe model")).toHaveValue(
       "acme/custom-recipe-v7",
     );
-    expect(screen.getByRole("radio", { name: /Household key/i })).toBeChecked();
     expect(screen.getByLabelText("Replace OpenRouter API key")).toHaveValue("");
   });
 
@@ -94,7 +90,6 @@ describe("AI provider settings", () => {
       provider: "openrouter",
       visionModelId: "vendor/vision",
       recipeModelId: "vendor/recipes",
-      credentialSource: "household",
       credentialConfigured: true,
       version: 2,
     });
@@ -102,7 +97,6 @@ describe("AI provider settings", () => {
     render(<AiProviderSettings apiMode="connected" />);
     await screen.findByRole("option", { name: "OpenRouter" });
     await user.selectOptions(screen.getByLabelText("Provider"), "openrouter");
-    await user.click(screen.getByRole("radio", { name: /Household key/i }));
     const secret = "fake-openrouter-household-key";
     await user.type(screen.getByLabelText("OpenRouter API key"), secret);
     await user.click(screen.getByRole("button", { name: "Save AI provider" }));
@@ -112,7 +106,6 @@ describe("AI provider settings", () => {
         provider: "openrouter",
         visionModelId: "vendor/vision",
         recipeModelId: "vendor/recipes",
-        credentialSource: "household",
         credentialAction: "replace",
         expectedVersion: 1,
         apiKey: secret,
@@ -124,10 +117,65 @@ describe("AI provider settings", () => {
     expect(JSON.stringify(sessionStorage)).not.toContain(secret);
   });
 
+  it("retains the saved key when saving without re-entering it", async () => {
+    const user = userEvent.setup();
+    render(<AiProviderSettings apiMode="connected" />);
+    await screen.findByLabelText("Replace OpenAI API key");
+
+    await user.click(screen.getByRole("button", { name: "Save AI provider" }));
+
+    await waitFor(() => {
+      expect(api.updateAiSettings).toHaveBeenCalledWith(
+        expect.not.objectContaining({ credentialAction: "replace" }),
+      );
+    });
+    expect(api.updateAiSettings).toHaveBeenCalledWith(
+      expect.objectContaining({ credentialAction: "retain" }),
+    );
+  });
+
+  it("requires a fresh key after switching providers with a saved key", async () => {
+    const user = userEvent.setup();
+    render(<AiProviderSettings apiMode="connected" />);
+    await screen.findByLabelText("Replace OpenAI API key");
+
+    await user.selectOptions(screen.getByLabelText("Provider"), "openrouter");
+    await user.type(screen.getByLabelText("OpenRouter API key"), "brand-new-key");
+    await user.click(screen.getByRole("button", { name: "Save AI provider" }));
+
+    await waitFor(() => {
+      expect(api.updateAiSettings).toHaveBeenCalledWith(
+        expect.objectContaining({
+          provider: "openrouter",
+          credentialAction: "replace",
+          apiKey: "brand-new-key",
+        }),
+      );
+    });
+  });
+
+  it("removes a saved key with an explicit clear action", async () => {
+    const user = userEvent.setup();
+    api.updateAiSettings.mockResolvedValue({
+      ...initial,
+      credentialConfigured: false,
+      version: 2,
+    });
+    render(<AiProviderSettings apiMode="connected" />);
+    await screen.findByLabelText("Replace OpenAI API key");
+
+    await user.click(screen.getByRole("button", { name: "Remove saved key" }));
+
+    await waitFor(() => {
+      expect(api.updateAiSettings).toHaveBeenCalledWith(
+        expect.objectContaining({ credentialAction: "clear" }),
+      );
+    });
+  });
+
   it("shows members the route without rendering an editable secret", async () => {
     api.getAiSettings.mockResolvedValue({
       ...initial,
-      credentialSource: "household",
       credentialConfigured: true,
       canEdit: false,
     });
@@ -137,6 +185,7 @@ describe("AI provider settings", () => {
     expect(screen.getByLabelText("Provider")).toBeDisabled();
     expect(screen.getByLabelText("Replace OpenAI API key")).toBeDisabled();
     expect(screen.queryByRole("button", { name: "Save AI provider" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Remove saved key" })).toBeNull();
   });
 
   it("automatically loads visible OpenRouter choices after a household key is entered", async () => {
@@ -145,7 +194,6 @@ describe("AI provider settings", () => {
 
     await screen.findByRole("option", { name: "OpenRouter" });
     await user.selectOptions(screen.getByLabelText("Provider"), "openrouter");
-    await user.click(screen.getByRole("radio", { name: /Household key/i }));
     await user.type(
       screen.getByLabelText("OpenRouter API key"),
       "fake-openrouter-discovery-key",
@@ -154,7 +202,6 @@ describe("AI provider settings", () => {
     await waitFor(
       () => {
         expect(api.discoverOpenRouterModelChoices).toHaveBeenCalledWith({
-          credentialSource: "household",
           apiKey: "fake-openrouter-discovery-key",
         });
       },
@@ -175,13 +222,11 @@ describe("AI provider settings", () => {
 
     await screen.findByRole("option", { name: "OpenRouter" });
     await user.selectOptions(screen.getByLabelText("Provider"), "openrouter");
-    await user.click(screen.getByRole("radio", { name: /Household key/i }));
     await user.type(screen.getByLabelText("OpenRouter API key"), "fake-key");
     await user.click(screen.getByRole("button", { name: "Load models" }));
 
     await waitFor(() => {
       expect(api.discoverOpenRouterModelChoices).toHaveBeenCalledWith({
-        credentialSource: "household",
         apiKey: "fake-key",
       });
     });
@@ -194,15 +239,12 @@ describe("AI provider settings", () => {
       provider: "openrouter",
       visionModelId: "vendor/vision",
       recipeModelId: "vendor/recipe",
-      credentialSource: "household",
       credentialConfigured: true,
     });
     render(<AiProviderSettings apiMode="connected" />);
 
     await waitFor(() => {
-      expect(api.discoverOpenRouterModelChoices).toHaveBeenCalledWith({
-        credentialSource: "household",
-      });
+      expect(api.discoverOpenRouterModelChoices).toHaveBeenCalledWith({});
     });
     expect(screen.getByLabelText("Replace OpenRouter API key")).toHaveValue("");
   });
