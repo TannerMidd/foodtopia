@@ -34,14 +34,20 @@ export function planAnalysisRecovery(
   const fail: StaleAnalysisJob[] = [];
   for (const job of jobs) {
     const staleSince = Date.parse(job.staleSince);
-    if (
-      job.status === "processing" ||
+    const terminallyStale =
       Number.isFinite(staleSince) &&
-        observedAt - staleSince >= TERMINAL_ANALYSIS_STALE_MS
-    ) {
+      observedAt - staleSince >= TERMINAL_ANALYSIS_STALE_MS;
+    if (job.status === "queued") {
+      if (terminallyStale) {
+        fail.push(job);
+      } else {
+        redispatch.push(job);
+      }
+    } else if (terminallyStale) {
+      // Processing work is never redispatched; it is failed only once the
+      // terminal window proves the original invocation is gone, so healthy
+      // long-running jobs surfaced by the 15-minute scan are left untouched.
       fail.push(job);
-    } else {
-      redispatch.push(job);
     }
   }
   return { redispatch, fail };
