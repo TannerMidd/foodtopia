@@ -1,0 +1,1347 @@
+- id: recipe-141
+  slug: soy-salmon-rice
+  title: Soy Salmon Rice
+  description: Soy-glazed salmon with rice.
+  servings: 4
+  totalMinutes: 30
+  mealTypes:
+    - dinner
+  cuisines:
+    - Japanese-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: salmon
+      foodConceptId: salmon
+      name: salmon
+      amount: 1.25
+      unit: lb
+      display: 1 1/4 pounds salmon
+      required: true
+      acceptedForms: &a1
+        - fresh
+        - frozen
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: &a3
+        - dried
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: &a4
+        - unspecified
+    - id: soy-sauce
+      foodConceptId: soy-sauce
+      name: soy sauce
+      amount: 2
+      unit: tbsp
+      display: 2 tablespoons soy sauce
+      required: true
+      acceptedForms: &a8
+        - opened
+        - unspecified
+    - id: sesame-oil
+      foodConceptId: sesame-oil
+      name: sesame oil
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon sesame oil
+      required: true
+      acceptedForms:
+        - opened
+        - unspecified
+  steps:
+    - Thaw frozen salmon in the refrigerator before starting. Simmer the rice in the water until tender.
+    - Brush the salmon with soy sauce and cook until it reaches 145°F and flakes easily, then finish with sesame oil and serve with the rice.
+  rights: &a2
+    owner: Foodtopia
+    author: Foodtopia Initial Catalog
+    reviewer: null
+    reviewedAt: null
+    status: seeded
+- id: recipe-142
+  slug: lemon-salmon-potatoes
+  title: Lemon Salmon Potatoes
+  description: Lemon salmon and roasted potatoes.
+  servings: 4
+  totalMinutes: 45
+  mealTypes:
+    - dinner
+  cuisines:
+    - European-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: salmon
+      foodConceptId: salmon
+      name: salmon
+      amount: 1.25
+      unit: lb
+      display: 1 1/4 pounds salmon
+      required: true
+      acceptedForms: *a1
+    - id: potato
+      foodConceptId: potato
+      name: potato
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds potatoes
+      required: true
+      acceptedForms: &a22
+        - fresh
+    - id: lemon
+      foodConceptId: lemon
+      name: lemon
+      amount: 1
+      unit: count
+      display: 1 lemon
+      required: true
+      acceptedForms: &a7
+        - fresh
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: &a6
+        - opened
+        - unspecified
+    - id: salt
+      foodConceptId: salt
+      name: salt
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon salt
+      required: true
+      acceptedForms: &a15
+        - dried
+        - unspecified
+  steps:
+    - Thaw frozen salmon in the refrigerator before starting. Heat the oven to 425°F, cut the potato into one-inch pieces, and toss with olive oil and salt; roast for 20 minutes.
+    - Move the potato aside, add the salmon, and roast until the potato is tender and the salmon reaches 145°F and flakes easily, about 12 to 15 minutes; finish with lemon.
+  rights: *a2
+- id: recipe-143
+  slug: shrimp-corn-rice
+  title: Shrimp Corn Rice
+  description: Quick shrimp corn rice.
+  servings: 4
+  totalMinutes: 28
+  mealTypes:
+    - dinner
+  cuisines:
+    - Latin American-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: shrimp
+      foodConceptId: shrimp
+      name: shrimp
+      amount: 1
+      unit: lb
+      display: 1 pound shrimp
+      required: true
+      acceptedForms: &a5
+        - fresh
+        - frozen
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a3
+    - id: corn
+      foodConceptId: corn
+      name: corn
+      amount: 2
+      unit: cup
+      display: 2 cups corn
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+        - canned
+        - cooked
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a4
+    - id: lime
+      foodConceptId: lime
+      name: lime
+      amount: 1
+      unit: count
+      display: 1 lime
+      required: true
+      acceptedForms:
+        - fresh
+    - id: cumin
+      foodConceptId: cumin
+      name: cumin
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon cumin
+      required: true
+      acceptedForms: &a20
+        - dried
+        - unspecified
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: &a9
+        - opened
+        - unspecified
+  steps:
+    - Thaw frozen shrimp in the refrigerator before starting. Simmer the rice in the water until tender, adding the corn for the final five minutes.
+    - Cook the shrimp in vegetable oil with cumin until opaque and they reach 145°F, then serve over the corn rice and finish with lime.
+  rights: *a2
+- id: recipe-144
+  slug: garlic-shrimp-pasta
+  title: Garlic Shrimp Pasta
+  description: Fast garlic shrimp pasta.
+  servings: 4
+  totalMinutes: 20
+  mealTypes:
+    - dinner
+  cuisines:
+    - Italian-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: shrimp
+      foodConceptId: shrimp
+      name: shrimp
+      amount: 1
+      unit: lb
+      display: 1 pound shrimp
+      required: true
+      acceptedForms: *a5
+    - id: pasta
+      foodConceptId: pasta
+      name: pasta
+      amount: 12
+      unit: oz
+      display: 12 ounces pasta
+      required: true
+      acceptedForms:
+        - dried
+    - id: garlic
+      foodConceptId: garlic
+      name: garlic
+      amount: 3
+      unit: count
+      display: 3 garlic cloves
+      required: true
+      acceptedForms: &a23
+        - fresh
+        - opened
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: *a6
+    - id: lemon
+      foodConceptId: lemon
+      name: lemon
+      amount: 1
+      unit: count
+      display: 1 lemon
+      required: true
+      acceptedForms: *a7
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 8
+      unit: cup
+      display: 8 cups water for boiling
+      required: true
+      acceptedForms:
+        - unspecified
+  steps:
+    - Thaw frozen shrimp in the refrigerator before starting. Boil the dried pasta until al dente, then drain and reserve a little cooking water.
+    - Cook the shrimp in olive oil with garlic until opaque and they reach 145°F, then toss with the pasta and lemon juice, loosening with reserved water if needed.
+  rights: *a2
+- id: recipe-145
+  slug: quick-tuna-tomato-pasta
+  title: Quick Tuna Tomato Pasta
+  description: Pantry tuna tomato pasta.
+  servings: 4
+  totalMinutes: 20
+  mealTypes:
+    - dinner
+  cuisines:
+    - Mediterranean-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: tuna
+      foodConceptId: tuna
+      name: tuna
+      amount: 10
+      unit: oz
+      display: 10 ounces tuna
+      required: true
+      acceptedForms:
+        - canned
+        - opened
+    - id: pasta
+      foodConceptId: pasta
+      name: pasta
+      amount: 12
+      unit: oz
+      display: 12 ounces pasta
+      required: true
+      acceptedForms:
+        - dried
+    - id: canned-tomato
+      foodConceptId: canned-tomato
+      name: canned tomatoes
+      amount: 15
+      unit: oz
+      display: 15 ounces canned tomatoes
+      required: true
+      acceptedForms: &a11
+        - canned
+        - opened
+    - id: oregano
+      foodConceptId: oregano
+      name: oregano
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon oregano
+      required: true
+      acceptedForms: &a13
+        - dried
+        - unspecified
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: *a6
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 8
+      unit: cup
+      display: 8 cups water for boiling
+      required: true
+      acceptedForms:
+        - unspecified
+  steps:
+    - Boil the dried pasta until al dente, then drain and reserve a little cooking water.
+    - Warm the tuna and canned tomatoes with oregano and olive oil, then toss with the pasta and loosen with reserved water if needed.
+  rights: *a2
+- id: recipe-146
+  slug: beef-pepper-rice
+  title: Beef Pepper Rice
+  description: Ground beef and pepper rice bowls.
+  servings: 4
+  totalMinutes: 30
+  mealTypes:
+    - dinner
+  cuisines:
+    - Asian-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: ground-beef
+      foodConceptId: ground-beef
+      name: ground beef
+      amount: 1
+      unit: lb
+      display: 1 pound ground beef
+      required: true
+      acceptedForms: &a10
+        - fresh
+        - frozen
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a3
+    - id: bell-pepper
+      foodConceptId: bell-pepper
+      name: bell pepper
+      amount: 2
+      unit: count
+      display: 2 bell peppers
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a4
+    - id: soy-sauce
+      foodConceptId: soy-sauce
+      name: soy sauce
+      amount: 2
+      unit: tbsp
+      display: 2 tablespoons soy sauce
+      required: true
+      acceptedForms: *a8
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a9
+  steps:
+    - Thaw frozen ground beef in the refrigerator before starting. Simmer the rice in the water until tender.
+    - Cook the ground beef and bell pepper in vegetable oil until the beef reaches 160°F, then stir in the soy sauce and serve over the rice.
+  rights: *a2
+- id: recipe-147
+  slug: beef-tomato-rice
+  title: Beef Tomato Rice
+  description: Tomato beef over rice.
+  servings: 4
+  totalMinutes: 35
+  mealTypes:
+    - dinner
+  cuisines:
+    - Mexican-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: ground-beef
+      foodConceptId: ground-beef
+      name: ground beef
+      amount: 1
+      unit: lb
+      display: 1 pound ground beef
+      required: true
+      acceptedForms: *a10
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a3
+    - id: canned-tomato
+      foodConceptId: canned-tomato
+      name: canned tomatoes
+      amount: 15
+      unit: oz
+      display: 15 ounces canned tomatoes
+      required: true
+      acceptedForms: *a11
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a4
+    - id: chili-powder
+      foodConceptId: chili-powder
+      name: chili powder
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon chili powder
+      required: true
+      acceptedForms:
+        - dried
+        - unspecified
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a9
+  steps:
+    - Thaw frozen ground beef in the refrigerator before starting. Cook the ground beef in vegetable oil with chili powder until it reaches 160°F, then add the canned tomatoes.
+    - Simmer the rice in the water until tender and serve the beef mixture over it.
+  rights: *a2
+- id: recipe-148
+  slug: sausage-cabbage-skillet
+  title: Sausage Cabbage Skillet
+  description: A simple sausage cabbage skillet.
+  servings: 4
+  totalMinutes: 25
+  mealTypes:
+    - dinner
+  cuisines:
+    - European-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: sausage
+      foodConceptId: sausage
+      name: sausage
+      amount: 1
+      unit: lb
+      display: 1 pound sausage
+      required: true
+      acceptedForms: &a12
+        - fresh
+        - frozen
+    - id: cabbage
+      foodConceptId: cabbage
+      name: cabbage
+      amount: 4
+      unit: cup
+      display: 4 cups cabbage
+      required: true
+      acceptedForms:
+        - fresh
+    - id: mustard
+      foodConceptId: mustard
+      name: mustard
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon mustard
+      required: true
+      acceptedForms: &a14
+        - opened
+        - unspecified
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a9
+    - id: black-pepper
+      foodConceptId: black-pepper
+      name: black pepper
+      amount: 0.5
+      unit: tsp
+      display: 1/2 teaspoon black pepper
+      required: true
+      acceptedForms: &a17
+        - dried
+        - unspecified
+  steps:
+    - Thaw frozen sausage in the refrigerator before starting. Brown the sausage in vegetable oil until it reaches 160°F.
+    - Add the cabbage and black pepper and cook until tender, then stir in the mustard and serve.
+  rights: *a2
+- id: recipe-149
+  slug: sausage-tomato-pasta
+  title: Sausage Tomato Pasta
+  description: Sausage marinara pasta.
+  servings: 4
+  totalMinutes: 30
+  mealTypes:
+    - dinner
+  cuisines:
+    - Italian-American
+  dietaryTags: []
+  ingredients:
+    - id: sausage
+      foodConceptId: sausage
+      name: sausage
+      amount: 1
+      unit: lb
+      display: 1 pound sausage
+      required: true
+      acceptedForms: *a12
+    - id: pasta
+      foodConceptId: pasta
+      name: pasta
+      amount: 12
+      unit: oz
+      display: 12 ounces pasta
+      required: true
+      acceptedForms:
+        - dried
+    - id: marinara-sauce
+      foodConceptId: marinara-sauce
+      name: marinara sauce
+      amount: 2
+      unit: cup
+      display: 2 cups marinara sauce
+      required: true
+      acceptedForms:
+        - canned
+        - opened
+        - unspecified
+    - id: oregano
+      foodConceptId: oregano
+      name: oregano
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon oregano
+      required: true
+      acceptedForms: *a13
+    - id: parmesan
+      foodConceptId: parmesan
+      name: parmesan cheese
+      amount: 0.5
+      unit: cup
+      display: 1/2 cup parmesan cheese
+      required: true
+      acceptedForms: &a16
+        - fresh
+        - opened
+        - unspecified
+  steps:
+    - Thaw frozen sausage in the refrigerator before starting. Boil the dried pasta until al dente and drain.
+    - Cook the sausage until it reaches 160°F, add the marinara sauce and oregano, then toss with the pasta and finish with parmesan cheese.
+  rights: *a2
+- id: recipe-150
+  slug: pork-chop-apple-pan
+  title: Pork Chop Apple Pan
+  description: Pork chops with warm apples.
+  servings: 4
+  totalMinutes: 30
+  mealTypes:
+    - dinner
+  cuisines:
+    - European-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: pork-chop
+      foodConceptId: pork-chop
+      name: pork chop
+      amount: 4
+      unit: count
+      display: 4 pork chops
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+    - id: apple
+      foodConceptId: apple
+      name: apple
+      amount: 3
+      unit: count
+      display: 3 apples
+      required: true
+      acceptedForms: &a25
+        - fresh
+    - id: mustard
+      foodConceptId: mustard
+      name: mustard
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon mustard
+      required: true
+      acceptedForms: *a14
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: *a6
+    - id: thyme
+      foodConceptId: thyme
+      name: thyme
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon thyme
+      required: true
+      acceptedForms: &a18
+        - fresh
+        - dried
+        - unspecified
+  steps:
+    - Thaw frozen pork chops in the refrigerator before starting. Brown the pork chops in olive oil with thyme and mustard.
+    - Add the sliced apple and cook until tender and the pork chops reach 145°F; rest the pork chops for three minutes before serving.
+  rights: *a2
+- id: recipe-151
+  slug: pork-tenderloin-sweet-potato
+  title: Pork Tenderloin Sweet Potato
+  description: Paprika pork tenderloin with sweet potatoes.
+  servings: 4
+  totalMinutes: 40
+  mealTypes:
+    - dinner
+  cuisines:
+    - American
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: pork-tenderloin
+      foodConceptId: pork-tenderloin
+      name: pork tenderloin
+      amount: 1.25
+      unit: lb
+      display: 1 1/4 pounds pork tenderloin
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+    - id: sweet-potato
+      foodConceptId: sweet-potato
+      name: sweet potato
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds sweet potatoes
+      required: true
+      acceptedForms:
+        - fresh
+    - id: paprika
+      foodConceptId: paprika
+      name: paprika
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon paprika
+      required: true
+      acceptedForms:
+        - dried
+        - unspecified
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: *a6
+    - id: salt
+      foodConceptId: salt
+      name: salt
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon salt
+      required: true
+      acceptedForms: *a15
+  steps:
+    - Thaw frozen pork tenderloin in the refrigerator before starting. Heat the oven to 425°F and toss cubed sweet potato with olive oil, paprika, and salt.
+    - Roast the sweet potato for 15 minutes, add the pork tenderloin, and continue until the sweet potato is tender and the pork reaches 145°F; rest the pork for three minutes before slicing.
+  rights: *a2
+- id: recipe-152
+  slug: bacon-pea-pasta
+  title: Bacon Pea Pasta
+  description: Bacon and pea pasta.
+  servings: 4
+  totalMinutes: 25
+  mealTypes:
+    - dinner
+  cuisines:
+    - Italian-inspired
+  dietaryTags: []
+  ingredients:
+    - id: bacon
+      foodConceptId: bacon
+      name: bacon
+      amount: 8
+      unit: oz
+      display: 8 ounces bacon
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+        - opened
+    - id: pasta
+      foodConceptId: pasta
+      name: pasta
+      amount: 12
+      unit: oz
+      display: 12 ounces pasta
+      required: true
+      acceptedForms:
+        - dried
+    - id: peas
+      foodConceptId: peas
+      name: peas
+      amount: 2
+      unit: cup
+      display: 2 cups peas
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+        - canned
+        - cooked
+    - id: parmesan
+      foodConceptId: parmesan
+      name: parmesan cheese
+      amount: 0.5
+      unit: cup
+      display: 1/2 cup parmesan cheese
+      required: true
+      acceptedForms: *a16
+    - id: black-pepper
+      foodConceptId: black-pepper
+      name: black pepper
+      amount: 0.5
+      unit: tsp
+      display: 1/2 teaspoon black pepper
+      required: true
+      acceptedForms: *a17
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 8
+      unit: cup
+      display: 8 cups water for boiling
+      required: true
+      acceptedForms:
+        - unspecified
+  steps:
+    - Boil the dried pasta until al dente, adding the peas for the final two minutes, then drain and reserve a little cooking water.
+    - Cook the bacon until crisp, then toss it and the rendered pan juices with the pasta, peas, parmesan cheese, and black pepper.
+  rights: *a2
+- id: recipe-153
+  slug: white-bean-kale-soup
+  title: White Bean Kale Soup
+  description: A quick white bean and kale soup.
+  servings: 4
+  totalMinutes: 25
+  mealTypes:
+    - lunch
+    - dinner
+  cuisines:
+    - Mediterranean-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: white-beans
+      foodConceptId: white-beans
+      name: white beans
+      amount: 15
+      unit: oz
+      display: 15 ounces white beans
+      required: true
+      acceptedForms:
+        - canned
+        - cooked
+    - id: kale
+      foodConceptId: kale
+      name: kale
+      amount: 4
+      unit: cup
+      display: 4 cups kale
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+    - id: vegetable-broth
+      foodConceptId: vegetable-broth
+      name: vegetable broth
+      amount: 4
+      unit: cup
+      display: 4 cups vegetable broth
+      required: true
+      acceptedForms: &a19
+        - canned
+        - opened
+        - unspecified
+    - id: canned-tomato
+      foodConceptId: canned-tomato
+      name: canned tomatoes
+      amount: 15
+      unit: oz
+      display: 15 ounces canned tomatoes
+      required: true
+      acceptedForms: *a11
+    - id: thyme
+      foodConceptId: thyme
+      name: thyme
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon thyme
+      required: true
+      acceptedForms: *a18
+  steps:
+    - Combine the white beans, vegetable broth, canned tomatoes, and thyme and bring to a simmer.
+    - Add the kale and simmer until tender, then divide the soup among bowls.
+  rights: *a2
+- id: recipe-154
+  slug: cumin-lentil-carrot-soup
+  title: Cumin Lentil Carrot Soup
+  description: Warming lentil carrot soup.
+  servings: 4
+  totalMinutes: 35
+  mealTypes:
+    - lunch
+    - dinner
+  cuisines:
+    - Middle Eastern-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: lentils
+      foodConceptId: lentils
+      name: lentils
+      amount: 1
+      unit: cup
+      display: 1 cup lentils
+      required: true
+      acceptedForms:
+        - dried
+    - id: carrot
+      foodConceptId: carrot
+      name: carrot
+      amount: 3
+      unit: count
+      display: 3 carrots
+      required: true
+      acceptedForms: &a21
+        - fresh
+        - frozen
+    - id: vegetable-broth
+      foodConceptId: vegetable-broth
+      name: vegetable broth
+      amount: 4
+      unit: cup
+      display: 4 cups vegetable broth
+      required: true
+      acceptedForms: *a19
+    - id: cumin
+      foodConceptId: cumin
+      name: cumin
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon cumin
+      required: true
+      acceptedForms: *a20
+    - id: onion
+      foodConceptId: onion
+      name: onion
+      amount: 1
+      unit: count
+      display: 1 onion
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+  steps:
+    - Cook the onion with cumin until softened, then add the dried lentils, carrot, and vegetable broth.
+    - Simmer until the lentils and carrot are tender before serving.
+  rights: *a2
+- id: recipe-155
+  slug: chicken-rice-broth-bowl
+  title: Chicken Rice Broth Bowl
+  description: A streamlined chicken thigh and rice broth bowl.
+  servings: 4
+  totalMinutes: 35
+  mealTypes:
+    - lunch
+    - dinner
+  cuisines:
+    - American
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: chicken-thigh
+      foodConceptId: chicken-thigh
+      name: chicken thigh
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds chicken thighs
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a3
+    - id: chicken-broth
+      foodConceptId: chicken-broth
+      name: chicken broth
+      amount: 4
+      unit: cup
+      display: 4 cups chicken broth
+      required: true
+      acceptedForms:
+        - canned
+        - opened
+        - unspecified
+    - id: carrot
+      foodConceptId: carrot
+      name: carrot
+      amount: 3
+      unit: count
+      display: 3 carrots
+      required: true
+      acceptedForms: *a21
+    - id: thyme
+      foodConceptId: thyme
+      name: thyme
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon thyme
+      required: true
+      acceptedForms: *a18
+  steps:
+    - Thaw frozen chicken thighs in the refrigerator before starting. Bring the chicken broth to a simmer with the carrot and thyme, then add the chicken thighs.
+    - Cook the chicken thighs until they reach 165°F, remove and chop them, then add the rice and simmer until tender; return the chicken to the broth and heat through.
+  rights: *a2
+- id: recipe-156
+  slug: tomato-egg-rice
+  title: Tomato Egg Rice
+  description: Tomato eggs with rice.
+  servings: 4
+  totalMinutes: 25
+  mealTypes:
+    - lunch
+    - dinner
+  cuisines:
+    - Chinese-inspired
+  dietaryTags:
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: eggs
+      foodConceptId: eggs
+      name: eggs
+      amount: 4
+      unit: count
+      display: 4 eggs
+      required: true
+      acceptedForms: &a24
+        - fresh
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a3
+    - id: canned-tomato
+      foodConceptId: canned-tomato
+      name: canned tomatoes
+      amount: 15
+      unit: oz
+      display: 15 ounces canned tomatoes
+      required: true
+      acceptedForms: *a11
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a4
+    - id: soy-sauce
+      foodConceptId: soy-sauce
+      name: soy sauce
+      amount: 2
+      unit: tbsp
+      display: 2 tablespoons soy sauce
+      required: true
+      acceptedForms: *a8
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a9
+  steps:
+    - Simmer the rice in the water until tender. Heat the vegetable oil, add the canned tomatoes, and simmer until slightly thickened.
+    - Stir in the eggs and soy sauce and cook until the eggs are fully set, then serve the eggs and canned tomatoes over the rice.
+  rights: *a2
+- id: recipe-157
+  slug: cauliflower-chickpea-tray
+  title: Cauliflower Chickpea Tray
+  description: Curry roasted cauliflower and chickpeas.
+  servings: 4
+  totalMinutes: 30
+  mealTypes:
+    - dinner
+    - side
+  cuisines:
+    - South Asian-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: cauliflower
+      foodConceptId: cauliflower
+      name: cauliflower
+      amount: 4
+      unit: cup
+      display: 4 cups cauliflower
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+    - id: chickpeas
+      foodConceptId: chickpeas
+      name: chickpeas
+      amount: 15
+      unit: oz
+      display: 15 ounces chickpeas
+      required: true
+      acceptedForms:
+        - canned
+        - cooked
+    - id: curry-powder
+      foodConceptId: curry-powder
+      name: curry powder
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon curry powder
+      required: true
+      acceptedForms:
+        - dried
+        - unspecified
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a9
+    - id: salt
+      foodConceptId: salt
+      name: salt
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon salt
+      required: true
+      acceptedForms: *a15
+  steps:
+    - Heat the oven to 425°F and toss the cauliflower and chickpeas with vegetable oil, curry powder, and salt.
+    - Roast until the cauliflower is tender and browned at the edges, stirring once halfway through.
+  rights: *a2
+- id: recipe-158
+  slug: roasted-green-beans-potatoes
+  title: Roasted Green Beans Potatoes
+  description: A practical roasted green bean and potato side.
+  servings: 4
+  totalMinutes: 35
+  mealTypes:
+    - side
+    - dinner
+  cuisines:
+    - European-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: green-beans
+      foodConceptId: green-beans
+      name: green beans
+      amount: 4
+      unit: cup
+      display: 4 cups green beans
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+        - canned
+        - cooked
+    - id: potato
+      foodConceptId: potato
+      name: potato
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds potatoes
+      required: true
+      acceptedForms: *a22
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: *a6
+    - id: garlic
+      foodConceptId: garlic
+      name: garlic
+      amount: 3
+      unit: count
+      display: 3 garlic cloves
+      required: true
+      acceptedForms: *a23
+    - id: salt
+      foodConceptId: salt
+      name: salt
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon salt
+      required: true
+      acceptedForms: *a15
+  steps:
+    - Heat the oven to 425°F, cut the potato into one-inch pieces, and toss it with olive oil, garlic, and salt; roast for 15 minutes.
+    - Add the green beans, toss, and continue roasting until the potato is tender and the green beans are browned.
+  rights: *a2
+- id: recipe-159
+  slug: cornmeal-cheddar-cakes
+  title: Cornmeal Cheddar Cakes
+  description: Savory cornmeal cheddar cakes.
+  servings: 4
+  totalMinutes: 25
+  mealTypes:
+    - breakfast
+    - side
+  cuisines:
+    - American
+  dietaryTags:
+    - vegetarian
+  ingredients:
+    - id: cornmeal
+      foodConceptId: cornmeal
+      name: cornmeal
+      amount: 1
+      unit: cup
+      display: 1 cup cornmeal
+      required: true
+      acceptedForms:
+        - dried
+    - id: cheddar
+      foodConceptId: cheddar
+      name: cheddar cheese
+      amount: 1
+      unit: cup
+      display: 1 cup cheddar cheese
+      required: true
+      acceptedForms:
+        - fresh
+        - opened
+        - unspecified
+    - id: eggs
+      foodConceptId: eggs
+      name: eggs
+      amount: 4
+      unit: count
+      display: 4 eggs
+      required: true
+      acceptedForms: *a24
+    - id: milk
+      foodConceptId: milk
+      name: milk
+      amount: 0.5
+      unit: cup
+      display: 1/2 cup milk
+      required: true
+      acceptedForms: &a26
+        - fresh
+        - opened
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a9
+  steps:
+    - Whisk the eggs and milk, then stir in the cornmeal and cheddar cheese to make a thick batter.
+    - Heat the vegetable oil in a skillet, spoon in small cakes, and cook on both sides until browned and the centers are fully set.
+  rights: *a2
+- id: recipe-160
+  slug: baked-apple-oats
+  title: Baked Apple Oats
+  description: A warm baked apple oat breakfast.
+  servings: 4
+  totalMinutes: 35
+  mealTypes:
+    - breakfast
+  cuisines:
+    - American
+  dietaryTags:
+    - vegetarian
+  ingredients:
+    - id: oats
+      foodConceptId: oats
+      name: oats
+      amount: 2
+      unit: cup
+      display: 2 cups oats
+      required: true
+      acceptedForms:
+        - dried
+    - id: apple
+      foodConceptId: apple
+      name: apple
+      amount: 3
+      unit: count
+      display: 3 apples
+      required: true
+      acceptedForms: *a25
+    - id: milk
+      foodConceptId: milk
+      name: milk
+      amount: 2
+      unit: cup
+      display: 2 cups milk
+      required: true
+      acceptedForms: *a26
+    - id: eggs
+      foodConceptId: eggs
+      name: eggs
+      amount: 4
+      unit: count
+      display: 4 eggs
+      required: true
+      acceptedForms: *a24
+    - id: cinnamon
+      foodConceptId: cinnamon
+      name: cinnamon
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon cinnamon
+      required: true
+      acceptedForms:
+        - dried
+        - unspecified
+    - id: maple-syrup
+      foodConceptId: maple-syrup
+      name: maple syrup
+      amount: 2
+      unit: tbsp
+      display: 2 tablespoons maple syrup
+      required: true
+      acceptedForms:
+        - opened
+        - unspecified
+  steps:
+    - Heat the oven to 350°F. Whisk the eggs, milk, cinnamon, and maple syrup, then stir in the oats and diced apple.
+    - Spread the oat mixture in a greased baking dish and bake until the center is set and the apple and oats are tender, about 30 minutes.
+  rights: *a2

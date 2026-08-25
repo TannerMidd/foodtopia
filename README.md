@@ -23,7 +23,7 @@ An invite-only, mobile-first household food inventory PWA built on one dependabl
 
 - **Photograph, don't type.** Stage 1–3 clear photos; on-device re-encoding (1600 px max edge, EXIF stripped, 5 MB cap) before anything is sent. Model output is always a draft — it cannot mutate inventory until you confirm the batch.
 - **Unknown stays unknown.** Inventory lots carry immutable events, optimistic versions, and explicit unknown/estimated/known quantities, so a recipe never assumes more than the household entered.
-- **Cook what you have.** 80 project-owned recipes, 103 normalized food concepts and 304 aliases, deterministic evidence-based matching, and cooking reconciliation that puts back what you actually used.
+- **Cook what you have.** 160 project-owned recipes, 103 normalized food concepts and 304 aliases, deterministic evidence-based matching, visible curated substitutions that require confirmation, and one AI fallback draft when the catalog has no usable result. AI drafts stay inert until a household member approves them as private recipes.
 - **Offline-first.** Installable PWA with a static, data-free offline fallback; Dexie snapshot/outbox sync on launch, focus, reconnect, and every 15 s while foregrounded. Logout clears household rows and caches.
 - **Shared by design.** One household per account, Supabase Auth with RLS, private raw-image storage, and beta admissions with a fail-closed pending state.
 - **BYO AI.** Every household owner supplies their own OpenAI or OpenRouter key — AES-GCM encrypted with a rotating server keyring, never returned after saving, and every call fails closed without one.
@@ -62,7 +62,7 @@ Open `http://localhost:3100`. With no cloud variables, development automatically
 2. Load `supabase/seed.sql` for the global food concepts and aliases.
 3. In Supabase Auth, enable email OTP/magic links and configure the `before-user-created` hook documented in the migration. Add the deployed `/auth/callback` URL to the redirect allowlist.
 4. Confirm the private `raw-images` bucket and storage policies created by the migration. Never make this bucket public.
-5. After genuine recipe review metadata is committed, generate and apply the reviewed-recipe import with `pnpm generate:recipe-import -- --output path/to/reviewed-recipes.sql`. The command validates every source YAML file in publication mode and refuses to write SQL while any recipe remains a draft.
+5. Generate and apply the public catalog import with `pnpm generate:recipe-import -- --output path/to/public-recipes.sql`. The command validates every source YAML file in publication mode and refuses to write SQL while any recipe remains a draft. Public recipes are either `reviewed` (with genuine reviewer metadata) or `seeded` initial-catalog content (with no review claim). Apply the seeded-status migrations before importing a catalog that contains seeded recipes.
 6. Create an Inngest application pointed at `/api/inngest` and set its event/signing keys.
 7. Configure the deployment-wide default model IDs (optional pre-fill hints). Direct OpenAI uses synchronous Responses requests with `store: false`; OpenRouter uses its OpenAI-compatible Chat Completions endpoint with structured outputs, zero-data-retention routing, and provider data collection denied. Owners select the provider and both model IDs in Settings.
 8. Configure the AES-GCM keyring — it is required. Foodtopia is BYO-only: household owners supply their own provider key in Settings, encrypted before storage and never returned after saving. The deployment never holds a provider key, so AI stays unconfigured until each household adds one.
@@ -123,7 +123,8 @@ pnpm validate:recipes:publication
 pnpm eval:vision path/to/manifest.json path/to/vision-results.json
 ```
 
-- Publication validation fails while any recipe lacks a genuine human reviewer and review date.
+- Publication validation rejects drafts. Reviewed recipes require genuine reviewer metadata; initial-seed recipes must use `seeded` and must not claim a reviewer or review date.
+- Signed-in household members can submit one bounded categorical flag per visible recipe. Flags intentionally contain no free-form text.
 - The vision evaluation requires the consented, non-production 100-batch benchmark; the manifest specification and scorer are in `evals/vision`.
 
 ## Repository map
@@ -145,6 +146,6 @@ pnpm eval:vision path/to/manifest.json path/to/vision-results.json
 
 ## Deliberate boundaries
 
-Foodtopia does not claim allergen safety, nutrition accuracy, freshness, edibility, or printed-date safety. The initial release also excludes barcode/receipt OCR, automatic date extraction, substitutions, generated recipes, shopping lists, meal calendars, nutrition optimization, push reminders, billing, native apps, and multi-household switching.
+Foodtopia does not claim allergen safety, nutrition accuracy, freshness, edibility, or printed-date safety. Curated substitutions are directed, deterministic, visible, and require confirmation; they are not identity aliases or allergy guidance. When deterministic matching returns nothing, the configured household model may create one strict draft from confirmed global food concepts and staples. The draft cannot be cooked, suggested, or shared publicly until a member approves it as a private household recipe; denial clears its payload. Raw meal prompts and inventory labels are not retained with proposals. The initial release still excludes barcode/receipt OCR, automatic date extraction, public AI-generated recipes, shopping lists, meal calendars, nutrition optimization, push reminders, billing, native apps, and multi-household switching.
 
 See [`docs/operations.md`](docs/operations.md) for raw-image retention, incident handling, and deletion procedures, and [`src/app/privacy/page.tsx`](src/app/privacy/page.tsx) for the user-facing beta notice.

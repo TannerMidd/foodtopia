@@ -6,10 +6,13 @@ import { zodTextFormat } from "openai/helpers/zod";
 import type { RecipeAssessment, RecipeIntent } from "@/contracts/domain";
 import {
   explanationsSchema,
+  generatedRecipeDraftSchema,
   ModelRefusalError,
   parsedRecipeIntentSchema,
   visionBatchResultSchema,
+  type GeneratedRecipeDraft,
   type RecipeAssistant,
+  type RecipeGenerationContext,
   type VisionAnalyzer,
   type VisionBatchResult,
 } from "@/server/ai/contracts";
@@ -92,6 +95,11 @@ const emptyIntent = (query: string): RecipeIntent => ({
   excludeConceptIds: [],
 });
 
+const generationInstructions = `Create exactly one practical recipe from the supplied structured kitchen context.
+Use only supplied foodConceptId/name pairs and only listed forms. Staples are available without verified quantities.
+Do not invent substitutions, foods, IDs, metadata, provenance, rights, safety claims, preservation, fermentation, or canning.
+Every step must list the exact foodConceptIds it uses. Every required ingredient must be referenced by at least one step. Do not add display text; the server derives it from amount, unit, and canonical name. For each raw animal protein, one positive cooking clause must repeat its exact canonical name after a cooking verb and before an explicit doneness endpoint such as fully cooked or a safe internal temperature. Keep quantities conservative when availability is uncertain; staples without verified quantities must use null amount and unit. Obey all supplied structured intent limits. Return only the strict recipe draft.`;
+
 export class OpenAIRecipeAssistant implements RecipeAssistant {
   private readonly client: OpenAI;
   private readonly model: string;
@@ -127,6 +135,22 @@ export class OpenAIRecipeAssistant implements RecipeAssistant {
       ...response.output_parsed,
       query: prompt,
     });
+  }
+
+  async generate(context: RecipeGenerationContext): Promise<GeneratedRecipeDraft> {
+    const response = await this.client.responses.parse({
+      model: this.model,
+      store: false,
+      input: [
+        { role: "system", content: generationInstructions },
+        { role: "user", content: JSON.stringify(context) },
+      ],
+      text: {
+        format: zodTextFormat(generatedRecipeDraftSchema, "generated_recipe_draft"),
+      },
+    });
+    if (!response.output_parsed) throw new ModelRefusalError("The model did not return a recipe draft.");
+    return generatedRecipeDraftSchema.parse(response.output_parsed);
   }
 
   async explain(

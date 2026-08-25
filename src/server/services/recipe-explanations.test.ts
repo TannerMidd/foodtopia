@@ -33,6 +33,7 @@ function assessment(
     tier,
     missingCount: tier === "almost_ready" ? 1 : 0,
     unknownQuantityCount: 0,
+    substitutionCount: 0,
     usesSoonCount: 0,
     explanation,
     evidence: [],

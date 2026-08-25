@@ -6,6 +6,7 @@ import {
   quantityStatusSchema,
   recipeAssessmentSchema,
   recipeIntentSchema,
+  type FoodForm,
   type RecipeAssessment,
   type RecipeIntent,
 } from "@/contracts/domain";
@@ -80,6 +81,55 @@ const explanationsSchema = z
   })
   .strict();
 
+export const generatedRecipeIngredientSchema = z
+  .object({
+    foodConceptId: z.string().trim().min(1).max(120),
+    name: z.string().trim().min(1).max(160),
+    amount: z.number().positive().max(100).nullable(),
+    unit: z.string().trim().min(1).max(40).nullable(),
+    required: z.boolean(),
+    acceptedForms: z.array(foodFormSchema).min(1).max(8),
+  })
+  .strict();
+
+export const generatedRecipeStepSchema = z
+  .object({
+    instruction: z.string().trim().min(8).max(600),
+    foodConceptIds: z.array(z.string().trim().min(1).max(120)).min(1).max(16),
+  })
+  .strict();
+
+/** Model-controlled recipe content only. Scope, IDs, rights and provenance are server-owned. */
+export const generatedRecipeDraftSchema = z
+  .object({
+    title: z.string().trim().min(3).max(120),
+    description: z.string().trim().min(10).max(360),
+    servings: z.number().int().positive().max(24),
+    totalMinutes: z.number().int().positive().max(180),
+    mealTypes: z.array(z.string().trim().min(1).max(40)).min(1).max(4),
+    cuisines: z.array(z.string().trim().min(1).max(60)).max(4),
+    dietaryTags: z.array(z.string().trim().min(1).max(60)).max(8),
+    ingredients: z.array(generatedRecipeIngredientSchema).min(2).max(16),
+    steps: z.array(generatedRecipeStepSchema).min(2).max(12),
+  })
+  .strict();
+
+export type GeneratedRecipeDraft = z.infer<typeof generatedRecipeDraftSchema>;
+
+export type RecipeGenerationContext = Readonly<{
+  intent: RecipeIntent;
+  foods: readonly Readonly<{
+    foodConceptId: string;
+    name: string;
+    forms: readonly FoodForm[];
+    quantities: readonly Readonly<{ quantity: number; unit: string; form: FoodForm }>[];
+    unknownQuantityForms: readonly FoodForm[];
+  }>[];
+  staples: readonly Readonly<{ foodConceptId: string; name: string }>[];
+  dietaryTags: readonly string[];
+  excludedConceptIds: readonly string[];
+}>;
+
 export { explanationsSchema, recipeAssessmentSchema };
 
 export interface RecipeAssistant {
@@ -88,6 +138,7 @@ export interface RecipeAssistant {
     intent: RecipeIntent,
     assessments: RecipeAssessment[],
   ): Promise<Map<string, string>>;
+  generate(context: RecipeGenerationContext): Promise<GeneratedRecipeDraft>;
 }
 
 export class ModelRefusalError extends Error {

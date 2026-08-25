@@ -1,7 +1,7 @@
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
 import { validateRecipeDirectory } from "../src/domain/recipe-loader";
-import { generateReviewedRecipeImportSql } from "./lib/recipe-import-sql";
+import { generatePublicRecipeImportSql } from "./lib/recipe-import-sql";
 
 function outputPathFromArgs(args: readonly string[]): string | null {
   const meaningfulArgs = args.filter((argument) => argument !== "--");
@@ -47,7 +47,7 @@ async function main(): Promise<void> {
     );
   }
 
-  const sql = generateReviewedRecipeImportSql(validation.recipes);
+  const sql = generatePublicRecipeImportSql(validation.recipes);
   if (outputPath === null) {
     process.stdout.write(sql);
     return;

@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = public, extensions;
 
-select plan(75);
+select plan(104);
 
 -- Stable fixture identifiers make failures and Storage paths easy to inspect.
 insert into auth.users (id, email, raw_app_meta_data, raw_user_meta_data)
@@ -751,6 +751,382 @@ select throws_ok(
   '42501',
   'permission denied for table profiles',
   'clients cannot change their own admission state'
+);
+
+-- Recipe flags are categorical, append-only, and constrained to recipes visible
+-- to the caller's household. Enable the fixture member before exercising this
+-- capability because flag policies enforce admission status independently.
+reset role;
+update public.profiles
+   set status = 'enabled', enabled_at = coalesce(enabled_at, now()), disabled_at = null
+ where id = 'c0000000-0000-0000-0000-000000000003';
+select throws_ok(
+  $$insert into public.recipes (
+      id, household_id, visibility, slug, title, description, servings, total_minutes,
+      steps, rights_owner, rights_author, rights_reviewer, rights_reviewed_at,
+      rights_status, created_by
+    ) values (
+      'blank-reviewer-fixture', null, 'published', 'blank-reviewer-fixture',
+      'Blank Reviewer Fixture', 'A malformed public recipe used only for constraint coverage.',
+      2, 10, array['Prepare the fixture safely.', 'Serve the fixture promptly.'],
+      'Foodtopia', 'Foodtopia Editorial', '   ', current_date, 'reviewed', null
+    )$$,
+  '23514',
+  'new row for relation "recipes" violates check constraint "recipes_review_shape"',
+  'reviewed recipes require a trimmed nonblank reviewer'
+);
+insert into public.recipes (
+  id, household_id, visibility, slug, title, description, servings, total_minutes,
+  steps, rights_owner, rights_author, rights_status, created_by
+) values
+  (
+    'seeded-rls-fixture', null, 'published', 'seeded-rls-fixture',
+    'Seeded RLS Fixture', 'A public initial-seed recipe used only for policy coverage.',
+    2, 10, array['Prepare the fixture safely.', 'Serve the fixture promptly.'],
+    'Foodtopia', 'Foodtopia Initial Catalog', 'seeded', null
+  ),
+  (
+    'bravo-household-recipe', '20000000-0000-0000-0000-000000000002', 'household',
+    'bravo-household-recipe', 'Bravo Household Recipe',
+    'A private household recipe used only for tenant policy coverage.',
+    2, 10, array['Prepare the fixture safely.', 'Serve the fixture promptly.'],
+    'Bravo household', 'bravo@example.test', 'draft',
+    'b0000000-0000-0000-0000-000000000002'
+  );
+
+select set_config(
+  'request.jwt.claims',
+  '{"sub":"c0000000-0000-0000-0000-000000000003","email":"charlie@example.test","role":"authenticated"}',
+  true
+);
+select set_config('request.jwt.claim.sub', 'c0000000-0000-0000-0000-000000000003', true);
+set local role authenticated;
+select lives_ok(
+  $$insert into public.recipe_flags (household_id, recipe_id, reason, flagged_by)
+    values ('10000000-0000-0000-0000-000000000001', 'seeded-rls-fixture', 'inaccurate', auth.uid())$$,
+  'a household member can flag a visible seeded recipe'
+);
+select is(
+  (select count(*) from public.recipe_flags where recipe_id = 'seeded-rls-fixture'),
+  1::bigint,
+  'the member can read their own flag'
+);
+
+reset role;
+insert into public.recipe_flags (household_id, recipe_id, reason, flagged_by)
+values (
+  '10000000-0000-0000-0000-000000000001',
+  'seeded-rls-fixture',
+  'unsafe',
+  'a0000000-0000-0000-0000-000000000001'
+);
+select set_config(
+  'request.jwt.claims',
+  '{"sub":"c0000000-0000-0000-0000-000000000003","email":"charlie@example.test","role":"authenticated"}',
+  true
+);
+select set_config('request.jwt.claim.sub', 'c0000000-0000-0000-0000-000000000003', true);
+set local role authenticated;
+select is(
+  (select count(*) from public.recipe_flags where recipe_id = 'seeded-rls-fixture'),
+  1::bigint,
+  'a member cannot read another member''s flag'
+);
+select throws_ok(
+  $$insert into public.recipe_flags (household_id, recipe_id, reason, flagged_by)
+    values ('10000000-0000-0000-0000-000000000001', 'seeded-rls-fixture', 'unsafe', auth.uid())$$,
+  '23505',
+  'duplicate key value violates unique constraint "recipe_flags_one_per_member"',
+  'a member cannot create duplicate flags for one recipe'
+);
+select throws_ok(
+  $$insert into public.recipe_flags (household_id, recipe_id, reason, flagged_by)
+    values ('10000000-0000-0000-0000-000000000001', 'bravo-household-recipe', 'other', auth.uid())$$,
+  '42501',
+  'new row violates row-level security policy for table "recipe_flags"',
+  'a member cannot flag another household private recipe'
+);
+select throws_ok(
+  $$insert into public.recipe_flags (household_id, recipe_id, reason, flagged_by)
+    values ('20000000-0000-0000-0000-000000000002', 'seeded-rls-fixture', 'other', auth.uid())$$,
+  '42501',
+  'new row violates row-level security policy for table "recipe_flags"',
+  'a member cannot spoof another household on a flag'
+);
+select throws_ok(
+  $$update public.recipe_flags set reason = 'other' where recipe_id = 'seeded-rls-fixture'$$,
+  '42501',
+  'permission denied for table recipe_flags',
+  'recipe flags are append-only for clients'
+);
+select throws_ok(
+  $$insert into public.cook_sessions (
+      household_id, recipe_id, recipe_snapshot, servings, status, started_by
+    ) values (
+      '10000000-0000-0000-0000-000000000001',
+      'seeded-rls-fixture',
+      '{"ingredients":[{"id":"forged","foodConceptId":"rice"}]}'::jsonb,
+      2,
+      'active',
+      auth.uid()
+    )$$,
+  '42501',
+  'permission denied for table cook_sessions',
+  'authenticated clients cannot forge authoritative cook session snapshots'
+);
+select throws_ok(
+  $$insert into public.recipe_proposals (
+      id, household_id, recipe_payload, idempotency_key, created_by
+    ) values (
+      gen_random_uuid(), '10000000-0000-0000-0000-000000000001', '{}'::jsonb,
+      gen_random_uuid(), auth.uid()
+    )$$,
+  '42501',
+  'permission denied for table recipe_proposals',
+  'authenticated clients cannot insert or tamper with recipe proposals directly'
+);
+
+reset role;
+insert into public.recipe_proposals (
+  id, household_id, recipe_payload, idempotency_key, request_fingerprint,
+  provider, model, created_by
+) values
+  (
+    '91000000-0000-4000-8000-000000000001',
+    '10000000-0000-0000-0000-000000000001',
+    '{
+      "id":"generated-91000000-0000-4000-8000-000000000001",
+      "slug":"generated-alpha-rice-91000000",
+      "title":"Generated Alpha Rice",
+      "description":"A private generated rice recipe for policy tests.",
+      "servings":2,
+      "totalMinutes":20,
+      "mealTypes":["dinner"],
+      "cuisines":[],
+      "dietaryTags":[],
+      "ingredients":[
+        {"id":"rice-1","foodConceptId":"rice","name":"rice","amount":1,"unit":"cup","display":"1 cup rice","required":true,"acceptedForms":["dried"]},
+        {"id":"water-2","foodConceptId":"water","name":"water","amount":2,"unit":"cup","display":"2 cups water","required":true,"acceptedForms":["unspecified"]}
+      ],
+      "steps":["Combine the rice and water in a pot.","Cook the rice and water until tender."],
+      "rights":{"owner":"Household","author":"AI-assisted household recipe","reviewer":null,"reviewedAt":null,"status":"draft"}
+    }'::jsonb,
+    '92000000-0000-4000-8000-000000000001', repeat('a', 64), 'openai', 'recipe-model',
+    'c0000000-0000-0000-0000-000000000003'
+  ),
+  (
+    '91000000-0000-4000-8000-000000000002',
+    '10000000-0000-0000-0000-000000000001',
+    '{
+      "id":"generated-91000000-0000-4000-8000-000000000002",
+      "slug":"generated-alpha-rice-91000002",
+      "title":"Generated Alpha Rice Two",
+      "description":"Another private generated rice recipe for policy tests.",
+      "servings":2,"totalMinutes":20,"mealTypes":["dinner"],"cuisines":[],"dietaryTags":[],
+      "ingredients":[
+        {"id":"rice-1","foodConceptId":"rice","name":"rice","amount":1,"unit":"cup","display":"1 cup rice","required":true,"acceptedForms":["dried"]},
+        {"id":"water-2","foodConceptId":"water","name":"water","amount":2,"unit":"cup","display":"2 cups water","required":true,"acceptedForms":["unspecified"]}
+      ],
+      "steps":["Combine the rice and water in a pot.","Cook the rice and water until tender."],
+      "rights":{"owner":"Household","author":"AI-assisted household recipe","reviewer":null,"reviewedAt":null,"status":"draft"}
+    }'::jsonb,
+    '92000000-0000-4000-8000-000000000002', repeat('b', 64), 'openai', 'recipe-model',
+    'c0000000-0000-0000-0000-000000000003'
+  ),
+  (
+    '91000000-0000-4000-8000-000000000003',
+    '10000000-0000-0000-0000-000000000001',
+    '{
+      "id":"generated-91000000-0000-4000-8000-000000000003",
+      "slug":"generated-alpha-rice-91000003",
+      "title":"Generated Alpha Rice Three",
+      "description":"A third private generated rice recipe for policy tests.",
+      "servings":2,"totalMinutes":20,"mealTypes":["dinner"],"cuisines":[],"dietaryTags":[],
+      "ingredients":[
+        {"id":"rice-1","foodConceptId":"rice","name":"rice","amount":1,"unit":"cup","display":"1 cup rice","required":true,"acceptedForms":["dried"]},
+        {"id":"water-2","foodConceptId":"water","name":"water","amount":2,"unit":"cup","display":"2 cups water","required":true,"acceptedForms":["unspecified"]}
+      ],
+      "steps":["Combine the rice and water in a pot.","Cook the rice and water until tender."],
+      "rights":{"owner":"Household","author":"AI-assisted household recipe","reviewer":null,"reviewedAt":null,"status":"draft"}
+    }'::jsonb,
+    '92000000-0000-4000-8000-000000000003', repeat('c', 64), 'openai', 'recipe-model',
+    'c0000000-0000-0000-0000-000000000003'
+  ),
+  (
+    '91000000-0000-4000-8000-000000000004',
+    '20000000-0000-0000-0000-000000000002',
+    '{
+      "id":"generated-91000000-0000-4000-8000-000000000004",
+      "slug":"generated-bravo-rice-91000004",
+      "title":"Generated Bravo Rice",
+      "description":"A different household generated recipe for policy tests.",
+      "servings":2,"totalMinutes":20,"mealTypes":["dinner"],"cuisines":[],"dietaryTags":[],
+      "ingredients":[
+        {"id":"rice-1","foodConceptId":"rice","name":"rice","amount":1,"unit":"cup","display":"1 cup rice","required":true,"acceptedForms":["dried"]},
+        {"id":"water-2","foodConceptId":"water","name":"water","amount":2,"unit":"cup","display":"2 cups water","required":true,"acceptedForms":["unspecified"]}
+      ],
+      "steps":["Combine the rice and water in a pot.","Cook the rice and water until tender."],
+      "rights":{"owner":"Household","author":"AI-assisted household recipe","reviewer":null,"reviewedAt":null,"status":"draft"}
+    }'::jsonb,
+    '92000000-0000-4000-8000-000000000004', repeat('d', 64), 'openai', 'recipe-model',
+    'b0000000-0000-0000-0000-000000000002'
+  );
+select set_config(
+  'request.jwt.claims',
+  '{"sub":"c0000000-0000-0000-0000-000000000003","email":"charlie@example.test","role":"authenticated"}',
+  true
+);
+select set_config('request.jwt.claim.sub', 'c0000000-0000-0000-0000-000000000003', true);
+set local role authenticated;
+select lives_ok(
+  $$select public.decide_recipe_proposal('91000000-0000-4000-8000-000000000001', 'approve', 0)$$,
+  'an enabled household member can approve a proposal atomically'
+);
+select is(
+  (select count(*) from public.recipes where id = 'generated-91000000-0000-4000-8000-000000000001'),
+  1::bigint,
+  'approval materializes one private household recipe visible to the member'
+);
+select is(
+  (public.decide_recipe_proposal('91000000-0000-4000-8000-000000000001', 'approve', 0) ->> 'replayed')::boolean,
+  true,
+  'repeating the same terminal approval is idempotent'
+);
+select throws_ok(
+  $$select public.decide_recipe_proposal('91000000-0000-4000-8000-000000000001', 'deny', 1)$$,
+  '23514',
+  'recipe proposal already has a different decision',
+  'an approved proposal cannot later be denied'
+);
+select throws_ok(
+  $$select public.decide_recipe_proposal('91000000-0000-4000-8000-000000000002', 'approve', 9)$$,
+  '40001',
+  'recipe proposal version changed',
+  'a stale expected version cannot decide a proposal'
+);
+select throws_ok(
+  $$select public.decide_recipe_proposal('91000000-0000-4000-8000-000000000004', 'approve', 0)$$,
+  'P0002',
+  'recipe proposal not found',
+  'another household proposal is not addressable'
+);
+select is(
+  (public.decide_recipe_proposal('91000000-0000-4000-8000-000000000002', 'deny', 0) ->> 'status'),
+  'denied',
+  'a member can explicitly deny a pending proposal'
+);
+select throws_ok(
+  $$update public.recipe_proposals set status = 'approved' where id = '91000000-0000-4000-8000-000000000003'$$,
+  '42501',
+  'permission denied for table recipe_proposals',
+  'authenticated clients cannot tamper with proposal lifecycle rows'
+);
+
+reset role;
+select is(
+  (select recipe_payload is null from public.recipe_proposals where id = '91000000-0000-4000-8000-000000000002'),
+  true,
+  'denial discards the stored recipe payload'
+);
+select is(
+  (select rights_status from public.recipes where id = 'generated-91000000-0000-4000-8000-000000000001'),
+  'draft'::public.recipe_review_status,
+  'household approval never marks generated content reviewed or public'
+);
+
+insert into public.cook_sessions (
+  id, household_id, recipe_id, recipe_snapshot, servings, status, started_by
+) values (
+  '92000000-0000-4000-8000-000000000001',
+  '10000000-0000-0000-0000-000000000001',
+  'generated-91000000-0000-4000-8000-000000000001',
+  '{"ingredients":[{"id":"rice-1","foodConceptId":"rice"}]}'::jsonb,
+  2,
+  'active',
+  'c0000000-0000-0000-0000-000000000003'
+);
+
+update public.profiles
+   set status = 'disabled', disabled_at = now()
+ where id = 'c0000000-0000-0000-0000-000000000003';
+select set_config(
+  'request.jwt.claims',
+  '{"sub":"c0000000-0000-0000-0000-000000000003","email":"charlie@example.test","role":"authenticated"}',
+  true
+);
+select set_config('request.jwt.claim.sub', 'c0000000-0000-0000-0000-000000000003', true);
+set local role authenticated;
+select is(
+  (select count(*) from public.recipe_flags where recipe_id = 'seeded-rls-fixture'),
+  0::bigint,
+  'a disabled member cannot read flags with a still-valid token'
+);
+select throws_ok(
+  $$insert into public.recipe_flags (household_id, recipe_id, reason, flagged_by)
+    values ('10000000-0000-0000-0000-000000000001', 'seeded-rls-fixture', 'other', auth.uid())$$,
+  '42501',
+  'new row violates row-level security policy for table "recipe_flags"',
+  'a disabled member cannot insert flags with a still-valid token'
+);
+select throws_ok(
+  $$select public.decide_recipe_proposal('91000000-0000-4000-8000-000000000003', 'approve', 0)$$,
+  '42501',
+  'enabled account required',
+  'a disabled member cannot decide a proposal with a still-valid token'
+);
+select is(
+  (select count(*) from public.recipes where id = 'generated-91000000-0000-4000-8000-000000000001'),
+  0::bigint,
+  'a disabled member cannot select an approved household recipe'
+);
+select is(
+  (select count(*) from public.recipe_ingredients where recipe_id = 'generated-91000000-0000-4000-8000-000000000001'),
+  0::bigint,
+  'a disabled member cannot select approved household recipe ingredients'
+);
+select throws_ok(
+  $$insert into public.recipe_ingredients (
+      recipe_id, id, household_id, position, food_concept_id, name, amount,
+      unit, display, required, accepted_forms
+    ) values (
+      'generated-91000000-0000-4000-8000-000000000001', 'disabled-write',
+      '10000000-0000-0000-0000-000000000001', 10, 'salt', 'salt', 1,
+      'tsp', '1 tsp salt', true, array['dried']::public.food_form[]
+    )$$,
+  '42501',
+  'new row violates row-level security policy for table "recipe_ingredients"',
+  'a disabled member cannot insert household recipe ingredients'
+);
+select is(
+  (with changed as (
+    update public.recipes set title = 'Disabled edit'
+     where id = 'generated-91000000-0000-4000-8000-000000000001'
+     returning 1
+  ) select count(*) from changed),
+  0::bigint,
+  'a disabled member cannot update an approved household recipe'
+);
+select is(
+  (with removed as (
+    delete from public.recipes
+     where id = 'generated-91000000-0000-4000-8000-000000000001'
+     returning 1
+  ) select count(*) from removed),
+  0::bigint,
+  'a disabled member cannot delete an approved household recipe'
+);
+select is(
+  (select count(*) from public.cook_sessions where id = '92000000-0000-4000-8000-000000000001'),
+  0::bigint,
+  'a disabled member cannot read a cook snapshot with a still-valid token'
+);
+select throws_ok(
+  $$select public.apply_cook_reconciliation(
+    '92000000-0000-4000-8000-000000000001', '[]'::jsonb
+  )$$,
+  '28000',
+  'active household session required',
+  'a disabled member cannot reconcile a cook session or mutate inventory'
 );
 
 select * from finish();

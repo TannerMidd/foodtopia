@@ -14,6 +14,10 @@ import {
   planAnalysisRecovery,
 } from "@/server/services/analysis-recovery";
 import { RAW_IMAGE_PURGE_CRON } from "@/server/services/raw-image-retention";
+import {
+  purgeExpiredRecipeProposals,
+  RECIPE_PROPOSAL_PURGE_CRON,
+} from "@/server/services/recipe-proposal-retention";
 
 export const analyzeFoodBatch = inngest.createFunction(
   {
@@ -48,6 +52,18 @@ export const purgeRawImages = inngest.createFunction(
     step.run("purge-expired-objects", () => purgeExpiredRawImages()),
 );
 
+export const purgeRecipeProposals = inngest.createFunction(
+  {
+    id: "purge-expired-recipe-proposals",
+    retries: 3,
+    triggers: [{ cron: RECIPE_PROPOSAL_PURGE_CRON }],
+  },
+  async ({ step }) =>
+    step.run("purge-expired-recipe-proposals", () =>
+      purgeExpiredRecipeProposals(),
+    ),
+);
+
 export const recoverAnalysisJobs = inngest.createFunction(
   {
     id: "recover-stale-analysis-jobs",
@@ -76,5 +92,6 @@ export const recoverAnalysisJobs = inngest.createFunction(
 export const inngestFunctions = [
   analyzeFoodBatch,
   purgeRawImages,
+  purgeRecipeProposals,
   recoverAnalysisJobs,
 ];

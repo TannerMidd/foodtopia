@@ -3,11 +3,13 @@ import type {
   HouseholdPreferences,
   InventoryLot,
   Recipe,
+  RecipeAssessment,
   RecipeIngredient,
 } from "../contracts/domain";
 import {
   DEFAULT_RECIPE_INTENT,
   assessRecipe,
+  materializeEffectiveAssessment,
   rankRecipeAssessments,
   suggestRecipes,
 } from "./assessment";
@@ -189,6 +191,223 @@ describe("recipe assessment", () => {
     expect(assessment.evidence[0].status).toBe("missing");
   });
 
+  it("uses curated chicken substitutions in both directions with provenance", () => {
+    const breast = {
+      ...ingredient("chicken", "chicken-breast", "chicken breast", 1, "lb"),
+      acceptedForms: ["fresh", "frozen"] as RecipeIngredient["acceptedForms"],
+    };
+    const thigh = {
+      ...ingredient("chicken", "chicken-thigh", "chicken thigh", 1, "lb"),
+      acceptedForms: ["fresh", "frozen"] as RecipeIngredient["acceptedForms"],
+    };
+    const thighLot = lot(30, "chicken-thigh", "chicken thighs", "known", 1, "lb", {
+      form: "frozen",
+    });
+    const breastLot = lot(31, "chicken-breast", "chicken breast", "known", 1, "lb", {
+      form: "fresh",
+    });
+
+    const fromThighs = assessRecipe(recipe("breast-from-thighs", [breast, ingredient("salt", "salt", "salt")]), [thighLot, lot(32, "salt", "salt", "known", 1, "count")], noPreferences);
+    const fromBreast = assessRecipe(recipe("thigh-from-breast", [thigh, ingredient("salt", "salt", "salt")]), [breastLot, lot(33, "salt", "salt", "known", 1, "count")], noPreferences);
+
+    expect(fromThighs.tier).toBe("likely_ready");
+    expect(fromThighs.substitutionCount).toBe(1);
+    expect(fromThighs.evidence[0].substitution).toMatchObject({
+      requestedConceptId: "chicken-breast",
+      matchedConceptId: "chicken-thigh",
+    });
+    expect(fromBreast.evidence[0].substitution).toMatchObject({
+      requestedConceptId: "chicken-thigh",
+      matchedConceptId: "chicken-breast",
+    });
+  });
+
+  it("prefers exact evidence but can replace an insufficient exact lot", () => {
+    const chicken = {
+      ...ingredient("chicken", "chicken-breast", "chicken breast", 1, "lb"),
+      acceptedForms: ["fresh", "frozen"] as RecipeIngredient["acceptedForms"],
+    };
+    const target = recipe("exact-first", [chicken, ingredient("salt", "salt", "salt")]);
+    const salt = lot(34, "salt", "salt", "known", 1, "count");
+    const sufficientBreast = lot(35, "chicken-breast", "chicken breast", "known", 1, "lb", { form: "fresh" });
+    const sufficientThigh = lot(36, "chicken-thigh", "chicken thigh", "known", 1, "lb", { form: "fresh" });
+
+    expect(assessRecipe(target, [sufficientBreast, sufficientThigh, salt], noPreferences).evidence[0].substitution).toBeNull();
+    const replaced = assessRecipe(target, [
+      lot(37, "chicken-breast", "chicken breast", "known", 0.25, "lb", { form: "fresh" }),
+      sufficientThigh,
+      salt,
+    ], noPreferences);
+    expect(replaced.evidence[0].status).toBe("present_sufficient");
+    expect(replaced.evidence[0].substitution?.matchedConceptId).toBe("chicken-thigh");
+  });
+
+  it("keeps substituted unknown quantities unproved and rejects form mismatches", () => {
+    const chicken = {
+      ...ingredient("chicken", "chicken-breast", "chicken breast", 1, "lb"),
+      acceptedForms: ["fresh", "frozen"] as RecipeIngredient["acceptedForms"],
+    };
+    const target = recipe("substitution-uncertain", [chicken, ingredient("salt", "salt", "salt")]);
+    const salt = lot(38, "salt", "salt", "known", 1, "count");
+    const unknown = assessRecipe(target, [
+      lot(39, "chicken-thigh", "chicken thigh", "unknown", null, null, { form: "frozen" }),
+      salt,
+    ], noPreferences);
+    expect(unknown.evidence[0].status).toBe("present_quantity_unknown");
+    expect(unknown.evidence[0].substitution?.matchedConceptId).toBe("chicken-thigh");
+
+    const wrongForm = assessRecipe(target, [
+      lot(40, "chicken-thigh", "chicken thigh", "known", 1, "lb", { form: "cooked" }),
+      salt,
+    ], noPreferences);
+    expect(wrongForm.evidence[0].status).toBe("missing");
+    expect(wrongForm.evidence[0].substitution).toBeNull();
+  });
+
+  it("applies exclusions to the selected substitute and ignores name-only lots", () => {
+    const chicken = {
+      ...ingredient("chicken", "chicken-breast", "chicken breast", 1, "lb"),
+      acceptedForms: ["fresh", "frozen"] as RecipeIngredient["acceptedForms"],
+    };
+    const target = recipe("excluded-substitute", [chicken, ingredient("salt", "salt", "salt")]);
+    const lots = [
+      lot(41, "chicken-thigh", "chicken thigh", "known", 1, "lb", { form: "fresh" }),
+      lot(42, "salt", "salt", "known", 1, "count"),
+    ];
+    expect(assessRecipe(target, lots, { ...noPreferences, excludedConceptIds: ["chicken-thigh"] }).tier).toBe("incompatible");
+    const nameOnly = assessRecipe(target, [
+      lot(43, null, "chicken thighs", "known", 1, "lb", { form: "fresh" }),
+      lots[1],
+    ], noPreferences);
+    expect(nameOnly.evidence[0].status).toBe("missing");
+    expect(nameOnly.evidence[0].substitution).toBeNull();
+  });
+
+  it("does not pool substitute concepts or chain beyond direct audited rules", () => {
+    const beans = {
+      ...ingredient("beans", "black-beans", "black beans", 16, "oz"),
+      acceptedForms: ["canned", "cooked"] as RecipeIngredient["acceptedForms"],
+    };
+    const target = recipe("one-substitute", [beans, ingredient("salt", "salt", "salt")]);
+    const assessment = assessRecipe(target, [
+      lot(44, "kidney-beans", "kidney beans", "known", 8, "oz", { form: "canned" }),
+      lot(45, "white-beans", "white beans", "known", 8, "oz", { form: "canned" }),
+      lot(46, "chickpeas", "chickpeas", "known", 16, "oz", { form: "canned" }),
+      lot(47, "salt", "salt", "known", 1, "count"),
+    ], noPreferences);
+    expect(assessment.evidence[0].status).toBe("missing");
+    expect(assessment.evidence[0].substitution).toBeNull();
+  });
+
+  it("chooses an allowed sufficient substitute ahead of unknown or excluded rules", () => {
+    const beans = {
+      ...ingredient("beans", "black-beans", "black beans", 16, "oz"),
+      acceptedForms: ["canned", "cooked"] as RecipeIngredient["acceptedForms"],
+    };
+    const target = recipe("best-bean-substitute", [beans, ingredient("salt", "salt", "salt")]);
+    const assessment = assessRecipe(
+      target,
+      [
+        lot(54, "kidney-beans", "kidney beans", "unknown", null, null, { form: "canned" }),
+        lot(55, "white-beans", "white beans", "known", 16, "oz", { form: "canned" }),
+        lot(56, "salt", "salt", "known", 1, "count"),
+      ],
+      { ...noPreferences, excludedConceptIds: ["kidney-beans"] },
+    );
+
+    expect(assessment.tier).toBe("likely_ready");
+    expect(assessment.evidence[0].substitution?.matchedConceptId).toBe("white-beans");
+    expect(assessment.explanation).not.toContain("excluded");
+  });
+
+  it("materializes substituted concepts and instructions for the cook snapshot", () => {
+    const chicken = {
+      ...ingredient("chicken", "chicken-breast", "chicken breast", 1, "lb"),
+      display: "1 pound chicken breast, diced",
+      acceptedForms: ["fresh", "frozen"] as RecipeIngredient["acceptedForms"],
+    };
+    const target = recipe("effective-snapshot", [chicken, ingredient("salt", "salt", "salt")], {
+      steps: ["Brown the chicken breast.", "Cook the chicken breasts completely with salt."],
+    });
+    const assessed = assessRecipe(target, [
+      lot(52, "chicken-thigh", "chicken thigh", "known", 1, "lb", { form: "fresh" }),
+      lot(53, "salt", "salt", "known", 1, "count"),
+    ], noPreferences);
+    const defaultEffective = materializeEffectiveAssessment(assessed);
+    const effective = materializeEffectiveAssessment(assessed, 4);
+
+    expect(defaultEffective.recipe.ingredients[0].display).toBe(
+      "1 pound chicken thigh, diced",
+    );
+    expect(effective.recipe.ingredients[0].display).toBe("2 lb chicken thigh, diced");
+    expect(effective.recipe.servings).toBe(4);
+    expect(effective.recipe.ingredients[0]).toMatchObject({
+      foodConceptId: "chicken-thigh",
+      name: "chicken thigh",
+      amount: 2,
+    });
+    expect(effective.recipe.steps.join(" ")).toContain("chicken thigh");
+    expect(effective.recipe.steps.slice(1).join(" ")).not.toContain("chicken breast");
+    expect(effective.recipe.steps[0]).toContain("Timing may differ");
+  });
+
+  it("preserves preparation display copy and replaces reciprocal substitutions once", () => {
+    const lemon = {
+      ...ingredient("lemon", "lemon", "lemon", 1, "count"),
+      display: "1 lemon, juiced",
+      acceptedForms: ["fresh"] as RecipeIngredient["acceptedForms"],
+    };
+    const lime = {
+      ...ingredient("lime", "lime", "lime", 1, "count"),
+      display: "1 lime, cut into wedges",
+      acceptedForms: ["fresh"] as RecipeIngredient["acceptedForms"],
+    };
+    const target = recipe("reciprocal-citrus", [lemon, lime], {
+      steps: ["Juice the lemon and garnish with the lime.", "Serve the lemon and lime together."],
+    });
+    const assessed = assessRecipe(
+      target,
+      [
+        lot(57, "lime", "lime", "known", 1, "count", { form: "fresh" }),
+        lot(58, "lemon", "lemon", "known", 1, "count", { form: "fresh" }),
+      ],
+      noPreferences,
+    );
+    // Force the direct reciprocal rules because exact inventory normally wins.
+    const reciprocal = {
+      ...assessed,
+      substitutionCount: 2,
+      evidence: assessed.evidence.map((item) => ({
+        ...item,
+        substitution:
+          item.ingredientId === "lemon"
+            ? {
+                requestedConceptId: "lemon",
+                requestedName: "lemon",
+                matchedConceptId: "lime",
+                matchedName: "lime",
+                guidance: "Use lime.",
+              }
+            : {
+                requestedConceptId: "lime",
+                requestedName: "lime",
+                matchedConceptId: "lemon",
+                matchedName: "lemon",
+                guidance: "Use lemon.",
+              },
+      })),
+    } satisfies RecipeAssessment;
+    const effective = materializeEffectiveAssessment(reciprocal);
+
+    expect(effective.recipe.ingredients[0].display).toBe("1 lime, juiced");
+    expect(effective.recipe.ingredients[1].display).toBe("1 lemon, cut into wedges");
+    expect(effective.recipe.steps.slice(2)).toEqual([
+      "Juice the lime and garnish with the lemon.",
+      "Serve the lime and lemon together.",
+    ]);
+    expect(effective.recipe.steps[0]).toMatch(/^Substitution note:/);
+  });
+
   it("counts missing and insufficient required ingredients as Almost ready", () => {
     const target = recipe("almost", [
       ingredient("rice", "rice", "rice", 1, "cup"),
@@ -301,6 +520,34 @@ describe("recipe assessment", () => {
         (item) => item.recipe.id,
       ),
     ).toEqual(["ready-draft", "ready-reviewed", "likely"]);
+  });
+
+  it("ranks an exact likely match ahead of a substituted likely match", () => {
+    const chicken = {
+      ...ingredient("chicken", "chicken-breast", "chicken breast", 1, "lb"),
+      acceptedForms: ["fresh", "frozen"] as RecipeIngredient["acceptedForms"],
+    };
+    const salt = ingredient("salt", "salt", "salt");
+    const exactUnknown = assessRecipe(
+      recipe("z-exact", [chicken, salt]),
+      [
+        lot(48, "chicken-breast", "chicken breast", "unknown", null, null, { form: "fresh" }),
+        lot(49, "salt", "salt", "known", 1, "count"),
+      ],
+      noPreferences,
+    );
+    const substituted = assessRecipe(
+      recipe("a-substituted", [chicken, salt]),
+      [
+        lot(50, "chicken-thigh", "chicken thigh", "known", 1, "lb", { form: "fresh" }),
+        lot(51, "salt", "salt", "known", 1, "count"),
+      ],
+      noPreferences,
+    );
+    expect(rankRecipeAssessments([substituted, exactUnknown]).map((item) => item.recipe.id)).toEqual([
+      "z-exact",
+      "a-substituted",
+    ]);
   });
 
   it("uses the parsed prompt as a deterministic soft ranking signal", () => {

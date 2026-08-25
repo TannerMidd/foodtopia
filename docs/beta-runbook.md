@@ -4,14 +4,16 @@
 
 - [ ] Apply the migration to a disposable Supabase project and run the RLS/storage security suite with two real users in two households.
 - [ ] Configure and exercise the Auth before-user-created hook, the open-beta signup window (open and closed), pending-account waiting screen, admin batch enable/disable at `/admin/beta`, beta onboarding, household invite acceptance, expiry, wrong-email rejection, and one-household constraint.
-- [ ] Human-review all 80 recipes and make `pnpm validate:recipes:publication` pass without synthetic reviewer metadata.
-- [ ] Import only reviewed recipes as `published` rows and verify every ingredient resolves to a global food concept.
+- [ ] Verify all 160 public recipes pass `pnpm validate:recipes:publication`: reviewed recipes have genuine reviewer metadata, while initial-seed recipes use `seeded` with no synthetic review claim.
+- [ ] Import reviewed and initial-seed recipes as `published` rows, verify every ingredient resolves to a global food concept, and confirm seeded recipes are visibly labeled as initial catalog content.
+- [ ] Flag one reviewed and one seeded recipe from a household member account; verify duplicate submission is idempotent, another household cannot read the flag, and no free-form feedback is retained.
 - [ ] Build the consented 100-batch image benchmark and meet at least 90% proposal precision and 80% recall.
 - [ ] Verify immediate apply/cancel deletion and the one-hour/24-hour purge deadlines against the real private bucket.
 - [ ] Run `pnpm check`, `pnpm build`, and both Playwright mobile projects.
 - [ ] Manually install and exercise camera/offline/reconnect behavior on current iOS Safari and Android Chrome.
 - [ ] Configure the operational alerts in `docs/operations.md` and rehearse household deletion.
 - [ ] Exercise OpenAI and OpenRouter with encrypted household credentials; verify a missing/invalid selected key never falls back to another provider or any deployment key.
+- [ ] Force a zero-match recipe search for each provider; verify only one strict AI draft appears, generation is separately rate-limited, approve creates a reusable private draft recipe, deny clears payload, and another/disabled household member cannot address the proposal.
 - [ ] Review the provider-inclusive privacy notice with the beta coordinator and obtain `vision-v2` first-scan consent before any production photo. Confirm the current provider/model route is visible before consent.
 
 ## Two-week success gates

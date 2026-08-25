@@ -1,0 +1,1284 @@
+- id: recipe-101
+  slug: peanut-butter-banana-oats
+  title: Peanut Butter Banana Oats
+  description: Creamy oats with banana and optional peanut butter.
+  servings: 4
+  totalMinutes: 10
+  mealTypes:
+    - breakfast
+  cuisines:
+    - American
+  dietaryTags:
+    - vegetarian
+  ingredients:
+    - id: oats
+      foodConceptId: oats
+      name: oats
+      amount: 2
+      unit: cup
+      display: 2 cups oats
+      required: true
+      acceptedForms: &a1
+        - dried
+    - id: milk
+      foodConceptId: milk
+      name: milk
+      amount: 2
+      unit: cup
+      display: 2 cups milk
+      required: true
+      acceptedForms: &a2
+        - fresh
+        - opened
+    - id: banana
+      foodConceptId: banana
+      name: banana
+      amount: 3
+      unit: count
+      display: 3 bananas
+      required: true
+      acceptedForms: &a6
+        - fresh
+        - frozen
+    - id: peanut-butter
+      foodConceptId: peanut-butter
+      name: peanut butter
+      amount: 3
+      unit: tbsp
+      display: 3 tablespoons peanut butter
+      required: true
+      acceptedForms: &a10
+        - opened
+        - unspecified
+    - id: cinnamon
+      foodConceptId: cinnamon
+      name: cinnamon
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon cinnamon
+      required: true
+      acceptedForms: &a3
+        - dried
+        - unspecified
+    - id: honey
+      foodConceptId: honey
+      name: honey
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon honey
+      required: true
+      acceptedForms: &a5
+        - opened
+        - unspecified
+  steps:
+    - Simmer the oats and milk over medium-low heat until creamy, stirring often, then fold in the sliced banana and cinnamon.
+    - Divide the oats into bowls, swirl in the peanut butter, and finish with honey before serving warm.
+  rights: &a4
+    owner: Foodtopia
+    author: Foodtopia Initial Catalog
+    reviewer: null
+    reviewedAt: null
+    status: seeded
+- id: recipe-102
+  slug: apple-cinnamon-oats
+  title: Apple Cinnamon Oats
+  description: Warm apple oats for a simple breakfast.
+  servings: 4
+  totalMinutes: 12
+  mealTypes:
+    - breakfast
+  cuisines:
+    - American
+  dietaryTags:
+    - vegetarian
+  ingredients:
+    - id: oats
+      foodConceptId: oats
+      name: oats
+      amount: 2
+      unit: cup
+      display: 2 cups oats
+      required: true
+      acceptedForms: *a1
+    - id: milk
+      foodConceptId: milk
+      name: milk
+      amount: 2
+      unit: cup
+      display: 2 cups milk
+      required: true
+      acceptedForms: *a2
+    - id: apple
+      foodConceptId: apple
+      name: apple
+      amount: 3
+      unit: count
+      display: 3 apples
+      required: true
+      acceptedForms: &a9
+        - fresh
+    - id: cinnamon
+      foodConceptId: cinnamon
+      name: cinnamon
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon cinnamon
+      required: true
+      acceptedForms: *a3
+    - id: maple-syrup
+      foodConceptId: maple-syrup
+      name: maple syrup
+      amount: 2
+      unit: tbsp
+      display: 2 tablespoons maple syrup
+      required: true
+      acceptedForms:
+        - opened
+        - unspecified
+  steps:
+    - Dice the apple and simmer it with the oats, milk, and cinnamon over medium-low heat until the apple and oats are tender.
+    - Spoon the apple oats into bowls and finish each serving with maple syrup.
+  rights: *a4
+- id: recipe-103
+  slug: berry-yogurt-oats
+  title: Berry Yogurt Oats
+  description: No-cook yogurt oats with berries.
+  servings: 4
+  totalMinutes: 245
+  mealTypes:
+    - breakfast
+  cuisines:
+    - European-inspired
+  dietaryTags:
+    - vegetarian
+  ingredients:
+    - id: oats
+      foodConceptId: oats
+      name: oats
+      amount: 2
+      unit: cup
+      display: 2 cups oats
+      required: true
+      acceptedForms: *a1
+    - id: yogurt
+      foodConceptId: yogurt
+      name: yogurt
+      amount: 2
+      unit: cup
+      display: 2 cups yogurt
+      required: true
+      acceptedForms: &a7
+        - fresh
+        - opened
+    - id: berries
+      foodConceptId: berries
+      name: berries
+      amount: 2
+      unit: cup
+      display: 2 cups berries
+      required: true
+      acceptedForms: &a8
+        - fresh
+        - frozen
+    - id: honey
+      foodConceptId: honey
+      name: honey
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon honey
+      required: true
+      acceptedForms: *a5
+    - id: cinnamon
+      foodConceptId: cinnamon
+      name: cinnamon
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon cinnamon
+      required: true
+      acceptedForms: *a3
+  steps:
+    - Stir the oats and yogurt together until evenly moistened, then fold in the berries and cinnamon.
+    - Cover and refrigerate for at least four hours so the oats soften, then stir well and finish with honey before serving.
+  rights: *a4
+- id: recipe-104
+  slug: banana-yogurt-bowl
+  title: Banana Yogurt Bowl
+  description: A fast banana yogurt bowl for breakfast or snack time.
+  servings: 4
+  totalMinutes: 5
+  mealTypes:
+    - breakfast
+    - snack
+  cuisines:
+    - Mediterranean-inspired
+  dietaryTags:
+    - vegetarian
+  ingredients:
+    - id: banana
+      foodConceptId: banana
+      name: banana
+      amount: 3
+      unit: count
+      display: 3 bananas
+      required: true
+      acceptedForms: *a6
+    - id: yogurt
+      foodConceptId: yogurt
+      name: yogurt
+      amount: 1
+      unit: cup
+      display: 1 cup yogurt
+      required: true
+      acceptedForms: *a7
+    - id: berries
+      foodConceptId: berries
+      name: berries
+      amount: 2
+      unit: cup
+      display: 2 cups berries
+      required: true
+      acceptedForms: *a8
+    - id: honey
+      foodConceptId: honey
+      name: honey
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon honey
+      required: true
+      acceptedForms: *a5
+    - id: cinnamon
+      foodConceptId: cinnamon
+      name: cinnamon
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon cinnamon
+      required: true
+      acceptedForms: *a3
+  steps:
+    - Slice the banana and fold it into the yogurt with the berries and cinnamon.
+    - Divide the banana yogurt among bowls and drizzle each serving with honey.
+  rights: *a4
+- id: recipe-105
+  slug: apple-peanut-butter-toast
+  title: Apple Peanut Butter Toast
+  description: Crunchy apple toast with peanut butter.
+  servings: 4
+  totalMinutes: 8
+  mealTypes:
+    - breakfast
+    - snack
+  cuisines:
+    - American
+  dietaryTags:
+    - vegetarian
+  ingredients:
+    - id: bread
+      foodConceptId: bread
+      name: bread
+      amount: 8
+      unit: count
+      display: 8 slices bread
+      required: true
+      acceptedForms: &a11
+        - fresh
+        - opened
+        - unspecified
+    - id: apple
+      foodConceptId: apple
+      name: apple
+      amount: 3
+      unit: count
+      display: 3 apples
+      required: true
+      acceptedForms: *a9
+    - id: peanut-butter
+      foodConceptId: peanut-butter
+      name: peanut butter
+      amount: 3
+      unit: tbsp
+      display: 3 tablespoons peanut butter
+      required: true
+      acceptedForms: *a10
+    - id: cinnamon
+      foodConceptId: cinnamon
+      name: cinnamon
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon cinnamon
+      required: true
+      acceptedForms: *a3
+    - id: honey
+      foodConceptId: honey
+      name: honey
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon honey
+      required: true
+      acceptedForms: *a5
+  steps:
+    - Toast the bread until crisp and spread each slice with peanut butter.
+    - Thinly slice the apple, layer it over the toast, and finish with cinnamon and honey.
+  rights: *a4
+- id: recipe-106
+  slug: tomato-egg-toast
+  title: Tomato Egg Toast
+  description: Egg and tomato toast that works for breakfast or lunch.
+  servings: 4
+  totalMinutes: 15
+  mealTypes:
+    - breakfast
+    - lunch
+  cuisines:
+    - Mediterranean-inspired
+  dietaryTags:
+    - vegetarian
+  ingredients:
+    - id: bread
+      foodConceptId: bread
+      name: bread
+      amount: 8
+      unit: count
+      display: 8 slices bread
+      required: true
+      acceptedForms: *a11
+    - id: eggs
+      foodConceptId: eggs
+      name: eggs
+      amount: 4
+      unit: count
+      display: 4 eggs
+      required: true
+      acceptedForms: &a12
+        - fresh
+    - id: tomato
+      foodConceptId: tomato
+      name: tomato
+      amount: 3
+      unit: count
+      display: 3 tomatoes
+      required: true
+      acceptedForms: &a17
+        - fresh
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: &a18
+        - opened
+        - unspecified
+    - id: salt
+      foodConceptId: salt
+      name: salt
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon salt
+      required: true
+      acceptedForms: &a13
+        - dried
+        - unspecified
+    - id: black-pepper
+      foodConceptId: black-pepper
+      name: black pepper
+      amount: 0.5
+      unit: tsp
+      display: 1/2 teaspoon black pepper
+      required: true
+      acceptedForms: &a14
+        - dried
+        - unspecified
+  steps:
+    - Toast the bread and slice the tomato. Heat the olive oil, add the eggs, season with salt and black pepper, and cook until the whites and yolks are fully set.
+    - Layer the tomato and cooked eggs over the bread and serve immediately.
+  rights: *a4
+- id: recipe-107
+  slug: spinach-cheddar-eggs
+  title: Spinach Cheddar Eggs
+  description: Soft scrambled eggs with spinach and cheddar.
+  servings: 4
+  totalMinutes: 12
+  mealTypes:
+    - breakfast
+  cuisines:
+    - American
+  dietaryTags:
+    - vegetarian
+  ingredients:
+    - id: eggs
+      foodConceptId: eggs
+      name: eggs
+      amount: 4
+      unit: count
+      display: 4 eggs
+      required: true
+      acceptedForms: *a12
+    - id: spinach
+      foodConceptId: spinach
+      name: spinach
+      amount: 4
+      unit: cup
+      display: 4 cups spinach
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+    - id: cheddar
+      foodConceptId: cheddar
+      name: cheddar cheese
+      amount: 1
+      unit: cup
+      display: 1 cup cheddar cheese
+      required: true
+      acceptedForms: &a15
+        - fresh
+        - opened
+        - unspecified
+    - id: butter
+      foodConceptId: butter
+      name: butter
+      amount: 2
+      unit: tbsp
+      display: 2 tablespoons butter
+      required: true
+      acceptedForms: &a16
+        - fresh
+        - opened
+    - id: salt
+      foodConceptId: salt
+      name: salt
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon salt
+      required: true
+      acceptedForms: *a13
+    - id: black-pepper
+      foodConceptId: black-pepper
+      name: black pepper
+      amount: 0.5
+      unit: tsp
+      display: 1/2 teaspoon black pepper
+      required: true
+      acceptedForms: *a14
+  steps:
+    - Melt the butter in a skillet, add the spinach, and cook until wilted; season with salt and black pepper.
+    - Add the eggs and stir until fully set, then fold in the cheddar cheese until melted.
+  rights: *a4
+- id: recipe-108
+  slug: salsa-egg-tortillas
+  title: Salsa Egg Tortillas
+  description: Breakfast tortillas with eggs and salsa.
+  servings: 4
+  totalMinutes: 15
+  mealTypes:
+    - breakfast
+    - lunch
+  cuisines:
+    - Mexican-inspired
+  dietaryTags:
+    - vegetarian
+  ingredients:
+    - id: eggs
+      foodConceptId: eggs
+      name: eggs
+      amount: 4
+      unit: count
+      display: 4 eggs
+      required: true
+      acceptedForms: *a12
+    - id: tortillas
+      foodConceptId: tortillas
+      name: tortillas
+      amount: 8
+      unit: count
+      display: 8 tortillas
+      required: true
+      acceptedForms: &a20
+        - fresh
+        - opened
+        - unspecified
+    - id: salsa
+      foodConceptId: salsa
+      name: salsa
+      amount: 0.5
+      unit: cup
+      display: 1/2 cup salsa
+      required: true
+      acceptedForms: &a21
+        - fresh
+        - canned
+        - opened
+        - unspecified
+    - id: cheddar
+      foodConceptId: cheddar
+      name: cheddar cheese
+      amount: 1
+      unit: cup
+      display: 1 cup cheddar cheese
+      required: true
+      acceptedForms: *a15
+    - id: hot-sauce
+      foodConceptId: hot-sauce
+      name: hot sauce
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon hot sauce
+      required: true
+      acceptedForms:
+        - opened
+        - unspecified
+  steps:
+    - Warm the tortillas. Scramble the eggs until fully set, then fold in the salsa and cheddar cheese until hot and melted.
+    - Fill the tortillas with the egg mixture and finish with hot sauce.
+  rights: *a4
+- id: recipe-109
+  slug: mushroom-egg-skillet
+  title: Mushroom Egg Skillet
+  description: A quick mushroom and egg skillet.
+  servings: 4
+  totalMinutes: 15
+  mealTypes:
+    - breakfast
+    - lunch
+  cuisines:
+    - European-inspired
+  dietaryTags:
+    - vegetarian
+  ingredients:
+    - id: eggs
+      foodConceptId: eggs
+      name: eggs
+      amount: 4
+      unit: count
+      display: 4 eggs
+      required: true
+      acceptedForms: *a12
+    - id: mushroom
+      foodConceptId: mushroom
+      name: mushrooms
+      amount: 4
+      unit: cup
+      display: 4 cups mushrooms
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+    - id: butter
+      foodConceptId: butter
+      name: butter
+      amount: 2
+      unit: tbsp
+      display: 2 tablespoons butter
+      required: true
+      acceptedForms: *a16
+    - id: thyme
+      foodConceptId: thyme
+      name: thyme
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon thyme
+      required: true
+      acceptedForms:
+        - fresh
+        - dried
+        - unspecified
+    - id: salt
+      foodConceptId: salt
+      name: salt
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon salt
+      required: true
+      acceptedForms: *a13
+  steps:
+    - Melt the butter in a skillet and brown the mushrooms with thyme and salt until their moisture cooks away.
+    - Add the eggs and stir gently until the eggs are fully set, then divide among plates.
+  rights: *a4
+- id: recipe-110
+  slug: potato-egg-hash
+  title: Potato Egg Hash
+  description: Crisp potato hash with eggs.
+  servings: 4
+  totalMinutes: 25
+  mealTypes:
+    - breakfast
+    - lunch
+  cuisines:
+    - American
+  dietaryTags:
+    - vegetarian
+  ingredients:
+    - id: potato
+      foodConceptId: potato
+      name: potato
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds potatoes
+      required: true
+      acceptedForms:
+        - fresh
+    - id: eggs
+      foodConceptId: eggs
+      name: eggs
+      amount: 4
+      unit: count
+      display: 4 eggs
+      required: true
+      acceptedForms: *a12
+    - id: onion
+      foodConceptId: onion
+      name: onion
+      amount: 1
+      unit: count
+      display: 1 onion
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: &a25
+        - opened
+        - unspecified
+    - id: paprika
+      foodConceptId: paprika
+      name: paprika
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon paprika
+      required: true
+      acceptedForms:
+        - dried
+        - unspecified
+  steps:
+    - Dice the potato and onion, then cook them in vegetable oil with paprika until the potato is tender and browned.
+    - Add the eggs and stir until fully set, scraping the browned potato from the pan as the eggs cook.
+  rights: *a4
+- id: recipe-111
+  slug: tuna-cucumber-toast
+  title: Tuna Cucumber Toast
+  description: Cool tuna cucumber toast for lunch.
+  servings: 4
+  totalMinutes: 10
+  mealTypes:
+    - lunch
+  cuisines:
+    - European-inspired
+  dietaryTags: []
+  ingredients:
+    - id: bread
+      foodConceptId: bread
+      name: bread
+      amount: 8
+      unit: count
+      display: 8 slices bread
+      required: true
+      acceptedForms: *a11
+    - id: tuna
+      foodConceptId: tuna
+      name: tuna
+      amount: 10
+      unit: oz
+      display: 10 ounces tuna
+      required: true
+      acceptedForms: &a23
+        - canned
+        - opened
+    - id: cucumber
+      foodConceptId: cucumber
+      name: cucumber
+      amount: 2
+      unit: count
+      display: 2 cucumbers
+      required: true
+      acceptedForms: &a22
+        - fresh
+    - id: mayonnaise
+      foodConceptId: mayonnaise
+      name: mayonnaise
+      amount: 2
+      unit: tbsp
+      display: 2 tablespoons mayonnaise
+      required: true
+      acceptedForms: &a24
+        - fresh
+        - opened
+        - unspecified
+    - id: lemon
+      foodConceptId: lemon
+      name: lemon
+      amount: 1
+      unit: count
+      display: 1 lemon
+      required: true
+      acceptedForms: &a19
+        - fresh
+    - id: black-pepper
+      foodConceptId: black-pepper
+      name: black pepper
+      amount: 0.5
+      unit: tsp
+      display: 1/2 teaspoon black pepper
+      required: true
+      acceptedForms: *a14
+  steps:
+    - Toast the bread. Mix the drained tuna with mayonnaise, lemon juice, black pepper, and diced cucumber.
+    - Spoon the tuna and cucumber mixture over the toast and serve promptly.
+  rights: *a4
+- id: recipe-112
+  slug: white-bean-tomato-toast
+  title: White Bean Tomato Toast
+  description: A fiber-rich white bean and tomato toast.
+  servings: 4
+  totalMinutes: 10
+  mealTypes:
+    - lunch
+  cuisines:
+    - Mediterranean-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: bread
+      foodConceptId: bread
+      name: bread
+      amount: 8
+      unit: count
+      display: 8 slices bread
+      required: true
+      acceptedForms: *a11
+    - id: white-beans
+      foodConceptId: white-beans
+      name: white beans
+      amount: 15
+      unit: oz
+      display: 15 ounces white beans
+      required: true
+      acceptedForms:
+        - canned
+        - cooked
+    - id: tomato
+      foodConceptId: tomato
+      name: tomato
+      amount: 3
+      unit: count
+      display: 3 tomatoes
+      required: true
+      acceptedForms: *a17
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: *a18
+    - id: lemon
+      foodConceptId: lemon
+      name: lemon
+      amount: 1
+      unit: count
+      display: 1 lemon
+      required: true
+      acceptedForms: *a19
+    - id: salt
+      foodConceptId: salt
+      name: salt
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon salt
+      required: true
+      acceptedForms: *a13
+  steps:
+    - Toast the bread and mash the white beans with olive oil, lemon juice, and salt.
+    - Spread the white beans over the toast, top with sliced tomato, and serve.
+  rights: *a4
+- id: recipe-113
+  slug: avocado-black-bean-tortillas
+  title: Avocado Black Bean Tortillas
+  description: Fast black bean and avocado tortillas.
+  servings: 4
+  totalMinutes: 12
+  mealTypes:
+    - lunch
+  cuisines:
+    - Mexican-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: tortillas
+      foodConceptId: tortillas
+      name: tortillas
+      amount: 8
+      unit: count
+      display: 8 tortillas
+      required: true
+      acceptedForms: *a20
+    - id: black-beans
+      foodConceptId: black-beans
+      name: black beans
+      amount: 15
+      unit: oz
+      display: 15 ounces black beans
+      required: true
+      acceptedForms: &a26
+        - canned
+        - cooked
+    - id: avocado
+      foodConceptId: avocado
+      name: avocado
+      amount: 2
+      unit: count
+      display: 2 avocados
+      required: true
+      acceptedForms: &a27
+        - fresh
+    - id: salsa
+      foodConceptId: salsa
+      name: salsa
+      amount: 0.5
+      unit: cup
+      display: 1/2 cup salsa
+      required: true
+      acceptedForms: *a21
+    - id: lime
+      foodConceptId: lime
+      name: lime
+      amount: 1
+      unit: count
+      display: 1 lime
+      required: true
+      acceptedForms: &a28
+        - fresh
+    - id: cumin
+      foodConceptId: cumin
+      name: cumin
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon cumin
+      required: true
+      acceptedForms:
+        - dried
+        - unspecified
+  steps:
+    - Warm the tortillas and black beans, then mash the avocado with lime juice and cumin.
+    - Fill each tortilla with black beans, avocado, and salsa and fold before serving.
+  rights: *a4
+- id: recipe-114
+  slug: chickpea-cucumber-salad
+  title: Chickpea Cucumber Salad
+  description: A crisp chickpea cucumber salad.
+  servings: 4
+  totalMinutes: 10
+  mealTypes:
+    - lunch
+    - side
+  cuisines:
+    - Mediterranean-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: chickpeas
+      foodConceptId: chickpeas
+      name: chickpeas
+      amount: 15
+      unit: oz
+      display: 15 ounces chickpeas
+      required: true
+      acceptedForms:
+        - canned
+        - cooked
+    - id: cucumber
+      foodConceptId: cucumber
+      name: cucumber
+      amount: 2
+      unit: count
+      display: 2 cucumbers
+      required: true
+      acceptedForms: *a22
+    - id: tomato
+      foodConceptId: tomato
+      name: tomato
+      amount: 3
+      unit: count
+      display: 3 tomatoes
+      required: true
+      acceptedForms: *a17
+    - id: lemon
+      foodConceptId: lemon
+      name: lemon
+      amount: 1
+      unit: count
+      display: 1 lemon
+      required: true
+      acceptedForms: *a19
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: *a18
+  steps:
+    - Dice the cucumber and tomato, then combine them with the drained chickpeas.
+    - Whisk the lemon juice with olive oil, toss it through the chickpea salad, and serve.
+  rights: *a4
+- id: recipe-115
+  slug: tuna-lettuce-cups
+  title: Tuna Lettuce Cups
+  description: Cool tuna-filled lettuce cups.
+  servings: 4
+  totalMinutes: 10
+  mealTypes:
+    - lunch
+  cuisines:
+    - American
+  dietaryTags: []
+  ingredients:
+    - id: tuna
+      foodConceptId: tuna
+      name: tuna
+      amount: 10
+      unit: oz
+      display: 10 ounces tuna
+      required: true
+      acceptedForms: *a23
+    - id: lettuce
+      foodConceptId: lettuce
+      name: lettuce
+      amount: 1
+      unit: count
+      display: 1 head lettuce
+      required: true
+      acceptedForms:
+        - fresh
+    - id: mayonnaise
+      foodConceptId: mayonnaise
+      name: mayonnaise
+      amount: 2
+      unit: tbsp
+      display: 2 tablespoons mayonnaise
+      required: true
+      acceptedForms: *a24
+    - id: mustard
+      foodConceptId: mustard
+      name: mustard
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon mustard
+      required: true
+      acceptedForms:
+        - opened
+        - unspecified
+    - id: cucumber
+      foodConceptId: cucumber
+      name: cucumber
+      amount: 2
+      unit: count
+      display: 2 cucumbers
+      required: true
+      acceptedForms: *a22
+  steps:
+    - Mix the drained tuna with mayonnaise, mustard, and diced cucumber.
+    - Separate the lettuce into cups, spoon in the tuna mixture, and serve chilled.
+  rights: *a4
+- id: recipe-116
+  slug: cheddar-tomato-quesadillas
+  title: Cheddar Tomato Quesadillas
+  description: Crisp tomato and cheddar quesadillas.
+  servings: 4
+  totalMinutes: 12
+  mealTypes:
+    - lunch
+    - snack
+  cuisines:
+    - Mexican-inspired
+  dietaryTags:
+    - vegetarian
+  ingredients:
+    - id: tortillas
+      foodConceptId: tortillas
+      name: tortillas
+      amount: 8
+      unit: count
+      display: 8 tortillas
+      required: true
+      acceptedForms: *a20
+    - id: cheddar
+      foodConceptId: cheddar
+      name: cheddar cheese
+      amount: 1
+      unit: cup
+      display: 1 cup cheddar cheese
+      required: true
+      acceptedForms: *a15
+    - id: tomato
+      foodConceptId: tomato
+      name: tomato
+      amount: 3
+      unit: count
+      display: 3 tomatoes
+      required: true
+      acceptedForms: *a17
+    - id: salsa
+      foodConceptId: salsa
+      name: salsa
+      amount: 0.5
+      unit: cup
+      display: 1/2 cup salsa
+      required: true
+      acceptedForms: *a21
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a25
+  steps:
+    - Layer cheddar cheese and sliced tomato over half of each tortilla, fold, and brush the outsides lightly with vegetable oil.
+    - Cook the tortillas in a skillet until crisp and the cheddar cheese melts, then cut into wedges and serve with salsa.
+  rights: *a4
+- id: recipe-117
+  slug: cucumber-yogurt-cups
+  title: Cucumber Yogurt Cups
+  description: Cool cucumber yogurt cups.
+  servings: 4
+  totalMinutes: 5
+  mealTypes:
+    - snack
+    - side
+  cuisines:
+    - Mediterranean-inspired
+  dietaryTags:
+    - vegetarian
+  ingredients:
+    - id: cucumber
+      foodConceptId: cucumber
+      name: cucumber
+      amount: 2
+      unit: count
+      display: 2 cucumbers
+      required: true
+      acceptedForms: *a22
+    - id: yogurt
+      foodConceptId: yogurt
+      name: yogurt
+      amount: 1
+      unit: cup
+      display: 1 cup yogurt
+      required: true
+      acceptedForms: *a7
+    - id: lemon
+      foodConceptId: lemon
+      name: lemon
+      amount: 1
+      unit: count
+      display: 1 lemon
+      required: true
+      acceptedForms: *a19
+    - id: black-pepper
+      foodConceptId: black-pepper
+      name: black pepper
+      amount: 0.5
+      unit: tsp
+      display: 1/2 teaspoon black pepper
+      required: true
+      acceptedForms: *a14
+  steps:
+    - Dice the cucumber and fold it into the yogurt with lemon juice and black pepper.
+    - Chill the cucumber yogurt briefly, then divide it among cups and serve cold.
+  rights: *a4
+- id: recipe-118
+  slug: cinnamon-banana-toast
+  title: Cinnamon Banana Toast
+  description: Warm banana toast with cinnamon.
+  servings: 4
+  totalMinutes: 8
+  mealTypes:
+    - breakfast
+    - snack
+  cuisines:
+    - American
+  dietaryTags:
+    - vegetarian
+  ingredients:
+    - id: bread
+      foodConceptId: bread
+      name: bread
+      amount: 8
+      unit: count
+      display: 8 slices bread
+      required: true
+      acceptedForms: *a11
+    - id: banana
+      foodConceptId: banana
+      name: banana
+      amount: 3
+      unit: count
+      display: 3 bananas
+      required: true
+      acceptedForms: *a6
+    - id: butter
+      foodConceptId: butter
+      name: butter
+      amount: 2
+      unit: tbsp
+      display: 2 tablespoons butter
+      required: true
+      acceptedForms: *a16
+    - id: cinnamon
+      foodConceptId: cinnamon
+      name: cinnamon
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon cinnamon
+      required: true
+      acceptedForms: *a3
+    - id: honey
+      foodConceptId: honey
+      name: honey
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon honey
+      required: true
+      acceptedForms: *a5
+  steps:
+    - Toast the bread and spread it with butter while warm.
+    - Top the bread with sliced banana, then finish with cinnamon and honey.
+  rights: *a4
+- id: recipe-119
+  slug: salsa-bean-snack-cups
+  title: Salsa Bean Snack Cups
+  description: No-cook black bean salsa cups.
+  servings: 4
+  totalMinutes: 8
+  mealTypes:
+    - snack
+    - side
+  cuisines:
+    - Mexican-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: black-beans
+      foodConceptId: black-beans
+      name: black beans
+      amount: 15
+      unit: oz
+      display: 15 ounces black beans
+      required: true
+      acceptedForms: *a26
+    - id: salsa
+      foodConceptId: salsa
+      name: salsa
+      amount: 0.5
+      unit: cup
+      display: 1/2 cup salsa
+      required: true
+      acceptedForms: *a21
+    - id: corn
+      foodConceptId: corn
+      name: corn
+      amount: 2
+      unit: cup
+      display: 2 cups corn
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+        - canned
+        - cooked
+    - id: avocado
+      foodConceptId: avocado
+      name: avocado
+      amount: 2
+      unit: count
+      display: 2 avocados
+      required: true
+      acceptedForms: *a27
+    - id: lime
+      foodConceptId: lime
+      name: lime
+      amount: 1
+      unit: count
+      display: 1 lime
+      required: true
+      acceptedForms: *a28
+  steps:
+    - Warm the black beans and corn, then cool them slightly and stir in the salsa.
+    - Divide into cups, top with diced avocado, and squeeze lime over each serving.
+  rights: *a4
+- id: recipe-120
+  slug: apple-berry-yogurt
+  title: Apple Berry Yogurt
+  description: Fresh apple and berry yogurt.
+  servings: 4
+  totalMinutes: 5
+  mealTypes:
+    - breakfast
+    - snack
+  cuisines:
+    - European-inspired
+  dietaryTags:
+    - vegetarian
+  ingredients:
+    - id: apple
+      foodConceptId: apple
+      name: apple
+      amount: 3
+      unit: count
+      display: 3 apples
+      required: true
+      acceptedForms: *a9
+    - id: berries
+      foodConceptId: berries
+      name: berries
+      amount: 2
+      unit: cup
+      display: 2 cups berries
+      required: true
+      acceptedForms: *a8
+    - id: yogurt
+      foodConceptId: yogurt
+      name: yogurt
+      amount: 1
+      unit: cup
+      display: 1 cup yogurt
+      required: true
+      acceptedForms: *a7
+    - id: honey
+      foodConceptId: honey
+      name: honey
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon honey
+      required: true
+      acceptedForms: *a5
+    - id: cinnamon
+      foodConceptId: cinnamon
+      name: cinnamon
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon cinnamon
+      required: true
+      acceptedForms: *a3
+  steps:
+    - Dice the apple and combine it with the berries and yogurt.
+    - Divide the fruit yogurt among bowls and finish with honey and cinnamon.
+  rights: *a4

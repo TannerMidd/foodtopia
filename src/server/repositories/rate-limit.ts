@@ -8,6 +8,7 @@ type UserClient = Awaited<ReturnType<typeof createServerSupabaseClient>>;
 export type RateLimitAction =
   | "analysis_create"
   | "recipe_suggest"
+  | "recipe_generate"
   | "invite_create"
   | "inventory_command"
   | "cook_reconcile";

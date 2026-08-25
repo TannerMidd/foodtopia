@@ -47,7 +47,7 @@ Configure alerts before the first household for:
 - stale inventory-conflict growth above the beta baseline;
 - daily OpenAI and OpenRouter spend or request volume above twice the seven-day moving expectation.
 
-Logs and telemetry must not include photos, signed URLs/tokens, inventory labels, email addresses, prompt text, provider response bodies, or service-role credentials. Use the API correlation ID and internal UUIDs for diagnosis.
+Logs and telemetry must not include photos, signed URLs/tokens, inventory labels, email addresses, prompt text, provider response bodies, or service-role credentials. Recipe proposals persist only the server-validated recipe payload, a content hash, bounded provider/model provenance, and lifecycle actors/times. Denial clears the payload immediately; the hourly `purge-expired-recipe-proposals` Inngest job clears every overdue pending payload after 24 hours, with recipe browsing providing an opportunistic backup sweep. The sweeps select only proposal IDs and must never log payload content. Use the API correlation ID and internal UUIDs for diagnosis.
 
 ## Household deletion
 
