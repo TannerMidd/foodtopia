@@ -42,11 +42,17 @@ const withSerwist = withSerwistInit({
         process.env.GITHUB_SHA ??
         "local-build",
     },
+    {
+      // Self-hosted ZXing reader binary so barcode scanning works offline.
+      // Revision tracks the pinned zxing-wasm dependency version.
+      url: "/zxing/zxing_reader.wasm",
+      revision: "zxing-wasm-3.1.3",
+    },
   ],
   register: false,
   cacheOnNavigation: false,
   disable: process.env.NODE_ENV !== "production",
-  globPublicPatterns: ["**/*.{ico,png,webp,woff2}"],
+  globPublicPatterns: ["**/*.{ico,png,webp,woff2,wasm}"],
 });
 
 export default withSerwist(nextConfig);

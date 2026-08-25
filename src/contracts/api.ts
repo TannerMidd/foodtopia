@@ -367,6 +367,27 @@ export const cookSessionCreateResponseSchema = z.object({
   createdAt: z.iso.datetime(),
 });
 
+/**
+ * Retail product codes as scanners report them: EAN-8, UPC-A/E (8 digits),
+ * EAN-13 and ITF-14. UPC-A is commonly reported as a 13-digit EAN-13 with a
+ * leading zero; the lookup service normalizes upstream instead of guessing.
+ */
+export const barcodeLookupRequestSchema = z.object({
+  barcode: z
+    .string()
+    .trim()
+    .regex(/^(\d{8}|\d{12}|\d{13}|\d{14})$/, "A retail barcode has 8, 12, 13 or 14 digits."),
+});
+
+export const barcodeLookupResponseSchema = z.object({
+  barcode: z.string().regex(/^\d{6,18}$/),
+  found: z.boolean(),
+  name: z.string().trim().min(1).max(160).nullable(),
+  brands: z.string().trim().max(160).nullable(),
+  quantityLabel: z.string().trim().max(60).nullable(),
+  imageUrl: z.url().nullable(),
+});
+
 export type InventorySyncResponse = z.infer<
   typeof inventorySyncResponseSchema
 >;
@@ -394,4 +415,10 @@ export type OpenRouterModelChoice = z.infer<
 >;
 export type OpenRouterModelsResponse = z.infer<
   typeof openRouterModelsResponseSchema
+>;
+export type BarcodeLookupRequest = z.infer<
+  typeof barcodeLookupRequestSchema
+>;
+export type BarcodeLookupResponse = z.infer<
+  typeof barcodeLookupResponseSchema
 >;

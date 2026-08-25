@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { Check, Pencil, Plus, RotateCcw, Search, Trash2, X } from "lucide-react";
+import { Check, Pencil, Plus, RotateCcw, ScanLine, Search, Trash2, X } from "lucide-react";
 import type {
   DateLabelType,
   FoodForm,
@@ -11,6 +11,7 @@ import type {
   InventoryLot,
   QuantityStatus,
 } from "@/contracts/domain";
+import { BarcodeScanModal } from "./barcode-scan-modal";
 import { normalizeFoodLabel, resolveFoodIdentity } from "@/domain/normalization";
 import type { OutboxRecord } from "@/lib/offline/db";
 import {
@@ -296,7 +297,9 @@ function AddItemModal({
   onClose: () => void;
   onSave: (command: InventoryCommand) => Promise<void>;
 }) {
+  const { online } = useOfflineInventory();
   const [name, setName] = useState("");
+  const [scanning, setScanning] = useState(false);
   const [quantityStatus, setQuantityStatus] = useState<QuantityStatus>("unknown");
   const [quantity, setQuantity] = useState("");
   const [unit, setUnit] = useState("");
@@ -354,6 +357,25 @@ function AddItemModal({
       description="Useful for a missed item or an offline correction. Photo batches still review fastest."
       onClose={onClose}
     >
+      {scanning && (
+        <BarcodeScanModal
+          online={online}
+          onClose={() => setScanning(false)}
+          onPick={(scannedName) => {
+            setName(scannedName);
+            setScanning(false);
+          }}
+        />
+      )}
+
+      <button
+        type="button"
+        className="m mb-5 inline-flex min-h-9 items-center gap-2 text-[11px] text-[var(--ink-4)] transition hover:text-[var(--accent)]"
+        onClick={() => setScanning(true)}
+      >
+        <ScanLine className="size-3.5" aria-hidden="true" />
+        scan a barcode instead
+      </button>
       <div className="grid gap-6 sm:grid-cols-2">
         <div className="sm:col-span-2">
           <Field label="Food name" htmlFor="manual-food-name">
