@@ -44,7 +44,14 @@ type ImageAssetStatus =
   | "failed";
 type CandidateStatus = "proposed" | "accepted" | "rejected";
 type RecipeVisibility = "household" | "published";
-type RecipeReviewStatus = "draft" | "reviewed";
+type RecipeReviewStatus = "draft" | "seeded" | "reviewed";
+type RecipeProposalStatus = "proposed" | "approved" | "denied" | "expired";
+type RecipeFlagReason =
+  | "inaccurate"
+  | "unsafe"
+  | "poor_instructions"
+  | "rights_concern"
+  | "other";
 type CookSessionStatus = "active" | "reconciled" | "cancelled";
 type CookAction = "no_change" | "used_some" | "used_up";
 type ProductEventSource = "client" | "server" | "worker";
@@ -67,6 +74,7 @@ type ProductEventName =
 type RateLimitAction =
   | "analysis_create"
   | "recipe_suggest"
+  | "recipe_generate"
   | "invite_create"
   | "inventory_command"
   | "cook_reconcile";
@@ -354,13 +362,40 @@ export type Database = {
         household_id: string | null;
         position: number;
         food_concept_id: string;
-        quantity: number | null;
+        name: string;
+        amount: number | null;
         unit: string | null;
-        optional: boolean;
         display: string;
+        required: boolean;
         accepted_forms: FoodForm[];
         created_at: string;
         updated_at: string;
+        version: number;
+      }>;
+      recipe_flags: Table<{
+        id: string;
+        household_id: string;
+        recipe_id: string;
+        reason: RecipeFlagReason;
+        flagged_by: string;
+        created_at: string;
+      }>;
+      recipe_proposals: Table<{
+        id: string;
+        household_id: string;
+        status: RecipeProposalStatus;
+        recipe_payload: Json | null;
+        content_hash: string | null;
+        idempotency_key: string;
+        request_fingerprint: string;
+        expires_at: string;
+        provider: string | null;
+        model: string | null;
+        created_by: string;
+        created_at: string;
+        decided_by: string | null;
+        decided_at: string | null;
+        recipe_id: string | null;
         version: number;
       }>;
       household_preferences: Table<{
@@ -432,6 +467,14 @@ export type Database = {
       record_privacy_consent: { Args: { p_consent_version: string }; Returns: Json };
       consume_rate_limit: {
         Args: { p_action: string; p_limit: number; p_window_seconds: number };
+        Returns: Json;
+      };
+      decide_recipe_proposal: {
+        Args: {
+          p_proposal_id: string;
+          p_decision: "approve" | "deny";
+          p_expected_version: number;
+        };
         Returns: Json;
       };
       consume_pre_auth_rate_limit: {
@@ -583,6 +626,8 @@ export type Database = {
       analysis_candidate_status: CandidateStatus;
       recipe_visibility: RecipeVisibility;
       recipe_review_status: RecipeReviewStatus;
+      recipe_proposal_status: RecipeProposalStatus;
+      recipe_flag_reason: RecipeFlagReason;
       cook_session_status: CookSessionStatus;
       cook_reconciliation_action: CookAction;
       product_event_source: ProductEventSource;

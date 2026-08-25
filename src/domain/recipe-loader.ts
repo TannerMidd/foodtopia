@@ -252,16 +252,26 @@ function validateRawRecipeShape(
         "Reviewed recipes require both reviewer and reviewedAt.",
         "rights",
       );
+    } else if (
+      recipe.rights.reviewer !== recipe.rights.reviewer.trim() ||
+      recipe.rights.reviewer.length > 160
+    ) {
+      issue(
+        issues,
+        raw,
+        "Reviewed recipe reviewer must be trimmed and at most 160 characters.",
+        "rights.reviewer",
+      );
     }
   } else if (recipe.rights.reviewer !== null || recipe.rights.reviewedAt !== null) {
     issue(
       issues,
       raw,
-      "Draft recipes must not claim a reviewer or review date.",
+      `${recipe.rights.status === "seeded" ? "Seeded" : "Draft"} recipes must not claim a reviewer or review date.`,
       "rights",
     );
   }
-  if (mode === "publication" && recipe.rights.status !== "reviewed") {
+  if (mode === "publication" && recipe.rights.status === "draft") {
     issue(
       issues,
       raw,

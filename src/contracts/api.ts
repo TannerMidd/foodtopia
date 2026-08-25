@@ -7,6 +7,7 @@ import {
   inventoryLotSchema,
   recipeAssessmentSchema,
   recipeIntentSchema,
+  recipeSchema,
 } from "./domain";
 
 export const apiErrorSchema = z.object({
@@ -256,17 +257,72 @@ export const recipeSuggestionRequestSchema = z
   .object({
     prompt: z.string().trim().max(500).optional(),
     intent: recipeIntentSchema.partial().optional(),
+    generationRequestId: z.uuid().optional(),
   })
   .refine((value) => value.prompt !== undefined || value.intent !== undefined, {
     message: "Provide a prompt or structured intent.",
   });
 
+export const recipeProposalStatusSchema = z.enum(["proposed", "approved", "denied"]);
+
+export const recipeProposalSchema = z
+  .object({
+    id: z.uuid(),
+    status: z.literal("proposed"),
+    recipe: recipeSchema,
+    provider: z.enum(["openai", "openrouter", "demo"]),
+    model: z.string().min(1).max(160).nullable(),
+    createdAt: z.iso.datetime(),
+    version: z.number().int().nonnegative(),
+  })
+  .strict();
+
 export const recipeSuggestionResponseSchema = z.object({
   parsedIntent: recipeIntentSchema,
-  assessments: z.array(recipeAssessmentSchema),
+  assessments: z.array(recipeAssessmentSchema).max(24),
+  proposal: recipeProposalSchema.nullable(),
+  fallbackNotice: z.string().max(280).nullable(),
   generatedAt: z.iso.datetime(),
   allergyNotice: z.string(),
 });
+
+export const recipeProposalDecisionRequestSchema = z
+  .object({
+    decision: z.enum(["approve", "deny"]),
+    expectedVersion: z.number().int().nonnegative(),
+  })
+  .strict();
+
+export const recipeProposalDecisionResponseSchema = z.discriminatedUnion("status", [
+  z
+    .object({
+      proposalId: z.uuid(),
+      status: z.literal("approved"),
+      recipeId: z.string().min(1).max(120),
+      version: z.number().int().nonnegative(),
+      replayed: z.boolean(),
+      assessment: recipeAssessmentSchema,
+    })
+    .strict(),
+  z
+    .object({
+      proposalId: z.uuid(),
+      status: z.literal("denied"),
+      recipeId: z.null(),
+      version: z.number().int().nonnegative(),
+      replayed: z.boolean(),
+    })
+    .strict(),
+  z
+    .object({
+      proposalId: z.uuid(),
+      status: z.literal("expired"),
+      recipeId: z.null(),
+      version: z.number().int().nonnegative(),
+      replayed: z.boolean(),
+    })
+    .strict(),
+]);
 
 export const analysisCreateRequestSchema = z.object({
   imageCount: z.number().int().min(1).max(3),
@@ -356,16 +412,57 @@ export const cookReconciliationRequestSchema = z.object({
   ),
 });
 
-export const cookSessionCreateRequestSchema = z.object({
-  recipeId: z.string().min(1),
-  assessment: recipeAssessmentSchema,
-});
+export const recipeFlagReasonSchema = z.enum([
+  "inaccurate",
+  "unsafe",
+  "poor_instructions",
+  "rights_concern",
+  "other",
+]);
+
+export const recipeFlagRequestSchema = z
+  .object({
+    recipeId: z.string().min(1).max(120),
+    reason: recipeFlagReasonSchema,
+  })
+  .strict();
+
+export const recipeFlagResponseSchema = z.object({
+  flagged: z.literal(true),
+  simulated: z.boolean(),
+}).strict();
+
+export const confirmedRecipeSubstitutionSchema = z
+  .object({
+    ingredientId: z.string().min(1).max(120),
+    matchedConceptId: z.string().min(1).max(120),
+  })
+  .strict();
+
+export const cookSessionCreateRequestSchema = z
+  .object({
+    recipeId: z.string().min(1).max(120),
+    servings: z.number().int().positive().max(24),
+    confirmedSubstitutions: z.array(confirmedRecipeSubstitutionSchema).max(40),
+  })
+  .strict();
 
 export const cookSessionCreateResponseSchema = z.object({
   cookSessionId: z.uuid(),
   recipeId: z.string(),
   createdAt: z.iso.datetime(),
+  assessment: recipeAssessmentSchema,
 });
+
+export const cookSessionSubstitutionConflictSchema = z
+  .object({
+    code: z.literal("RECIPE_SUBSTITUTIONS_CHANGED"),
+    message: z.string(),
+    retryable: z.literal(false),
+    correlationId: z.string(),
+    latestAssessment: recipeAssessmentSchema,
+  })
+  .strict();
 
 /**
  * Retail product codes as scanners report them: EAN-8, UPC-A/E (8 digits),
@@ -393,6 +490,13 @@ export type InventorySyncResponse = z.infer<
 >;
 export type RecipeSuggestionResponse = z.infer<
   typeof recipeSuggestionResponseSchema
+>;
+export type RecipeProposal = z.infer<typeof recipeProposalSchema>;
+export type RecipeProposalDecisionRequest = z.infer<
+  typeof recipeProposalDecisionRequestSchema
+>;
+export type RecipeProposalDecisionResponse = z.infer<
+  typeof recipeProposalDecisionResponseSchema
 >;
 export type AnalysisCreateResponse = z.infer<
   typeof analysisCreateResponseSchema
@@ -422,3 +526,5 @@ export type BarcodeLookupRequest = z.infer<
 export type BarcodeLookupResponse = z.infer<
   typeof barcodeLookupResponseSchema
 >;
+export type RecipeFlagReason = z.infer<typeof recipeFlagReasonSchema>;
+export type RecipeFlagResponse = z.infer<typeof recipeFlagResponseSchema>;

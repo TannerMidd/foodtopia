@@ -214,7 +214,7 @@ export const recipeSchema = z.object({
     author: z.string().min(1),
     reviewer: z.string().nullable(),
     reviewedAt: z.iso.date().nullable(),
-    status: z.enum(["draft", "reviewed"]),
+    status: z.enum(["draft", "seeded", "reviewed"]),
   }),
 });
 
@@ -249,11 +249,24 @@ export const recipeTierSchema = z.enum([
   "incompatible",
 ]);
 
+export const ingredientSubstitutionSchema = z
+  .object({
+    requestedConceptId: z.string().min(1),
+    requestedName: z.string().min(1),
+    matchedConceptId: z.string().min(1),
+    matchedName: z.string().min(1),
+    guidance: z.string().min(1).max(280),
+  })
+  .strict();
+
+export type IngredientSubstitution = z.infer<typeof ingredientSubstitutionSchema>;
+
 export const recipeAssessmentSchema = z.object({
   recipe: recipeSchema,
   tier: recipeTierSchema,
   missingCount: z.number().int().nonnegative(),
   unknownQuantityCount: z.number().int().nonnegative(),
+  substitutionCount: z.number().int().nonnegative(),
   usesSoonCount: z.number().int().nonnegative(),
   explanation: z.string().nullable(),
   evidence: z.array(
@@ -263,6 +276,7 @@ export const recipeAssessmentSchema = z.object({
       status: ingredientEvidenceStatusSchema,
       lotIds: z.array(z.uuid()),
       detail: z.string(),
+      substitution: ingredientSubstitutionSchema.nullable(),
     }),
   ),
 });

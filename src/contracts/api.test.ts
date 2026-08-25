@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { betaAccountsResponseSchema } from "./api";
+import {
+  betaAccountsResponseSchema,
+  cookSessionCreateRequestSchema,
+  recipeFlagRequestSchema,
+  recipeFlagResponseSchema,
+} from "./api";
 
 describe("betaAccountsResponseSchema", () => {
   const baseAccount = {
@@ -36,5 +41,59 @@ describe("betaAccountsResponseSchema", () => {
         ],
       }).success,
     ).toBe(true);
+  });
+});
+
+describe("cook session create contract", () => {
+  it("accepts only recipe identity, servings, and bounded confirmations", () => {
+    expect(
+      cookSessionCreateRequestSchema.parse({
+        recipeId: "recipe-042",
+        servings: 4,
+        confirmedSubstitutions: [
+          { ingredientId: "chicken", matchedConceptId: "chicken-thigh" },
+        ],
+      }),
+    ).toEqual({
+      recipeId: "recipe-042",
+      servings: 4,
+      confirmedSubstitutions: [
+        { ingredientId: "chicken", matchedConceptId: "chicken-thigh" },
+      ],
+    });
+    expect(
+      cookSessionCreateRequestSchema.safeParse({
+        recipeId: "recipe-042",
+        servings: 4,
+        confirmedSubstitutions: [],
+        assessment: { tier: "ready" },
+      }).success,
+    ).toBe(false);
+  });
+});
+
+describe("recipe flag contracts", () => {
+  it("requires an explicit simulated-persistence indicator in responses", () => {
+    expect(recipeFlagResponseSchema.parse({ flagged: true, simulated: false })).toEqual({
+      flagged: true,
+      simulated: false,
+    });
+    expect(recipeFlagResponseSchema.safeParse({ flagged: true }).success).toBe(false);
+  });
+
+  it("accepts only a bounded categorical reason", () => {
+    expect(
+      recipeFlagRequestSchema.parse({ recipeId: "recipe-081", reason: "unsafe" }),
+    ).toEqual({ recipeId: "recipe-081", reason: "unsafe" });
+    expect(
+      recipeFlagRequestSchema.safeParse({
+        recipeId: "recipe-081",
+        reason: "unsafe",
+        comment: "free-form text is intentionally not retained",
+      }).success,
+    ).toBe(false);
+    expect(
+      recipeFlagRequestSchema.safeParse({ recipeId: "recipe-081", reason: "bad" }).success,
+    ).toBe(false);
   });
 });

@@ -1,0 +1,1394 @@
+- id: recipe-081
+  slug: simple-chicken-thigh-rice
+  title: Simple Chicken Thigh Rice
+  description: A straightforward chicken thigh dinner served with tender rice.
+  servings: 4
+  totalMinutes: 35
+  mealTypes:
+    - dinner
+  cuisines:
+    - American
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: chicken-thigh
+      foodConceptId: chicken-thigh
+      name: chicken thigh
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds chicken thighs
+      required: true
+      acceptedForms: &a1
+        - fresh
+        - frozen
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: &a2
+        - dried
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: &a3
+        - unspecified
+    - id: salt
+      foodConceptId: salt
+      name: salt
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon salt
+      required: true
+      acceptedForms: &a6
+        - dried
+        - unspecified
+    - id: black-pepper
+      foodConceptId: black-pepper
+      name: black pepper
+      amount: 0.5
+      unit: tsp
+      display: 1/2 teaspoon black pepper
+      required: true
+      acceptedForms: &a10
+        - dried
+        - unspecified
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: &a4
+        - opened
+        - unspecified
+  steps:
+    - Thaw frozen chicken thighs in the refrigerator before starting. Season the chicken thighs with salt and black pepper, then brown them in vegetable oil over medium heat.
+    - Cover and continue cooking the chicken thighs until the thickest pieces reach 165°F, while simmering the rice in the water until tender; rest the rice covered for five minutes and serve together.
+  rights: &a5
+    owner: Foodtopia
+    author: Foodtopia Initial Catalog
+    reviewer: null
+    reviewedAt: null
+    status: seeded
+- id: recipe-082
+  slug: soy-chicken-thigh-rice-bowl
+  title: Soy Chicken Thigh Rice Bowl
+  description: Savory chicken thighs and rice finished with soy and sesame.
+  servings: 4
+  totalMinutes: 35
+  mealTypes:
+    - dinner
+  cuisines:
+    - Asian-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: chicken-thigh
+      foodConceptId: chicken-thigh
+      name: chicken thigh
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds chicken thighs
+      required: true
+      acceptedForms: *a1
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a2
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a3
+    - id: soy-sauce
+      foodConceptId: soy-sauce
+      name: soy sauce
+      amount: 2
+      unit: tbsp
+      display: 2 tablespoons soy sauce
+      required: true
+      acceptedForms: &a8
+        - opened
+        - unspecified
+    - id: sesame-oil
+      foodConceptId: sesame-oil
+      name: sesame oil
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon sesame oil
+      required: true
+      acceptedForms: &a15
+        - opened
+        - unspecified
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a4
+  steps:
+    - Thaw frozen chicken thighs in the refrigerator before starting, then brown the chicken thighs in vegetable oil and add the soy sauce.
+    - Cover and cook the chicken thighs until they reach 165°F. Simmer the rice in the water until tender, finish the chicken with sesame oil, and spoon it over the rice.
+  rights: *a5
+- id: recipe-083
+  slug: curry-chicken-thigh-rice
+  title: Curry Chicken Thigh Rice
+  description: Warm curry-spiced chicken thighs with a straightforward pot of rice.
+  servings: 4
+  totalMinutes: 40
+  mealTypes:
+    - dinner
+  cuisines:
+    - South Asian-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: chicken-thigh
+      foodConceptId: chicken-thigh
+      name: chicken thigh
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds chicken thighs
+      required: true
+      acceptedForms: *a1
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a2
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a3
+    - id: curry-powder
+      foodConceptId: curry-powder
+      name: curry powder
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon curry powder
+      required: true
+      acceptedForms:
+        - dried
+        - unspecified
+    - id: salt
+      foodConceptId: salt
+      name: salt
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon salt
+      required: true
+      acceptedForms: *a6
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a4
+  steps:
+    - Thaw frozen chicken thighs in the refrigerator before starting. Coat the chicken thighs with curry powder and salt, then brown them in vegetable oil.
+    - Cover and cook the chicken thighs until they reach 165°F, while simmering the rice in the water until tender; rest the rice covered and serve with the chicken.
+  rights: *a5
+- id: recipe-084
+  slug: lemon-chicken-thigh-rice
+  title: Lemon Chicken Thigh Rice
+  description: Bright lemon chicken thighs paired with fluffy rice.
+  servings: 4
+  totalMinutes: 40
+  mealTypes:
+    - dinner
+  cuisines:
+    - Mediterranean-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: chicken-thigh
+      foodConceptId: chicken-thigh
+      name: chicken thigh
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds chicken thighs
+      required: true
+      acceptedForms: *a1
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a2
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a3
+    - id: lemon
+      foodConceptId: lemon
+      name: lemon
+      amount: 1
+      unit: count
+      display: 1 lemon
+      required: true
+      acceptedForms:
+        - fresh
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: &a7
+        - opened
+        - unspecified
+    - id: salt
+      foodConceptId: salt
+      name: salt
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon salt
+      required: true
+      acceptedForms: *a6
+  steps:
+    - Thaw frozen chicken thighs in the refrigerator before starting. Season the chicken thighs with salt and brown them in olive oil over medium heat.
+    - Cover and continue cooking the chicken thighs until they reach 165°F. Simmer the rice in the water until tender, then squeeze the lemon over the chicken and serve with the rice.
+  rights: *a5
+- id: recipe-085
+  slug: salsa-chicken-thigh-rice
+  title: Salsa Chicken Thigh Rice
+  description: An easy salsa chicken thigh bowl built on pantry rice.
+  servings: 4
+  totalMinutes: 35
+  mealTypes:
+    - dinner
+  cuisines:
+    - Mexican-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: chicken-thigh
+      foodConceptId: chicken-thigh
+      name: chicken thigh
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds chicken thighs
+      required: true
+      acceptedForms: *a1
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a2
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a3
+    - id: salsa
+      foodConceptId: salsa
+      name: salsa
+      amount: 0.5
+      unit: cup
+      display: 1/2 cup salsa
+      required: true
+      acceptedForms:
+        - fresh
+        - canned
+        - opened
+        - unspecified
+    - id: cumin
+      foodConceptId: cumin
+      name: cumin
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon cumin
+      required: true
+      acceptedForms: &a11
+        - dried
+        - unspecified
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a4
+  steps:
+    - Thaw frozen chicken thighs in the refrigerator before starting, then brown the chicken thighs in vegetable oil and season with cumin.
+    - Add the salsa, cover, and simmer until the chicken thighs reach 165°F. Cook the rice in the water until tender and serve the saucy chicken over it.
+  rights: *a5
+- id: recipe-086
+  slug: garlic-chicken-thigh-rice
+  title: Garlic Chicken Thigh Rice
+  description: Garlicky chicken thighs and rice for a practical weeknight meal.
+  servings: 4
+  totalMinutes: 38
+  mealTypes:
+    - dinner
+  cuisines:
+    - Mediterranean-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: chicken-thigh
+      foodConceptId: chicken-thigh
+      name: chicken thigh
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds chicken thighs
+      required: true
+      acceptedForms: *a1
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a2
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a3
+    - id: garlic
+      foodConceptId: garlic
+      name: garlic
+      amount: 3
+      unit: count
+      display: 3 garlic cloves
+      required: true
+      acceptedForms: &a12
+        - fresh
+        - opened
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: *a7
+    - id: salt
+      foodConceptId: salt
+      name: salt
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon salt
+      required: true
+      acceptedForms: *a6
+  steps:
+    - Thaw frozen chicken thighs in the refrigerator before starting. Brown the chicken thighs in olive oil, then add the garlic and salt around them.
+    - Cover and cook until the chicken thighs reach 165°F. Simmer the rice in the water until tender, rest it covered for five minutes, and serve with the garlic chicken.
+  rights: *a5
+- id: recipe-087
+  slug: hot-sauce-chicken-thigh-rice
+  title: Hot Sauce Chicken Thigh Rice
+  description: Spicy chicken thighs over plain rice with minimal preparation.
+  servings: 4
+  totalMinutes: 35
+  mealTypes:
+    - dinner
+  cuisines:
+    - American
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: chicken-thigh
+      foodConceptId: chicken-thigh
+      name: chicken thigh
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds chicken thighs
+      required: true
+      acceptedForms: *a1
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a2
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a3
+    - id: hot-sauce
+      foodConceptId: hot-sauce
+      name: hot sauce
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon hot sauce
+      required: true
+      acceptedForms:
+        - opened
+        - unspecified
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a4
+    - id: salt
+      foodConceptId: salt
+      name: salt
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon salt
+      required: true
+      acceptedForms: *a6
+  steps:
+    - Thaw frozen chicken thighs in the refrigerator before starting. Season the chicken thighs with salt and brown them in vegetable oil.
+    - Cover and continue cooking until the chicken thighs reach 165°F, then coat them with hot sauce. Simmer the rice in the water until tender and serve alongside.
+  rights: *a5
+- id: recipe-088
+  slug: honey-chicken-thigh-rice
+  title: Honey Chicken Thigh Rice
+  description: A sweet-savory chicken thigh and rice bowl.
+  servings: 4
+  totalMinutes: 38
+  mealTypes:
+    - dinner
+  cuisines:
+    - Asian-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: chicken-thigh
+      foodConceptId: chicken-thigh
+      name: chicken thigh
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds chicken thighs
+      required: true
+      acceptedForms: *a1
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a2
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a3
+    - id: honey
+      foodConceptId: honey
+      name: honey
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon honey
+      required: true
+      acceptedForms:
+        - opened
+        - unspecified
+    - id: soy-sauce
+      foodConceptId: soy-sauce
+      name: soy sauce
+      amount: 2
+      unit: tbsp
+      display: 2 tablespoons soy sauce
+      required: true
+      acceptedForms: *a8
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a4
+  steps:
+    - Thaw frozen chicken thighs in the refrigerator before starting, then brown the chicken thighs in vegetable oil and add the soy sauce.
+    - Cover and cook until the chicken thighs reach 165°F. Stir in the honey to glaze the chicken, simmer the rice in the water until tender, and serve together.
+  rights: *a5
+- id: recipe-089
+  slug: chicken-thigh-tomato-rice
+  title: Chicken Thigh Tomato Rice
+  description: One-pot tomato rice with paprika chicken thighs.
+  servings: 4
+  totalMinutes: 45
+  mealTypes:
+    - dinner
+  cuisines:
+    - Spanish-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: chicken-thigh
+      foodConceptId: chicken-thigh
+      name: chicken thigh
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds chicken thighs
+      required: true
+      acceptedForms: *a1
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a2
+    - id: canned-tomato
+      foodConceptId: canned-tomato
+      name: canned tomatoes
+      amount: 15
+      unit: oz
+      display: 15 ounces canned tomatoes
+      required: true
+      acceptedForms:
+        - canned
+        - opened
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a3
+    - id: paprika
+      foodConceptId: paprika
+      name: paprika
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon paprika
+      required: true
+      acceptedForms: &a13
+        - dried
+        - unspecified
+    - id: salt
+      foodConceptId: salt
+      name: salt
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon salt
+      required: true
+      acceptedForms: *a6
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a4
+  steps:
+    - Thaw frozen chicken thighs in the refrigerator before starting. Season the chicken thighs with paprika and salt, then brown them in vegetable oil.
+    - Add the canned tomatoes, rice, and water, cover, and simmer until the rice is tender and the chicken thighs reach 165°F; rest for five minutes before serving.
+  rights: *a5
+- id: recipe-090
+  slug: chicken-thigh-pea-rice
+  title: Chicken Thigh Pea Rice
+  description: A family-style chicken thigh, pea, and rice pot.
+  servings: 4
+  totalMinutes: 42
+  mealTypes:
+    - dinner
+  cuisines:
+    - European-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: chicken-thigh
+      foodConceptId: chicken-thigh
+      name: chicken thigh
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds chicken thighs
+      required: true
+      acceptedForms: *a1
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a2
+    - id: peas
+      foodConceptId: peas
+      name: peas
+      amount: 2
+      unit: cup
+      display: 2 cups peas
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+        - canned
+        - cooked
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a3
+    - id: thyme
+      foodConceptId: thyme
+      name: thyme
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon thyme
+      required: true
+      acceptedForms:
+        - fresh
+        - dried
+        - unspecified
+    - id: salt
+      foodConceptId: salt
+      name: salt
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon salt
+      required: true
+      acceptedForms: *a6
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a4
+  steps:
+    - Thaw frozen chicken thighs in the refrigerator before starting. Brown the chicken thighs in vegetable oil with thyme and salt.
+    - Add the rice and water, cover, and simmer until the chicken thighs reach 165°F and the rice is tender; fold in the peas for the final five minutes.
+  rights: *a5
+- id: recipe-091
+  slug: pesto-chicken-breast-rice
+  title: Pesto Chicken Breast Rice
+  description: Pesto-coated chicken breast served over rice.
+  servings: 4
+  totalMinutes: 35
+  mealTypes:
+    - dinner
+  cuisines:
+    - Italian-inspired
+  dietaryTags: []
+  ingredients:
+    - id: chicken-breast
+      foodConceptId: chicken-breast
+      name: chicken breast
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds chicken breast
+      required: true
+      acceptedForms: &a9
+        - fresh
+        - frozen
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a2
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a3
+    - id: pesto
+      foodConceptId: pesto
+      name: pesto
+      amount: 0.25
+      unit: cup
+      display: 1/4 cup pesto
+      required: true
+      acceptedForms:
+        - fresh
+        - opened
+        - unspecified
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: *a7
+  steps:
+    - Thaw frozen chicken breast in the refrigerator before starting, then brown the chicken breast in olive oil and coat it with pesto.
+    - Cover and cook the chicken breast until it reaches 165°F. Simmer the rice in the water until tender, rest it covered, and serve with the pesto chicken.
+  rights: *a5
+- id: recipe-092
+  slug: mustard-chicken-breast-rice
+  title: Mustard Chicken Breast Rice
+  description: Tangy mustard chicken breast with simple rice.
+  servings: 4
+  totalMinutes: 35
+  mealTypes:
+    - dinner
+  cuisines:
+    - French-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: chicken-breast
+      foodConceptId: chicken-breast
+      name: chicken breast
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds chicken breast
+      required: true
+      acceptedForms: *a9
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a2
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a3
+    - id: mustard
+      foodConceptId: mustard
+      name: mustard
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon mustard
+      required: true
+      acceptedForms: &a14
+        - opened
+        - unspecified
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: *a7
+    - id: black-pepper
+      foodConceptId: black-pepper
+      name: black pepper
+      amount: 0.5
+      unit: tsp
+      display: 1/2 teaspoon black pepper
+      required: true
+      acceptedForms: *a10
+  steps:
+    - Thaw frozen chicken breast in the refrigerator before starting. Season the chicken breast with black pepper and brown it in olive oil.
+    - Brush the chicken breast with mustard, cover, and cook until it reaches 165°F. Simmer the rice in the water until tender and serve together.
+  rights: *a5
+- id: recipe-093
+  slug: chicken-broccoli-rice-skillet
+  title: Chicken Broccoli Rice Skillet
+  description: Chicken, broccoli, and rice in a dependable skillet dinner.
+  servings: 4
+  totalMinutes: 38
+  mealTypes:
+    - dinner
+  cuisines:
+    - Asian-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: chicken-breast
+      foodConceptId: chicken-breast
+      name: chicken breast
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds chicken breast
+      required: true
+      acceptedForms: *a9
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a2
+    - id: broccoli
+      foodConceptId: broccoli
+      name: broccoli
+      amount: 4
+      unit: cup
+      display: 4 cups broccoli
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a3
+    - id: soy-sauce
+      foodConceptId: soy-sauce
+      name: soy sauce
+      amount: 2
+      unit: tbsp
+      display: 2 tablespoons soy sauce
+      required: true
+      acceptedForms: *a8
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a4
+  steps:
+    - Thaw frozen chicken breast in the refrigerator before starting, then brown the chicken breast in vegetable oil and cook until it reaches 165°F.
+    - Simmer the rice in the water until tender. Steam the broccoli until crisp-tender, combine it with the chicken and soy sauce, and serve over the rice.
+  rights: *a5
+- id: recipe-094
+  slug: chicken-corn-rice-bowl
+  title: Chicken Corn Rice Bowl
+  description: A lime chicken, corn, and rice bowl.
+  servings: 4
+  totalMinutes: 35
+  mealTypes:
+    - dinner
+  cuisines:
+    - Mexican-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: chicken-breast
+      foodConceptId: chicken-breast
+      name: chicken breast
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds chicken breast
+      required: true
+      acceptedForms: *a9
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a2
+    - id: corn
+      foodConceptId: corn
+      name: corn
+      amount: 2
+      unit: cup
+      display: 2 cups corn
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+        - canned
+        - cooked
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a3
+    - id: lime
+      foodConceptId: lime
+      name: lime
+      amount: 1
+      unit: count
+      display: 1 lime
+      required: true
+      acceptedForms:
+        - fresh
+    - id: cumin
+      foodConceptId: cumin
+      name: cumin
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon cumin
+      required: true
+      acceptedForms: *a11
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a4
+  steps:
+    - Thaw frozen chicken breast in the refrigerator before starting. Brown the chicken breast in vegetable oil with cumin and cook until it reaches 165°F.
+    - Simmer the rice in the water until tender, warming the corn during the final five minutes; add the chicken and finish the bowls with lime.
+  rights: *a5
+- id: recipe-095
+  slug: chicken-spinach-rice
+  title: Chicken Spinach Rice
+  description: Chicken breast and spinach served with pantry rice.
+  servings: 4
+  totalMinutes: 35
+  mealTypes:
+    - dinner
+  cuisines:
+    - Mediterranean-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: chicken-breast
+      foodConceptId: chicken-breast
+      name: chicken breast
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds chicken breast
+      required: true
+      acceptedForms: *a9
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a2
+    - id: spinach
+      foodConceptId: spinach
+      name: spinach
+      amount: 4
+      unit: cup
+      display: 4 cups spinach
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a3
+    - id: garlic
+      foodConceptId: garlic
+      name: garlic
+      amount: 3
+      unit: count
+      display: 3 garlic cloves
+      required: true
+      acceptedForms: *a12
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: *a7
+    - id: salt
+      foodConceptId: salt
+      name: salt
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon salt
+      required: true
+      acceptedForms: *a6
+  steps:
+    - Thaw frozen chicken breast in the refrigerator before starting. Brown the chicken breast in olive oil with garlic and salt, then cook until it reaches 165°F.
+    - Simmer the rice in the water until tender. Wilt the spinach in the chicken pan, then serve the chicken and spinach over the rice.
+  rights: *a5
+- id: recipe-096
+  slug: chicken-pepper-rice
+  title: Chicken Pepper Rice
+  description: A colorful chicken pepper rice bowl.
+  servings: 4
+  totalMinutes: 38
+  mealTypes:
+    - dinner
+  cuisines:
+    - Asian-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: chicken-breast
+      foodConceptId: chicken-breast
+      name: chicken breast
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds chicken breast
+      required: true
+      acceptedForms: *a9
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a2
+    - id: bell-pepper
+      foodConceptId: bell-pepper
+      name: bell pepper
+      amount: 2
+      unit: count
+      display: 2 bell peppers
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a3
+    - id: soy-sauce
+      foodConceptId: soy-sauce
+      name: soy sauce
+      amount: 2
+      unit: tbsp
+      display: 2 tablespoons soy sauce
+      required: true
+      acceptedForms: *a8
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a4
+  steps:
+    - Thaw frozen chicken breast in the refrigerator before starting, then brown the chicken breast in vegetable oil and cook until it reaches 165°F.
+    - Cook the bell pepper until tender-crisp and stir in the soy sauce. Simmer the rice in the water until tender and spoon the chicken and bell pepper over it.
+  rights: *a5
+- id: recipe-097
+  slug: chicken-thigh-potato-tray
+  title: Chicken Thigh Potato Tray
+  description: A reduced-ingredient chicken thigh and potato tray bake.
+  servings: 4
+  totalMinutes: 50
+  mealTypes:
+    - dinner
+  cuisines:
+    - European-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: chicken-thigh
+      foodConceptId: chicken-thigh
+      name: chicken thigh
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds chicken thighs
+      required: true
+      acceptedForms: *a1
+    - id: potato
+      foodConceptId: potato
+      name: potato
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds potatoes
+      required: true
+      acceptedForms:
+        - fresh
+    - id: paprika
+      foodConceptId: paprika
+      name: paprika
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon paprika
+      required: true
+      acceptedForms: *a13
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: *a7
+    - id: salt
+      foodConceptId: salt
+      name: salt
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon salt
+      required: true
+      acceptedForms: *a6
+    - id: black-pepper
+      foodConceptId: black-pepper
+      name: black pepper
+      amount: 0.5
+      unit: tsp
+      display: 1/2 teaspoon black pepper
+      required: true
+      acceptedForms: *a10
+  steps:
+    - Thaw frozen chicken thighs in the refrigerator before starting. Heat the oven to 425°F; cut the potato into one-inch pieces and toss it with olive oil, paprika, salt, and black pepper.
+    - Roast the potato for 15 minutes, add the chicken thighs, and continue roasting until the potato is tender and the chicken thighs reach 165°F.
+  rights: *a5
+- id: recipe-098
+  slug: chicken-thigh-green-bean-pan
+  title: Chicken Thigh Green Bean Pan
+  description: A one-pan chicken thigh and green bean dinner.
+  servings: 4
+  totalMinutes: 35
+  mealTypes:
+    - dinner
+  cuisines:
+    - American
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: chicken-thigh
+      foodConceptId: chicken-thigh
+      name: chicken thigh
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds chicken thighs
+      required: true
+      acceptedForms: *a1
+    - id: green-beans
+      foodConceptId: green-beans
+      name: green beans
+      amount: 4
+      unit: cup
+      display: 4 cups green beans
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+        - canned
+        - cooked
+    - id: mustard
+      foodConceptId: mustard
+      name: mustard
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon mustard
+      required: true
+      acceptedForms: *a14
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: *a7
+    - id: salt
+      foodConceptId: salt
+      name: salt
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon salt
+      required: true
+      acceptedForms: *a6
+  steps:
+    - Thaw frozen chicken thighs in the refrigerator before starting. Brown the chicken thighs in olive oil, then cover and cook until they reach 165°F.
+    - Add the green beans and cook until tender, then stir in the mustard and salt and coat the chicken and green beans before serving.
+  rights: *a5
+- id: recipe-099
+  slug: chicken-breast-tomato-pasta
+  title: Chicken Breast Tomato Pasta
+  description: Fast tomato pasta with fully cooked chicken breast.
+  servings: 4
+  totalMinutes: 30
+  mealTypes:
+    - dinner
+  cuisines:
+    - Italian-inspired
+  dietaryTags: []
+  ingredients:
+    - id: chicken-breast
+      foodConceptId: chicken-breast
+      name: chicken breast
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds chicken breast
+      required: true
+      acceptedForms: *a9
+    - id: pasta
+      foodConceptId: pasta
+      name: pasta
+      amount: 12
+      unit: oz
+      display: 12 ounces pasta
+      required: true
+      acceptedForms:
+        - dried
+    - id: marinara-sauce
+      foodConceptId: marinara-sauce
+      name: marinara sauce
+      amount: 2
+      unit: cup
+      display: 2 cups marinara sauce
+      required: true
+      acceptedForms:
+        - canned
+        - opened
+        - unspecified
+    - id: parmesan
+      foodConceptId: parmesan
+      name: parmesan cheese
+      amount: 0.5
+      unit: cup
+      display: 1/2 cup parmesan cheese
+      required: true
+      acceptedForms:
+        - fresh
+        - opened
+        - unspecified
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: *a7
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 8
+      unit: cup
+      display: 8 cups water for boiling
+      required: true
+      acceptedForms:
+        - unspecified
+  steps:
+    - Thaw frozen chicken breast in the refrigerator before starting. Boil the dried pasta until al dente, reserving a little cooking water, and brown the chicken breast in olive oil until it reaches 165°F.
+    - Warm the marinara sauce, toss it with the drained pasta and chicken breast, loosen with reserved pasta water if needed, and finish with parmesan cheese.
+  rights: *a5
+- id: recipe-100
+  slug: chicken-cabbage-noodles
+  title: Chicken Cabbage Noodles
+  description: Quick chicken and cabbage noodles for a weeknight.
+  servings: 4
+  totalMinutes: 28
+  mealTypes:
+    - dinner
+  cuisines:
+    - Asian-inspired
+  dietaryTags:
+    - dairy-free
+  ingredients:
+    - id: chicken-breast
+      foodConceptId: chicken-breast
+      name: chicken breast
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds chicken breast
+      required: true
+      acceptedForms: *a9
+    - id: noodles
+      foodConceptId: noodles
+      name: noodles
+      amount: 12
+      unit: oz
+      display: 12 ounces noodles
+      required: true
+      acceptedForms:
+        - dried
+    - id: cabbage
+      foodConceptId: cabbage
+      name: cabbage
+      amount: 4
+      unit: cup
+      display: 4 cups cabbage
+      required: true
+      acceptedForms:
+        - fresh
+    - id: soy-sauce
+      foodConceptId: soy-sauce
+      name: soy sauce
+      amount: 2
+      unit: tbsp
+      display: 2 tablespoons soy sauce
+      required: true
+      acceptedForms: *a8
+    - id: sesame-oil
+      foodConceptId: sesame-oil
+      name: sesame oil
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon sesame oil
+      required: true
+      acceptedForms: *a15
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a4
+  steps:
+    - Thaw frozen chicken breast in the refrigerator before starting. Boil the dried noodles until tender, then drain; brown the chicken breast in vegetable oil until it reaches 165°F.
+    - Cook the cabbage in the chicken pan until tender, then toss in the noodles, soy sauce, and sesame oil and heat through.
+  rights: *a5

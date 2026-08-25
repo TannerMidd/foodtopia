@@ -1,9 +1,12 @@
 import type { RecipeAssessment, RecipeIntent } from "@/contracts/domain";
 import type {
+  GeneratedRecipeDraft,
   RecipeAssistant,
+  RecipeGenerationContext,
   VisionAnalyzer,
   VisionBatchResult,
 } from "@/server/ai/contracts";
+import { demoGeneratedDraft } from "@/server/services/generated-recipes";
 
 const foodWords = [
   ["tomato", "Tomatoes", "Produce"],
@@ -52,6 +55,10 @@ const mealTypes = ["breakfast", "lunch", "dinner", "snack"];
 const dietaryTags = ["vegetarian", "vegan", "gluten-free", "dairy-free"];
 
 export class HeuristicRecipeAssistant implements RecipeAssistant {
+  async generate(context: RecipeGenerationContext): Promise<GeneratedRecipeDraft> {
+    return demoGeneratedDraft(context);
+  }
+
   async parseIntent(prompt: string): Promise<RecipeIntent> {
     const normalized = prompt.toLowerCase();
     const time = normalized.match(/(?:under|within|in)\s+(\d{1,3})\s*(?:minutes?|mins?)/);

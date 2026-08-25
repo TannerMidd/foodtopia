@@ -1,15 +1,22 @@
-import type { Recipe } from "@/contracts/domain";
+import "server-only";
+
+import type { RecipeAssessment } from "@/contracts/domain";
+import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { asObject } from "./mappers";
 
 type UserClient = Awaited<ReturnType<typeof createServerSupabaseClient>>;
 
 export async function createProductionCookSession(
-  client: UserClient,
   session: { householdId: string; userId: string },
-  recipe: Recipe,
+  assessment: RecipeAssessment,
 ) {
-  const { data, error } = await client
+  const recipe = assessment.recipe;
+  // Session/tenant authorization and assessment recomputation happen in the
+  // route before this trusted write. Authenticated clients have no table INSERT
+  // grant and cannot forge recipe_snapshot directly.
+  const admin = createAdminSupabaseClient();
+  const { data, error } = await admin
     .from("cook_sessions")
     .insert({
       household_id: session.householdId,
@@ -26,6 +33,7 @@ export async function createProductionCookSession(
     cookSessionId: data.id,
     recipeId: data.recipe_id,
     createdAt: data.started_at,
+    assessment,
   };
 }
 

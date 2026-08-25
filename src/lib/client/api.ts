@@ -8,6 +8,7 @@ import {
   betaAccountMutationResponseSchema,
   betaAccountsResponseSchema,
   cookSessionCreateResponseSchema,
+  cookSessionSubstitutionConflictSchema,
   householdBootstrapResponseSchema,
   householdCurrentResponseSchema,
   householdDeleteResponseSchema,
@@ -19,6 +20,8 @@ import {
   inviteCreateResponseSchema,
   openRouterModelsResponseSchema,
   recipeSuggestionResponseSchema,
+  recipeProposalDecisionResponseSchema,
+  recipeFlagResponseSchema,
   signupWindowResponseSchema,
   unfinishedAnalysesResponseSchema,
   visionConsentResponseSchema,
@@ -31,8 +34,12 @@ import {
   type OpenRouterModelDiscoveryRequest,
   type OpenRouterModelsResponse,
   type RecipeSuggestionResponse,
+  type RecipeProposalDecisionResponse,
+  type RecipeFlagReason,
+  type RecipeFlagResponse,
   type BarcodeLookupResponse,
 } from "@/contracts/api";
+import { confirmedSubstitutionsForAssessment } from "@/domain/assessment";
 import type {
   Analysis,
   AnalysisCandidate,
@@ -50,6 +57,7 @@ export class ApiClientError extends Error {
   readonly code: string;
   readonly retryable: boolean;
   readonly correlationId: string | null;
+  readonly latestAssessment: RecipeAssessment | null;
 
   constructor(options: {
     message: string;
@@ -57,6 +65,7 @@ export class ApiClientError extends Error {
     code?: string;
     retryable?: boolean;
     correlationId?: string | null;
+    latestAssessment?: RecipeAssessment | null;
   }) {
     super(options.message);
     this.name = "ApiClientError";
@@ -64,6 +73,7 @@ export class ApiClientError extends Error {
     this.code = options.code ?? "request_failed";
     this.retryable = options.retryable ?? (options.status === 0 || options.status >= 500);
     this.correlationId = options.correlationId ?? null;
+    this.latestAssessment = options.latestAssessment ?? null;
   }
 }
 
@@ -105,12 +115,16 @@ async function request(path: string, init?: RequestInit): Promise<unknown> {
 
   if (!response.ok) {
     const parsed = apiErrorSchema.safeParse(body);
+    const substitutionConflict = cookSessionSubstitutionConflictSchema.safeParse(body);
     throw new ApiClientError({
       status: response.status,
       message: parsed.success ? parsed.data.message : `Request failed (${response.status}).`,
       code: parsed.success ? parsed.data.code : "request_failed",
       retryable: parsed.success ? parsed.data.retryable : response.status >= 500,
       correlationId: parsed.success ? parsed.data.correlationId : null,
+      latestAssessment: substitutionConflict.success
+        ? substitutionConflict.data.latestAssessment
+        : null,
     });
   }
 
@@ -303,7 +317,38 @@ export async function getRecipeSuggestions(prompt: string): Promise<RecipeSugges
   return recipeSuggestionResponseSchema.parse(
     await request("/api/v1/recipe-suggestions", {
       method: "POST",
-      body: JSON.stringify({ prompt }),
+      body: JSON.stringify({
+        prompt,
+        generationRequestId: crypto.randomUUID(),
+      }),
+    }),
+  );
+}
+
+export async function decideRecipeProposal(
+  proposalId: string,
+  decision: "approve" | "deny",
+  expectedVersion: number,
+): Promise<RecipeProposalDecisionResponse> {
+  return recipeProposalDecisionResponseSchema.parse(
+    await request(
+      `/api/v1/recipe-proposals/${encodeURIComponent(proposalId)}/decision`,
+      {
+        method: "POST",
+        body: JSON.stringify({ decision, expectedVersion }),
+      },
+    ),
+  );
+}
+
+export async function flagRecipe(
+  recipeId: string,
+  reason: RecipeFlagReason,
+): Promise<RecipeFlagResponse> {
+  return recipeFlagResponseSchema.parse(
+    await request("/api/v1/recipe-flags", {
+      method: "POST",
+      body: JSON.stringify({ recipeId, reason }),
     }),
   );
 }
@@ -421,12 +466,18 @@ export type ReconciliationChange = {
 
 export async function createCookSession(
   assessment: RecipeAssessment,
-): Promise<{ cookSessionId: string; recipeId: string; createdAt: string }> {
+): Promise<{
+  cookSessionId: string;
+  recipeId: string;
+  createdAt: string;
+  assessment: RecipeAssessment;
+}> {
   return cookSessionCreateResponseSchema.parse(await request("/api/v1/cook-sessions", {
     method: "POST",
     body: JSON.stringify({
       recipeId: assessment.recipe.id,
-      assessment,
+      servings: assessment.recipe.servings,
+      confirmedSubstitutions: confirmedSubstitutionsForAssessment(assessment),
     }),
   }));
 }

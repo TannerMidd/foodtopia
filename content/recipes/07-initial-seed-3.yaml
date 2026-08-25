@@ -1,0 +1,1436 @@
+- id: recipe-121
+  slug: cumin-black-bean-rice
+  title: Cumin Black Bean Rice
+  description: Simple cumin black beans over rice.
+  servings: 4
+  totalMinutes: 30
+  mealTypes:
+    - lunch
+    - dinner
+  cuisines:
+    - Mexican-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: black-beans
+      foodConceptId: black-beans
+      name: black beans
+      amount: 15
+      unit: oz
+      display: 15 ounces black beans
+      required: true
+      acceptedForms: &a12
+        - canned
+        - cooked
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: &a1
+        - dried
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: &a2
+        - unspecified
+    - id: cumin
+      foodConceptId: cumin
+      name: cumin
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon cumin
+      required: true
+      acceptedForms: &a6
+        - dried
+        - unspecified
+    - id: salsa
+      foodConceptId: salsa
+      name: salsa
+      amount: 0.5
+      unit: cup
+      display: 1/2 cup salsa
+      required: true
+      acceptedForms: &a13
+        - fresh
+        - canned
+        - opened
+        - unspecified
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: &a4
+        - opened
+        - unspecified
+  steps:
+    - Simmer the rice in the water until tender. Warm the black beans in vegetable oil with cumin.
+    - Fluff the rice, fold in the seasoned black beans, and top with salsa.
+  rights: &a3
+    owner: Foodtopia
+    author: Foodtopia Initial Catalog
+    reviewer: null
+    reviewedAt: null
+    status: seeded
+- id: recipe-122
+  slug: white-bean-spinach-rice
+  title: White Bean Spinach Rice
+  description: White beans and spinach with rice.
+  servings: 4
+  totalMinutes: 30
+  mealTypes:
+    - dinner
+  cuisines:
+    - Mediterranean-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: white-beans
+      foodConceptId: white-beans
+      name: white beans
+      amount: 15
+      unit: oz
+      display: 15 ounces white beans
+      required: true
+      acceptedForms: &a18
+        - canned
+        - cooked
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a1
+    - id: spinach
+      foodConceptId: spinach
+      name: spinach
+      amount: 4
+      unit: cup
+      display: 4 cups spinach
+      required: true
+      acceptedForms: &a19
+        - fresh
+        - frozen
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a2
+    - id: garlic
+      foodConceptId: garlic
+      name: garlic
+      amount: 3
+      unit: count
+      display: 3 garlic cloves
+      required: true
+      acceptedForms:
+        - fresh
+        - opened
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: &a7
+        - opened
+        - unspecified
+  steps:
+    - Simmer the rice in the water until tender. Warm the white beans in olive oil with garlic.
+    - Wilt the spinach into the white beans, then spoon the mixture over the rice.
+  rights: *a3
+- id: recipe-123
+  slug: kidney-bean-tomato-rice
+  title: Kidney Bean Tomato Rice
+  description: Tomato kidney beans with rice.
+  servings: 4
+  totalMinutes: 35
+  mealTypes:
+    - dinner
+  cuisines:
+    - Caribbean-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: kidney-beans
+      foodConceptId: kidney-beans
+      name: kidney beans
+      amount: 15
+      unit: oz
+      display: 15 ounces kidney beans
+      required: true
+      acceptedForms:
+        - canned
+        - cooked
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a1
+    - id: canned-tomato
+      foodConceptId: canned-tomato
+      name: canned tomatoes
+      amount: 15
+      unit: oz
+      display: 15 ounces canned tomatoes
+      required: true
+      acceptedForms: &a5
+        - canned
+        - opened
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a2
+    - id: chili-powder
+      foodConceptId: chili-powder
+      name: chili powder
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon chili powder
+      required: true
+      acceptedForms:
+        - dried
+        - unspecified
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a4
+  steps:
+    - Simmer the rice in the water until tender. Warm the kidney beans and canned tomatoes with chili powder and vegetable oil.
+    - Fluff the rice and serve the kidney bean mixture over it.
+  rights: *a3
+- id: recipe-124
+  slug: chickpea-curry-rice
+  title: Chickpea Curry Rice
+  description: A streamlined chickpea curry rice dinner.
+  servings: 4
+  totalMinutes: 35
+  mealTypes:
+    - dinner
+  cuisines:
+    - South Asian-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: chickpeas
+      foodConceptId: chickpeas
+      name: chickpeas
+      amount: 15
+      unit: oz
+      display: 15 ounces chickpeas
+      required: true
+      acceptedForms: &a10
+        - canned
+        - cooked
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a1
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a2
+    - id: curry-powder
+      foodConceptId: curry-powder
+      name: curry powder
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon curry powder
+      required: true
+      acceptedForms:
+        - dried
+        - unspecified
+    - id: coconut-milk
+      foodConceptId: coconut-milk
+      name: coconut milk
+      amount: 14
+      unit: fl-oz
+      display: 14 fluid ounces coconut milk
+      required: true
+      acceptedForms:
+        - canned
+        - opened
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a4
+  steps:
+    - Simmer the rice in the water until tender. Bloom the curry powder in vegetable oil, then add the chickpeas and coconut milk.
+    - Simmer the chickpea curry until slightly thickened and serve it over the rice.
+  rights: *a3
+- id: recipe-125
+  slug: lentil-tomato-rice
+  title: Lentil Tomato Rice
+  description: A one-pot lentil tomato rice meal.
+  servings: 4
+  totalMinutes: 40
+  mealTypes:
+    - dinner
+  cuisines:
+    - Middle Eastern-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: lentils
+      foodConceptId: lentils
+      name: lentils
+      amount: 1
+      unit: cup
+      display: 1 cup lentils
+      required: true
+      acceptedForms:
+        - dried
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a1
+    - id: canned-tomato
+      foodConceptId: canned-tomato
+      name: canned tomatoes
+      amount: 15
+      unit: oz
+      display: 15 ounces canned tomatoes
+      required: true
+      acceptedForms: *a5
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a2
+    - id: cumin
+      foodConceptId: cumin
+      name: cumin
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon cumin
+      required: true
+      acceptedForms: *a6
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a4
+  steps:
+    - Simmer the dried lentils in part of the water until nearly tender, then add the rice, remaining water, canned tomatoes, cumin, and vegetable oil.
+    - Cover and cook until the lentils and rice are tender, adding a small splash of water only if the pan dries before they finish.
+  rights: *a3
+- id: recipe-126
+  slug: tofu-pea-rice-bowl
+  title: Tofu Pea Rice Bowl
+  description: Tofu and pea rice bowls.
+  servings: 4
+  totalMinutes: 30
+  mealTypes:
+    - dinner
+  cuisines:
+    - Asian-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: tofu
+      foodConceptId: tofu
+      name: tofu
+      amount: 14
+      unit: oz
+      display: 14 ounces tofu
+      required: true
+      acceptedForms: &a20
+        - fresh
+        - opened
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a1
+    - id: peas
+      foodConceptId: peas
+      name: peas
+      amount: 2
+      unit: cup
+      display: 2 cups peas
+      required: true
+      acceptedForms: &a15
+        - fresh
+        - frozen
+        - canned
+        - cooked
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a2
+    - id: soy-sauce
+      foodConceptId: soy-sauce
+      name: soy sauce
+      amount: 2
+      unit: tbsp
+      display: 2 tablespoons soy sauce
+      required: true
+      acceptedForms: &a21
+        - opened
+        - unspecified
+    - id: sesame-oil
+      foodConceptId: sesame-oil
+      name: sesame oil
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon sesame oil
+      required: true
+      acceptedForms: &a22
+        - opened
+        - unspecified
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a4
+  steps:
+    - Simmer the rice in the water until tender, adding the peas for the final five minutes.
+    - Brown the tofu in vegetable oil, add the soy sauce and sesame oil, and serve the tofu over the pea rice.
+  rights: *a3
+- id: recipe-127
+  slug: broccoli-cheddar-rice
+  title: Broccoli Cheddar Rice
+  description: Comforting broccoli cheddar rice.
+  servings: 4
+  totalMinutes: 30
+  mealTypes:
+    - dinner
+    - side
+  cuisines:
+    - American
+  dietaryTags:
+    - vegetarian
+  ingredients:
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a1
+    - id: broccoli
+      foodConceptId: broccoli
+      name: broccoli
+      amount: 4
+      unit: cup
+      display: 4 cups broccoli
+      required: true
+      acceptedForms: &a23
+        - fresh
+        - frozen
+    - id: cheddar
+      foodConceptId: cheddar
+      name: cheddar cheese
+      amount: 1
+      unit: cup
+      display: 1 cup cheddar cheese
+      required: true
+      acceptedForms:
+        - fresh
+        - opened
+        - unspecified
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a2
+    - id: butter
+      foodConceptId: butter
+      name: butter
+      amount: 2
+      unit: tbsp
+      display: 2 tablespoons butter
+      required: true
+      acceptedForms: &a8
+        - fresh
+        - opened
+    - id: black-pepper
+      foodConceptId: black-pepper
+      name: black pepper
+      amount: 0.5
+      unit: tsp
+      display: 1/2 teaspoon black pepper
+      required: true
+      acceptedForms: &a17
+        - dried
+        - unspecified
+  steps:
+    - Simmer the rice in the water until tender, steaming the broccoli above it or in a separate pan.
+    - Fold the broccoli, butter, cheddar cheese, and black pepper into the hot rice until the cheese melts.
+  rights: *a3
+- id: recipe-128
+  slug: tomato-basil-rice
+  title: Tomato Basil Rice
+  description: Tomato basil rice for a side or light meal.
+  servings: 4
+  totalMinutes: 28
+  mealTypes:
+    - side
+    - dinner
+  cuisines:
+    - Italian-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a1
+    - id: canned-tomato
+      foodConceptId: canned-tomato
+      name: canned tomatoes
+      amount: 15
+      unit: oz
+      display: 15 ounces canned tomatoes
+      required: true
+      acceptedForms: *a5
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a2
+    - id: basil
+      foodConceptId: basil
+      name: basil
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon basil
+      required: true
+      acceptedForms:
+        - fresh
+        - dried
+        - unspecified
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: *a7
+    - id: salt
+      foodConceptId: salt
+      name: salt
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon salt
+      required: true
+      acceptedForms: &a9
+        - dried
+        - unspecified
+  steps:
+    - Combine the rice, canned tomatoes, water, olive oil, and salt and bring to a simmer.
+    - Cover and cook until the rice is tender, then fold in the basil and rest for five minutes before serving.
+  rights: *a3
+- id: recipe-129
+  slug: mushroom-thyme-rice
+  title: Mushroom Thyme Rice
+  description: Savory mushroom thyme rice.
+  servings: 4
+  totalMinutes: 30
+  mealTypes:
+    - dinner
+    - side
+  cuisines:
+    - European-inspired
+  dietaryTags:
+    - vegetarian
+  ingredients:
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a1
+    - id: mushroom
+      foodConceptId: mushroom
+      name: mushrooms
+      amount: 4
+      unit: cup
+      display: 4 cups mushrooms
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a2
+    - id: thyme
+      foodConceptId: thyme
+      name: thyme
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon thyme
+      required: true
+      acceptedForms:
+        - fresh
+        - dried
+        - unspecified
+    - id: butter
+      foodConceptId: butter
+      name: butter
+      amount: 2
+      unit: tbsp
+      display: 2 tablespoons butter
+      required: true
+      acceptedForms: *a8
+    - id: salt
+      foodConceptId: salt
+      name: salt
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon salt
+      required: true
+      acceptedForms: *a9
+  steps:
+    - Brown the mushrooms in butter with thyme and salt until their liquid cooks away.
+    - Simmer the rice in the water until tender, then fold in the mushrooms and rest covered for five minutes.
+  rights: *a3
+- id: recipe-130
+  slug: corn-lime-rice
+  title: Corn Lime Rice
+  description: Bright corn lime rice.
+  servings: 4
+  totalMinutes: 25
+  mealTypes:
+    - side
+  cuisines:
+    - Mexican-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: rice
+      foodConceptId: rice
+      name: rice
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups dry rice
+      required: true
+      acceptedForms: *a1
+    - id: corn
+      foodConceptId: corn
+      name: corn
+      amount: 2
+      unit: cup
+      display: 2 cups corn
+      required: true
+      acceptedForms:
+        - fresh
+        - frozen
+        - canned
+        - cooked
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a2
+    - id: lime
+      foodConceptId: lime
+      name: lime
+      amount: 1
+      unit: count
+      display: 1 lime
+      required: true
+      acceptedForms: &a14
+        - fresh
+    - id: cumin
+      foodConceptId: cumin
+      name: cumin
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon cumin
+      required: true
+      acceptedForms: *a6
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a4
+  steps:
+    - Simmer the rice in the water until nearly tender, then fold in the corn and cumin and cook for five more minutes.
+    - Rest the rice covered, then stir in the vegetable oil and lime juice before serving.
+  rights: *a3
+- id: recipe-131
+  slug: quinoa-chickpea-bowl
+  title: Quinoa Chickpea Bowl
+  description: A simple quinoa chickpea bowl.
+  servings: 4
+  totalMinutes: 25
+  mealTypes:
+    - lunch
+    - dinner
+  cuisines:
+    - Mediterranean-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: quinoa
+      foodConceptId: quinoa
+      name: quinoa
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups quinoa
+      required: true
+      acceptedForms: &a11
+        - dried
+    - id: chickpeas
+      foodConceptId: chickpeas
+      name: chickpeas
+      amount: 15
+      unit: oz
+      display: 15 ounces chickpeas
+      required: true
+      acceptedForms: *a10
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a2
+    - id: cucumber
+      foodConceptId: cucumber
+      name: cucumber
+      amount: 2
+      unit: count
+      display: 2 cucumbers
+      required: true
+      acceptedForms:
+        - fresh
+    - id: lemon
+      foodConceptId: lemon
+      name: lemon
+      amount: 1
+      unit: count
+      display: 1 lemon
+      required: true
+      acceptedForms: &a16
+        - fresh
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: *a7
+  steps:
+    - Rinse the quinoa, then simmer it in the water until tender and drain the chickpeas.
+    - Combine the quinoa and chickpeas with diced cucumber, lemon juice, and olive oil and serve warm or cool.
+  rights: *a3
+- id: recipe-132
+  slug: black-bean-quinoa
+  title: Black Bean Quinoa
+  description: Black beans and quinoa with salsa.
+  servings: 4
+  totalMinutes: 25
+  mealTypes:
+    - lunch
+    - dinner
+  cuisines:
+    - Mexican-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: quinoa
+      foodConceptId: quinoa
+      name: quinoa
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups quinoa
+      required: true
+      acceptedForms: *a11
+    - id: black-beans
+      foodConceptId: black-beans
+      name: black beans
+      amount: 15
+      unit: oz
+      display: 15 ounces black beans
+      required: true
+      acceptedForms: *a12
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 3
+      unit: cup
+      display: 3 cups water
+      required: true
+      acceptedForms: *a2
+    - id: salsa
+      foodConceptId: salsa
+      name: salsa
+      amount: 0.5
+      unit: cup
+      display: 1/2 cup salsa
+      required: true
+      acceptedForms: *a13
+    - id: cumin
+      foodConceptId: cumin
+      name: cumin
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon cumin
+      required: true
+      acceptedForms: *a6
+    - id: lime
+      foodConceptId: lime
+      name: lime
+      amount: 1
+      unit: count
+      display: 1 lime
+      required: true
+      acceptedForms: *a14
+  steps:
+    - Rinse the quinoa, then simmer it in the water until tender; warm the black beans separately with cumin.
+    - Combine the quinoa and black beans, then finish with salsa and lime juice.
+  rights: *a3
+- id: recipe-133
+  slug: lemon-pea-couscous
+  title: Lemon Pea Couscous
+  description: Fast lemon pea couscous.
+  servings: 4
+  totalMinutes: 15
+  mealTypes:
+    - lunch
+    - side
+  cuisines:
+    - North African-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: couscous
+      foodConceptId: couscous
+      name: couscous
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups couscous
+      required: true
+      acceptedForms:
+        - dried
+    - id: peas
+      foodConceptId: peas
+      name: peas
+      amount: 2
+      unit: cup
+      display: 2 cups peas
+      required: true
+      acceptedForms: *a15
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups water
+      required: true
+      acceptedForms: *a2
+    - id: lemon
+      foodConceptId: lemon
+      name: lemon
+      amount: 1
+      unit: count
+      display: 1 lemon
+      required: true
+      acceptedForms: *a16
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: *a7
+    - id: black-pepper
+      foodConceptId: black-pepper
+      name: black pepper
+      amount: 0.5
+      unit: tsp
+      display: 1/2 teaspoon black pepper
+      required: true
+      acceptedForms: *a17
+  steps:
+    - Bring the water to a boil, pour it over the dried couscous, cover, and let stand until tender; warm the peas separately.
+    - Fluff the couscous with olive oil and black pepper, fold in the peas, and finish with lemon juice.
+  rights: *a3
+- id: recipe-134
+  slug: chickpea-tomato-couscous
+  title: Chickpea Tomato Couscous
+  description: Chickpea tomato couscous.
+  servings: 4
+  totalMinutes: 18
+  mealTypes:
+    - lunch
+    - dinner
+  cuisines:
+    - North African-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: couscous
+      foodConceptId: couscous
+      name: couscous
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups couscous
+      required: true
+      acceptedForms:
+        - dried
+    - id: chickpeas
+      foodConceptId: chickpeas
+      name: chickpeas
+      amount: 15
+      unit: oz
+      display: 15 ounces chickpeas
+      required: true
+      acceptedForms: *a10
+    - id: tomato
+      foodConceptId: tomato
+      name: tomato
+      amount: 3
+      unit: count
+      display: 3 tomatoes
+      required: true
+      acceptedForms:
+        - fresh
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 1.5
+      unit: cup
+      display: 1 1/2 cups water
+      required: true
+      acceptedForms: *a2
+    - id: cumin
+      foodConceptId: cumin
+      name: cumin
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon cumin
+      required: true
+      acceptedForms: *a6
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: *a7
+  steps:
+    - Bring the water to a boil, pour it over the dried couscous, cover, and let stand until tender.
+    - Fluff the couscous with olive oil and cumin, then fold in the chickpeas and diced tomato.
+  rights: *a3
+- id: recipe-135
+  slug: white-bean-pesto-pasta
+  title: White Bean Pesto Pasta
+  description: Quick pesto pasta with white beans.
+  servings: 4
+  totalMinutes: 20
+  mealTypes:
+    - dinner
+  cuisines:
+    - Italian-inspired
+  dietaryTags:
+    - vegetarian
+  ingredients:
+    - id: pasta
+      foodConceptId: pasta
+      name: pasta
+      amount: 12
+      unit: oz
+      display: 12 ounces pasta
+      required: true
+      acceptedForms:
+        - dried
+    - id: white-beans
+      foodConceptId: white-beans
+      name: white beans
+      amount: 15
+      unit: oz
+      display: 15 ounces white beans
+      required: true
+      acceptedForms: *a18
+    - id: pesto
+      foodConceptId: pesto
+      name: pesto
+      amount: 0.25
+      unit: cup
+      display: 1/4 cup pesto
+      required: true
+      acceptedForms:
+        - fresh
+        - opened
+        - unspecified
+    - id: spinach
+      foodConceptId: spinach
+      name: spinach
+      amount: 4
+      unit: cup
+      display: 4 cups spinach
+      required: true
+      acceptedForms: *a19
+    - id: parmesan
+      foodConceptId: parmesan
+      name: parmesan cheese
+      amount: 0.5
+      unit: cup
+      display: 1/2 cup parmesan cheese
+      required: true
+      acceptedForms:
+        - fresh
+        - opened
+        - unspecified
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 8
+      unit: cup
+      display: 8 cups water for boiling
+      required: true
+      acceptedForms:
+        - unspecified
+  steps:
+    - Boil the dried pasta until al dente, adding the spinach for the final minute, then drain and reserve a little cooking water.
+    - Warm the white beans, then toss them with the pasta, spinach, pesto, and parmesan cheese, loosening with reserved water if needed.
+  rights: *a3
+- id: recipe-136
+  slug: lentil-marinara-pasta
+  title: Lentil Marinara Pasta
+  description: Hearty lentil marinara pasta.
+  servings: 4
+  totalMinutes: 25
+  mealTypes:
+    - dinner
+  cuisines:
+    - Italian-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: pasta
+      foodConceptId: pasta
+      name: pasta
+      amount: 12
+      unit: oz
+      display: 12 ounces pasta
+      required: true
+      acceptedForms:
+        - dried
+    - id: lentils
+      foodConceptId: lentils
+      name: lentils
+      amount: 1
+      unit: cup
+      display: 1 cup lentils
+      required: true
+      acceptedForms:
+        - dried
+    - id: marinara-sauce
+      foodConceptId: marinara-sauce
+      name: marinara sauce
+      amount: 2
+      unit: cup
+      display: 2 cups marinara sauce
+      required: true
+      acceptedForms:
+        - canned
+        - opened
+        - unspecified
+    - id: oregano
+      foodConceptId: oregano
+      name: oregano
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon oregano
+      required: true
+      acceptedForms:
+        - dried
+        - unspecified
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: *a7
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 8
+      unit: cup
+      display: 8 cups water for boiling
+      required: true
+      acceptedForms:
+        - unspecified
+  steps:
+    - Simmer the dried lentils in water until tender. Boil the dried pasta until al dente and drain.
+    - Warm the marinara sauce with oregano and olive oil, then fold in the lentils and pasta and heat through.
+  rights: *a3
+- id: recipe-137
+  slug: tofu-cabbage-noodles
+  title: Tofu Cabbage Noodles
+  description: Tofu and cabbage noodles.
+  servings: 4
+  totalMinutes: 25
+  mealTypes:
+    - dinner
+  cuisines:
+    - Asian-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: tofu
+      foodConceptId: tofu
+      name: tofu
+      amount: 14
+      unit: oz
+      display: 14 ounces tofu
+      required: true
+      acceptedForms: *a20
+    - id: noodles
+      foodConceptId: noodles
+      name: noodles
+      amount: 12
+      unit: oz
+      display: 12 ounces noodles
+      required: true
+      acceptedForms:
+        - dried
+    - id: cabbage
+      foodConceptId: cabbage
+      name: cabbage
+      amount: 4
+      unit: cup
+      display: 4 cups cabbage
+      required: true
+      acceptedForms:
+        - fresh
+    - id: soy-sauce
+      foodConceptId: soy-sauce
+      name: soy sauce
+      amount: 2
+      unit: tbsp
+      display: 2 tablespoons soy sauce
+      required: true
+      acceptedForms: *a21
+    - id: sesame-oil
+      foodConceptId: sesame-oil
+      name: sesame oil
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon sesame oil
+      required: true
+      acceptedForms: *a22
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a4
+  steps:
+    - Boil the dried noodles until tender and drain. Brown the tofu in vegetable oil, then add the cabbage and cook until tender.
+    - Toss the noodles with the tofu, cabbage, soy sauce, and sesame oil and heat through.
+  rights: *a3
+- id: recipe-138
+  slug: peanut-broccoli-noodles
+  title: Peanut Broccoli Noodles
+  description: Creamy peanut broccoli noodles.
+  servings: 4
+  totalMinutes: 22
+  mealTypes:
+    - dinner
+  cuisines:
+    - Southeast Asian-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: noodles
+      foodConceptId: noodles
+      name: noodles
+      amount: 12
+      unit: oz
+      display: 12 ounces noodles
+      required: true
+      acceptedForms:
+        - dried
+    - id: broccoli
+      foodConceptId: broccoli
+      name: broccoli
+      amount: 4
+      unit: cup
+      display: 4 cups broccoli
+      required: true
+      acceptedForms: *a23
+    - id: peanut-butter
+      foodConceptId: peanut-butter
+      name: peanut butter
+      amount: 3
+      unit: tbsp
+      display: 3 tablespoons peanut butter
+      required: true
+      acceptedForms:
+        - opened
+        - unspecified
+    - id: soy-sauce
+      foodConceptId: soy-sauce
+      name: soy sauce
+      amount: 2
+      unit: tbsp
+      display: 2 tablespoons soy sauce
+      required: true
+      acceptedForms: *a21
+    - id: water
+      foodConceptId: water
+      name: water
+      amount: 0.25
+      unit: cup
+      display: 1/4 cup water or reserved noodle water
+      required: true
+      acceptedForms: *a2
+    - id: hot-sauce
+      foodConceptId: hot-sauce
+      name: hot sauce
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon hot sauce
+      required: true
+      acceptedForms:
+        - opened
+        - unspecified
+  steps:
+    - Boil the dried noodles until tender, adding the broccoli for the final three minutes, then drain and reserve a quarter cup of cooking water.
+    - Whisk the peanut butter with soy sauce, hot sauce, and the measured water, then toss the sauce with the noodles and broccoli.
+  rights: *a3
+- id: recipe-139
+  slug: black-bean-sweet-potato
+  title: Black Bean Sweet Potato
+  description: Roasted sweet potato with black beans.
+  servings: 4
+  totalMinutes: 35
+  mealTypes:
+    - dinner
+  cuisines:
+    - Mexican-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: black-beans
+      foodConceptId: black-beans
+      name: black beans
+      amount: 15
+      unit: oz
+      display: 15 ounces black beans
+      required: true
+      acceptedForms: *a12
+    - id: sweet-potato
+      foodConceptId: sweet-potato
+      name: sweet potato
+      amount: 1.5
+      unit: lb
+      display: 1 1/2 pounds sweet potatoes
+      required: true
+      acceptedForms:
+        - fresh
+    - id: salsa
+      foodConceptId: salsa
+      name: salsa
+      amount: 0.5
+      unit: cup
+      display: 1/2 cup salsa
+      required: true
+      acceptedForms: *a13
+    - id: cumin
+      foodConceptId: cumin
+      name: cumin
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon cumin
+      required: true
+      acceptedForms: *a6
+    - id: vegetable-oil
+      foodConceptId: vegetable-oil
+      name: vegetable oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon vegetable oil
+      required: true
+      acceptedForms: *a4
+  steps:
+    - Cut the sweet potato into one-inch pieces, toss with vegetable oil and cumin, and roast at 425°F until tender and browned.
+    - Warm the black beans and salsa, then spoon them over the roasted sweet potato.
+  rights: *a3
+- id: recipe-140
+  slug: chickpea-spinach-skillet
+  title: Chickpea Spinach Skillet
+  description: A quick chickpea spinach tomato skillet.
+  servings: 4
+  totalMinutes: 20
+  mealTypes:
+    - dinner
+  cuisines:
+    - Mediterranean-inspired
+  dietaryTags:
+    - vegan
+    - vegetarian
+    - dairy-free
+  ingredients:
+    - id: chickpeas
+      foodConceptId: chickpeas
+      name: chickpeas
+      amount: 15
+      unit: oz
+      display: 15 ounces chickpeas
+      required: true
+      acceptedForms: *a10
+    - id: spinach
+      foodConceptId: spinach
+      name: spinach
+      amount: 4
+      unit: cup
+      display: 4 cups spinach
+      required: true
+      acceptedForms: *a19
+    - id: canned-tomato
+      foodConceptId: canned-tomato
+      name: canned tomatoes
+      amount: 15
+      unit: oz
+      display: 15 ounces canned tomatoes
+      required: true
+      acceptedForms: *a5
+    - id: cumin
+      foodConceptId: cumin
+      name: cumin
+      amount: 1
+      unit: tsp
+      display: 1 teaspoon cumin
+      required: true
+      acceptedForms: *a6
+    - id: olive-oil
+      foodConceptId: olive-oil
+      name: olive oil
+      amount: 1
+      unit: tbsp
+      display: 1 tablespoon olive oil
+      required: true
+      acceptedForms: *a7
+  steps:
+    - Warm the chickpeas and canned tomatoes in olive oil with cumin until bubbling.
+    - Add the spinach by handfuls and cook until wilted, then simmer briefly so the skillet thickens.
+  rights: *a3

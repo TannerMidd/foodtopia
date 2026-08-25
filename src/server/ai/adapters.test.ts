@@ -46,6 +46,31 @@ describe("vision response validation", () => {
 });
 
 describe("local recipe intent parser", () => {
+  it("builds one deterministic demo draft only from supplied concepts", async () => {
+    const draft = await new HeuristicRecipeAssistant().generate({
+      intent: {
+        query: "dinner",
+        maxMinutes: 30,
+        servings: 2,
+        mealTypes: ["dinner"],
+        cuisines: [],
+        dietaryTags: [],
+        includeConceptIds: [],
+        excludeConceptIds: [],
+      },
+      foods: [
+        { foodConceptId: "rice", name: "rice", forms: ["dried"], quantities: [], unknownQuantityForms: ["dried"] },
+        { foodConceptId: "tomato", name: "tomato", forms: ["fresh"], quantities: [], unknownQuantityForms: ["fresh"] },
+      ],
+      staples: [],
+      dietaryTags: [],
+      excludedConceptIds: [],
+    });
+    expect(draft.ingredients.map((item) => item.foodConceptId)).toEqual(["rice", "tomato"]);
+    expect(draft).not.toHaveProperty("id");
+    expect(draft).not.toHaveProperty("rights");
+  });
+
   it("extracts bounded, deterministic filters without inventing food", async () => {
     const intent = await new HeuristicRecipeAssistant().parseIntent(
       "spicy vegetarian Mexican dinner under 30 minutes for 4",
