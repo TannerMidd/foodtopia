@@ -13,7 +13,9 @@ const navItems = [
   { href: "/inventory", label: "kitchen", icon: Refrigerator },
   { href: "/capture", label: "add food", icon: Camera, desktopOnly: true },
   { href: "/recipes", label: "cook", icon: Utensils },
-  { href: "/household", label: "household", icon: Home },
+  // "house" keeps the four mobile tabs inside the floating bar; the desktop
+  // rail spells the destination out in full.
+  { href: "/household", label: "household", shortLabel: "house", icon: Home },
 ];
 
 /** Routes that render without the nav rail or the mobile tab bar. */
@@ -201,8 +203,8 @@ function ShellChrome({ children }: { children: ReactNode }) {
 
         {/* Mobile: a floating pill bar. The active destination is the one
             solid terracotta pill on the screen. */}
-        <nav className="safe-bottom fixed inset-x-0 bottom-0 z-40 px-[18px] pb-5 md:hidden">
-          <div className="flex h-16 items-center justify-between rounded-[32px] bg-[var(--ground-hi)] px-2 shadow-[0_8px_24px_rgba(23,19,16,0.55)]">
+        <nav className="safe-bottom fixed inset-x-0 bottom-0 z-40 px-2 pb-5 md:hidden">
+          <div className="flex h-16 items-center justify-between rounded-[32px] bg-[var(--ground-hi)] px-1 shadow-[0_8px_24px_rgba(23,19,16,0.55)]">
             {navItems
               .filter((item) => !item.desktopOnly)
               .map((item) => {
@@ -213,14 +215,16 @@ function ShellChrome({ children }: { children: ReactNode }) {
                     href={item.href}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "flex min-h-12 items-center gap-2 rounded-3xl px-[14px] text-[13.5px] transition",
+                      "flex min-h-12 items-center gap-1.5 rounded-3xl text-[13px] transition",
                       active
-                        ? "bg-[var(--accent)] font-semibold text-[var(--accent-ink)]"
-                        : "px-3 font-medium text-[var(--ink-5)]",
+                        ? "bg-[var(--accent)] px-2.5 font-semibold text-[var(--accent-ink)]"
+                        : "px-2 font-medium text-[var(--ink-5)]",
                     )}
                   >
-                    <item.icon className="size-4 shrink-0" aria-hidden="true" />
-                    <span>{item.label}</span>
+                    {/* Only the active destination gets its icon — the design's
+                        quiet bar keeps the inactive tabs to words alone. */}
+                    {active && <item.icon className="size-4 shrink-0" aria-hidden="true" />}
+                    <span>{item.shortLabel ?? item.label}</span>
                   </Link>
                 );
               })}
