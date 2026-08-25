@@ -3,7 +3,9 @@ import "server-only";
 const value = (name: string) => process.env[name]?.trim() || null;
 
 export const serverEnv = {
-  appUrl: value("NEXT_PUBLIC_APP_URL") ?? "http://localhost:3000",
+  // Nullable on purpose: origin checks must fail loudly instead of silently
+  // comparing against a guessed localhost fallback on real deployments.
+  appUrl: value("NEXT_PUBLIC_APP_URL"),
   supabaseUrl: value("NEXT_PUBLIC_SUPABASE_URL"),
   supabaseAnonKey:
     value("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY") ??

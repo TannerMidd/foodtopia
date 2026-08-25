@@ -11,21 +11,34 @@ import { ApiFault } from "@/server/http";
  * authentication against cross-site form posts.
  */
 export function assertSameOrigin(request: NextRequest) {
-  const origin = request.headers.get("origin");
-  let expectedOrigin: string;
-  try {
-    const configured = new URL(serverEnv.appUrl);
-    if (configured.protocol !== "https:" && configured.hostname !== "localhost") {
-      throw new Error("Unsupported application origin");
+  const rawAppUrl = serverEnv.appUrl;
+  let expectedOrigin: string | null = null;
+  if (rawAppUrl) {
+    try {
+      const configured = new URL(rawAppUrl);
+      if (
+        configured.protocol === "https:" ||
+        configured.hostname === "localhost"
+      ) {
+        expectedOrigin = configured.origin;
+      }
+    } catch {
+      // Fall through: an unparseable app URL must disable mutations loudly.
     }
-    expectedOrigin = configured.origin;
-  } catch {
+  }
+  if (!expectedOrigin) {
     throw new ApiFault(
       "AUTH_CONFIGURATION_ERROR",
-      "The application origin is not configured for authenticated requests.",
+      "NEXT_PUBLIC_APP_URL is missing or invalid; authenticated requests are rejected.",
       503,
       true,
     );
+  }
+  const origin = request.headers.get("origin");
+  if (!origin) {
+    console.warn("Same-origin check rejected a request without an Origin header", {
+      path: request.nextUrl.pathname,
+    });
   }
   if (!origin || origin !== expectedOrigin) {
     throw new ApiFault(
