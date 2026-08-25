@@ -37,10 +37,10 @@
     /* Ink, brightest to faintest. The faint stops stay readable on --page. */
     --ink: #f2eae0;
     --ink-2: #c9bdb0;
-    --ink-3: #a39485;
-    --ink-4: #8d8174;
-    --ink-5: #7c7166;
-    --ink-6: #5a5148;
+    --ink-3: #b2a597;
+    --ink-4: #a99b8d;
+    --ink-5: #9f9284;
+    --ink-6: #9b8e80;
 
     /* Terracotta: the one action, and anything running out. */
     --accent: #d2734a;
@@ -264,6 +264,7 @@
   /* A small rounded fact: a suggestion, a preference, a duration. */
   .chip {
     display: inline-flex;
+    min-height: 44px;
     align-items: center;
     padding: 9px 15px;
     border-radius: 20px;
@@ -317,7 +318,7 @@
   }
 
   .page-enter {
-    animation: page-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: page-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
   }
 
   .skeleton {

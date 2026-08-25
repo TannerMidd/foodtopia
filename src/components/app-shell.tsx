@@ -171,11 +171,18 @@ function ShellChrome({ children }: { children: ReactNode }) {
 
       <div className="min-w-0 flex-1 pb-[calc(6.5rem+env(safe-area-inset-bottom))] md:pb-0">
         {/* Mobile: the same mark and the same one line of status. */}
-        <header className="safe-top flex items-center justify-between px-5 pb-1 md:hidden">
-          <Link href="/" aria-label="Foodtopia home">
+        <header className="safe-top flex items-center justify-between gap-3 px-5 pb-1 md:hidden">
+          <Link
+            href="/"
+            className="flex min-h-11 flex-none items-center"
+            aria-label="Foodtopia home"
+          >
             <Wordmark mark={26} text={17} />
           </Link>
-          <p className="m text-[11px] text-[var(--ink-5)]" role="status">
+          <p
+            className="m min-w-0 flex-1 truncate text-right text-[11px] text-[var(--ink-5)]"
+            role="status"
+          >
             {status.head}
             {status.sub ? ` · ${status.sub}` : ""}
           </p>
@@ -203,7 +210,7 @@ function ShellChrome({ children }: { children: ReactNode }) {
 
         {/* Mobile: a floating pill bar. The active destination is the one
             solid terracotta pill on the screen. */}
-        <nav className="safe-bottom fixed inset-x-0 bottom-0 z-40 px-2 pb-5 md:hidden">
+        <nav className="fixed inset-x-0 bottom-0 z-40 px-2 pb-[max(1.25rem,env(safe-area-inset-bottom))] md:hidden">
           <div className="flex h-16 items-center justify-between rounded-[32px] bg-[var(--ground-hi)] px-1 shadow-[0_8px_24px_rgba(23,19,16,0.55)]">
             {navItems
               .filter((item) => !item.desktopOnly)

@@ -276,8 +276,12 @@ function AdjustItemModal({
           {error}
         </p>
       )}
-      <div className="mt-8 flex items-center justify-end gap-6">
-        <button type="button" className="m text-[11px] text-[var(--ink-4)] hover:text-[var(--ink)]" onClick={onClose}>
+      <div className="mt-8 flex items-center justify-end gap-3">
+        <button
+          type="button"
+          className="m inline-flex min-h-11 items-center px-3 text-[12px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+          onClick={onClose}
+        >
           cancel
         </button>
         <Button busy={saving} onClick={() => void save()}>
@@ -356,6 +360,7 @@ function AddItemModal({
       title="Add one item"
       description="Useful for a missed item or an offline correction. Photo batches still review fastest."
       onClose={onClose}
+      suspended={scanning}
     >
       {scanning && (
         <BarcodeScanModal
@@ -367,10 +372,9 @@ function AddItemModal({
           }}
         />
       )}
-
       <button
         type="button"
-        className="m mb-5 inline-flex min-h-9 items-center gap-2 text-[11px] text-[var(--ink-4)] transition hover:text-[var(--accent)]"
+        className="m mb-5 inline-flex min-h-11 items-center gap-2 px-2 text-[12px] text-[var(--ink-4)] transition hover:text-[var(--accent)]"
         onClick={() => setScanning(true)}
       >
         <ScanLine className="size-3.5" aria-hidden="true" />
@@ -463,8 +467,12 @@ function AddItemModal({
           {error}
         </p>
       )}
-      <div className="mt-8 flex items-center justify-end gap-6">
-        <button type="button" className="m text-[11px] text-[var(--ink-4)] hover:text-[var(--ink)]" onClick={onClose}>
+      <div className="mt-8 flex items-center justify-end gap-3">
+        <button
+          type="button"
+          className="m inline-flex min-h-11 items-center px-3 text-[12px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+          onClick={onClose}
+        >
           cancel
         </button>
         <Button busy={saving} onClick={() => void save()}>
@@ -490,58 +498,60 @@ function LotRow({
   return (
     <article
       id={`lot-${lot.id}`}
-      className="row row-link !rounded-[18px] !px-[18px] !py-[15px] min-h-0 flex-wrap gap-x-3.5 gap-y-1 sm:flex-nowrap"
+      className="row row-link grid min-h-0 grid-cols-[minmax(0,1fr)_auto] gap-x-3.5 gap-y-2 !rounded-[18px] !px-[18px] !py-[15px] sm:flex sm:flex-nowrap"
     >
-      <span className="min-w-0 flex-1">
+      <span className="col-span-2 min-w-0 sm:flex-1">
         <h3 className="truncate font-[family-name:var(--font-familjen)] text-[16.5px] font-semibold">
           {lot.name}
         </h3>
         <span className="m mt-1 block truncate text-[11px] text-[var(--ink-5)]">{formText(lot)}</span>
       </span>
-      {pressing ? (
-        // Running out: the date becomes a small terracotta pill.
-        <span className="m order-3 rounded-[14px] bg-[var(--accent)] px-[11px] py-[5px] text-[10.5px] font-semibold text-[var(--accent-ink)] sm:order-none">
-          {relativeDate(lot.dateLabel!)}
+      <span className="col-span-2 flex min-w-0 items-center justify-between gap-3 sm:contents">
+        {pressing ? (
+          // Running out: the date becomes a small terracotta pill.
+          <span className="m min-w-0 truncate rounded-[14px] bg-[var(--accent)] px-[11px] py-[5px] text-[10.5px] font-semibold text-[var(--accent-ink)]">
+            {relativeDate(lot.dateLabel!)}
+          </span>
+        ) : printed ? (
+          <span className="m min-w-0 truncate whitespace-nowrap text-[11px] text-[var(--ink-4)]">
+            {relativeDate(lot.dateLabel!)}
+          </span>
+        ) : null}
+        <span
+          className={cn(
+            "ml-auto w-[56px] shrink-0 text-right font-[family-name:var(--font-familjen)] sm:ml-0",
+            lot.quantityStatus === "unknown"
+              ? "m text-[12px] text-[var(--ink-5)]"
+              : "text-[15px] font-semibold",
+          )}
+        >
+          {amountText(lot)}
         </span>
-      ) : printed ? (
-        <span className="m order-3 whitespace-nowrap text-[11px] text-[var(--ink-4)] sm:order-none">
-          {relativeDate(lot.dateLabel!)}
-        </span>
-      ) : null}
-      <span
-        className={cn(
-          "w-[56px] shrink-0 text-right font-[family-name:var(--font-familjen)]",
-          lot.quantityStatus === "unknown"
-            ? "m text-[12px] text-[var(--ink-5)]"
-            : "text-[15px] font-semibold",
-        )}
-      >
-        {amountText(lot)}
       </span>
-      <span className="flex flex-none items-center gap-2 text-[var(--ink-5)]">
+      <span className="col-span-2 flex flex-none items-center justify-self-end gap-1 text-[var(--ink-5)]">
         <button
           type="button"
-          className="flex size-8 items-center justify-center rounded-full transition hover:bg-[var(--ground-tint)] hover:text-[var(--ink)]"
+          className="flex size-11 items-center justify-center rounded-full transition hover:bg-[var(--ground-tint)] hover:text-[var(--ink)] active:bg-[var(--ground-tint)]"
           onClick={() => onAdjust(lot)}
           aria-label={`Adjust ${lot.name}`}
         >
-          <Pencil className="size-3.5" aria-hidden="true" />
+          <Pencil className="size-4" aria-hidden="true" />
         </button>
         <button
           type="button"
-          className="flex size-8 items-center justify-center rounded-full transition hover:bg-[var(--ground-tint)] hover:text-[var(--ink)]"
+          className="flex size-11 items-center justify-center rounded-full transition hover:bg-[var(--ground-tint)] hover:text-[var(--ink)] active:bg-[var(--ground-tint)]"
           onClick={() => onAction(lot, "consume")}
           aria-label={`Mark ${lot.name} used up`}
         >
-          <Check className="size-3.5" aria-hidden="true" />
+          <Check className="size-4" aria-hidden="true" />
         </button>
         <button
           type="button"
-          className="flex size-8 items-center justify-center rounded-full transition hover:bg-[var(--ground-tint)] hover:text-[var(--accent)]"
+          className="flex size-11 items-center justify-center rounded-full transition hover:bg-[var(--ground-tint)] hover:text-[var(--accent)] active:bg-[var(--ground-tint)]"
           onClick={() => onAction(lot, "discard")}
           aria-label={`Discard ${lot.name}`}
         >
-          <Trash2 className="size-3.5" aria-hidden="true" />
+          <Trash2 className="size-4" aria-hidden="true" />
         </button>
       </span>
     </article>
@@ -648,7 +658,7 @@ export function InventoryScreen() {
         <div className="flex items-center gap-5">
           <button
             type="button"
-            className="m text-[12px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+            className="m inline-flex min-h-11 items-center px-2 text-[12px] text-[var(--ink-4)] hover:text-[var(--ink)]"
             onClick={() => setAdding(true)}
           >
             add one by hand
@@ -670,7 +680,7 @@ export function InventoryScreen() {
           <Search className="size-[17px] flex-none text-[var(--ink-5)]" aria-hidden="true" />
           <input
             type="search"
-            className="bd min-h-9 w-full bg-transparent text-[var(--ink)] focus:outline-none"
+            className="bd min-h-[52px] w-full bg-transparent text-[16px] text-[var(--ink)] focus:outline-none"
             placeholder="Find something…"
             aria-label="Search the kitchen"
             value={query}
@@ -694,7 +704,7 @@ export function InventoryScreen() {
               type="button"
               aria-pressed={filter === value}
               className={cn(
-                "m inline-flex items-center rounded-[20px] px-4 py-[9px] text-[13px] transition",
+                "m inline-flex min-h-11 items-center rounded-[20px] px-4 py-[9px] text-[13px] transition",
                 filter === value
                   ? "bg-[var(--ink)] font-semibold text-[var(--page)]"
                   : "bg-[var(--ground-hi)] font-medium text-[var(--ink-3)] hover:bg-[var(--ground-tint)] hover:text-[var(--ink-2)]",

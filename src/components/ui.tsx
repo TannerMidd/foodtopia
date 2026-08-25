@@ -1,7 +1,54 @@
 "use client";
 
-import type { ButtonHTMLAttributes, ReactNode } from "react";
-import { LoaderCircle } from "lucide-react";
+import {
+  type ButtonHTMLAttributes,
+  type ReactNode,
+  useEffect,
+  useId,
+  useRef,
+  useSyncExternalStore,
+} from "react";
+import { createPortal } from "react-dom";
+import { LoaderCircle, X } from "lucide-react";
+
+let bodyLockCount = 0;
+let restoreBody: (() => void) | null = null;
+const modalStack: string[] = [];
+const subscribeToMount = () => () => undefined;
+const getClientMountSnapshot = () => true;
+const getServerMountSnapshot = () => false;
+
+function lockBodyScroll() {
+  bodyLockCount += 1;
+  if (bodyLockCount === 1) {
+    const scrollY = window.scrollY;
+    const previous = {
+      overflow: document.body.style.overflow,
+      position: document.body.style.position,
+      top: document.body.style.top,
+      width: document.body.style.width,
+    };
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
+    restoreBody = () => {
+      document.body.style.overflow = previous.overflow;
+      document.body.style.position = previous.position;
+      document.body.style.top = previous.top;
+      document.body.style.width = previous.width;
+      if (window.scrollY !== scrollY) window.scrollTo(0, scrollY);
+    };
+  }
+
+  return () => {
+    bodyLockCount = Math.max(0, bodyLockCount - 1);
+    if (bodyLockCount === 0) {
+      restoreBody?.();
+      restoreBody = null;
+    }
+  };
+}
 
 export function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -75,13 +122,13 @@ export function PageHeader({
   action?: ReactNode;
 }) {
   return (
-    <header className="mb-9 flex items-end justify-between gap-6">
+    <header className="mb-9 flex flex-col items-start gap-5 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
       <div className="min-w-0">
         {eyebrow && <p className="ml !text-[var(--accent)]">{eyebrow}</p>}
         <h1 className="hd mt-3 text-[clamp(1.9rem,7vw,2.3rem)]">{title}</h1>
         {description && <p className="bd mt-3 max-w-[34rem] text-[15px]">{description}</p>}
       </div>
-      {action && <div className="shrink-0">{action}</div>}
+      {action && <div className="w-full shrink-0 sm:w-auto">{action}</div>}
     </header>
   );
 }
@@ -171,14 +218,17 @@ export function StateNotice({
   };
   return (
     <div
-      className={cn("flex items-start justify-between gap-5 rounded-[20px] py-4 pl-6 pr-5", rules[tone])}
+      className={cn(
+        "flex flex-col items-start gap-4 rounded-[20px] py-4 pl-6 pr-5 sm:flex-row sm:justify-between sm:gap-5",
+        rules[tone],
+      )}
       role={tone === "error" ? "alert" : "status"}
     >
       <div className="min-w-0 flex-1">
         <p className="nm">{title}</p>
         {children && <div className="bd mt-1.5">{children}</div>}
       </div>
-      {action && <div className="shrink-0">{action}</div>}
+      {action && <div className="w-full shrink-0 sm:w-auto">{action}</div>}
     </div>
   );
 }
@@ -227,7 +277,7 @@ export function Field({
   htmlFor?: string;
 }) {
   return (
-    <div>
+    <div className="min-w-0">
       <label htmlFor={htmlFor} className="ml mb-2.5 block">
         {label}
       </label>
@@ -243,35 +293,172 @@ export function Modal({
   description,
   children,
   onClose,
+  suspended = false,
 }: {
   open: boolean;
   title: string;
   description?: string;
   children: ReactNode;
   onClose: () => void;
+  suspended?: boolean;
 }) {
-  if (!open) return null;
-  return (
+  const mounted = useSyncExternalStore(
+    subscribeToMount,
+    getClientMountSnapshot,
+    getServerMountSnapshot,
+  );
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const restoreFocusRef = useRef<HTMLElement | null>(null);
+  const onCloseRef = useRef(onClose);
+  const suspendedRef = useRef(suspended);
+  const modalId = useId();
+  const titleId = `${modalId}-title`;
+  const descriptionId = `${modalId}-description`;
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+    suspendedRef.current = suspended;
+  }, [onClose, suspended]);
+
+  useEffect(() => {
+    if (!mounted || !open) return;
+
+    restoreFocusRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const unlockBody = lockBodyScroll();
+    const dialogElement = dialogRef.current;
+    modalStack.push(modalId);
+
+    const background = Array.from(document.body.children)
+      .filter((element) => element !== overlayRef.current)
+      .map((element) => ({ element, wasInert: element.hasAttribute("inert") }));
+    for (const { element } of background) element.setAttribute("inert", "");
+
+    const keepFocusedControlVisible = () => {
+      const active = document.activeElement;
+      const dialog = dialogRef.current;
+      if (!(active instanceof HTMLElement) || !dialog?.contains(active)) return;
+      const viewport = window.visualViewport;
+      const viewportTop = viewport?.offsetTop ?? 0;
+      const viewportBottom = viewportTop + (viewport?.height ?? window.innerHeight);
+      const rect = active.getBoundingClientRect();
+      if (rect.top < viewportTop + 16 || rect.bottom > viewportBottom - 16) {
+        active.scrollIntoView({ block: "center", behavior: "auto" });
+      }
+    };
+    const syncToVisualViewport = () => {
+      const overlay = overlayRef.current;
+      const viewport = window.visualViewport;
+      if (!overlay || !viewport) return;
+      overlay.style.left = `${viewport.offsetLeft}px`;
+      overlay.style.top = `${viewport.offsetTop}px`;
+      overlay.style.width = `${viewport.width}px`;
+      overlay.style.height = `${viewport.height}px`;
+      window.requestAnimationFrame(keepFocusedControlVisible);
+    };
+    syncToVisualViewport();
+    dialogElement?.addEventListener("focusin", keepFocusedControlVisible);
+    window.visualViewport?.addEventListener("resize", syncToVisualViewport);
+    window.visualViewport?.addEventListener("scroll", syncToVisualViewport);
+
+    const focusFrame = window.requestAnimationFrame(() => {
+      closeButtonRef.current?.focus({ preventScroll: true });
+    });
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (suspendedRef.current || modalStack.at(-1) !== modalId) return;
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onCloseRef.current();
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const focusable = Array.from(
+        dialogRef.current?.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), a[href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ) ?? [],
+      ).filter((element) => element.getClientRects().length > 0);
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable.at(-1)!;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.cancelAnimationFrame(focusFrame);
+      document.removeEventListener("keydown", handleKeyDown);
+      dialogElement?.removeEventListener("focusin", keepFocusedControlVisible);
+      window.visualViewport?.removeEventListener("resize", syncToVisualViewport);
+      window.visualViewport?.removeEventListener("scroll", syncToVisualViewport);
+      const stackIndex = modalStack.lastIndexOf(modalId);
+      if (stackIndex >= 0) modalStack.splice(stackIndex, 1);
+      for (const { element, wasInert } of background) {
+        if (!wasInert) element.removeAttribute("inert");
+      }
+      unlockBody();
+      const restoreTarget = restoreFocusRef.current;
+      window.requestAnimationFrame(() => {
+        if (restoreTarget?.isConnected) restoreTarget.focus({ preventScroll: true });
+      });
+    };
+  }, [modalId, mounted, open]);
+
+  if (!mounted || !open) return null;
+
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-[#171310]/75 p-0 backdrop-blur-[2px] sm:items-center sm:p-6"
-      onMouseDown={onClose}
+      ref={overlayRef}
+      className="fixed inset-0 z-[100] flex items-end justify-center overflow-hidden bg-[#171310]/75 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur-[2px] sm:items-center sm:p-6"
+      aria-hidden={suspended || undefined}
+      inert={suspended}
+      onPointerDown={(event) => {
+        if (!suspended && event.target === event.currentTarget) onCloseRef.current();
+      }}
     >
       <section
-        className="frame safe-bottom max-h-[92dvh] w-full max-w-xl overflow-y-auto rounded-b-none px-6 pb-6 pt-7 sm:rounded-[28px] sm:px-8 sm:pb-8"
+        ref={dialogRef}
+        className="frame flex max-h-full w-full max-w-xl flex-col overflow-hidden rounded-b-none sm:max-h-[calc(100dvh-3rem)] sm:rounded-[28px]"
         role="dialog"
         aria-modal="true"
-        aria-labelledby="modal-title"
-        onMouseDown={(event) => event.stopPropagation()}
+        aria-labelledby={titleId}
+        aria-describedby={description ? descriptionId : undefined}
       >
-        <div className="mx-auto mb-5 h-[5px] w-10 rounded-full bg-[var(--edge-strong)] sm:hidden" />
-        <div className="mb-7">
-          <h2 id="modal-title" className="hd text-[24px]">
-            {title}
-          </h2>
-          {description && <p className="bd mt-2.5">{description}</p>}
+        <div className="shrink-0 px-6 pb-5 pt-4 sm:px-8 sm:pt-7">
+          <div className="mx-auto mb-4 h-[5px] w-10 rounded-full bg-[var(--edge-strong)] sm:hidden" />
+          <div className="relative pr-12">
+            <h2 id={titleId} className="hd text-[24px]">
+              {title}
+            </h2>
+            {description && (
+              <p id={descriptionId} className="bd mt-2.5">
+                {description}
+              </p>
+            )}
+            <button
+              ref={closeButtonRef}
+              type="button"
+              className="absolute -right-1 -top-2 flex size-11 items-center justify-center rounded-full text-[var(--ink-4)] transition hover:bg-[var(--ground-tint)] hover:text-[var(--ink)]"
+              aria-label={`Close ${title}`}
+              onClick={() => onCloseRef.current()}
+            >
+              <X className="size-5" aria-hidden="true" />
+            </button>
+          </div>
         </div>
-        {children}
+        <div className="min-h-0 overflow-y-auto overscroll-contain px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] [scroll-padding-block:1rem_max(6rem,env(safe-area-inset-bottom))] sm:px-8 sm:pb-8">
+          {children}
+        </div>
       </section>
-    </div>
+    </div>,
+    document.body,
   );
 }
