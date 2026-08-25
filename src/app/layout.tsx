@@ -1,24 +1,25 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, Newsreader } from "next/font/google";
+import { Familjen_Grotesk, Work_Sans } from "next/font/google";
 import { AppShell } from "@/components/app-shell";
 import "./globals.css";
 
-// The reading serif every line of the app is set in. Kept variable so the
-// optical-size axis can follow the type scale from 10px labels to 40px titles.
-const newsreader = Newsreader({
+// The name of a thing — headings, the wordmark, every number on a disc — is
+// set in Familjen Grotesk: rounded, full, a little warm.
+const familjen = Familjen_Grotesk({
   subsets: ["latin"],
   style: ["normal", "italic"],
-  axes: ["opsz"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
-  variable: "--font-newsreader",
+  variable: "--font-familjen",
 });
 
-// Mono carries the numbers and the machine-recorded facts, nothing else.
-const plexMono = IBM_Plex_Mono({
+// Work Sans says everything else, at a size you can read while your hands
+// are full.
+const workSans = Work_Sans({
   subsets: ["latin"],
-  weight: ["400"],
+  style: ["normal", "italic"],
   display: "swap",
-  variable: "--font-plex-mono",
+  variable: "--font-work-sans",
 });
 
 export const metadata: Metadata = {
@@ -41,7 +42,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#161411",
+  themeColor: "#171310",
   colorScheme: "dark",
 };
 
@@ -49,7 +50,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${newsreader.variable} ${plexMono.variable}`}
+      className={`${familjen.variable} ${workSans.variable}`}
       suppressHydrationWarning
     >
       <body>

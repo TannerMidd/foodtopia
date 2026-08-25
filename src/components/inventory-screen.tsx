@@ -22,6 +22,7 @@ import {
   locationNames,
   locationOrder,
   numberWord,
+  relativeDate,
 } from "./format";
 import { useOfflineInventory } from "./offline-provider";
 import {
@@ -63,7 +64,7 @@ function ConflictRow({ record }: { record: OutboxRecord }) {
   }
 
   return (
-    <div className="row min-h-0 flex-col items-start gap-4 py-5 sm:flex-row sm:items-center">
+    <div className="row min-h-0 flex-col items-start gap-4 !rounded-[20px] py-5 sm:flex-row sm:items-center">
       <div className="min-w-0 flex-1">
         <p className="nm">
           {record.status === "conflict" ? "Household update collided" : "Queued change was rejected"}
@@ -85,7 +86,7 @@ function ConflictRow({ record }: { record: OutboxRecord }) {
         </button>
         <button
           type="button"
-          className="m border-b border-[var(--accent-rule)] pb-0.5 text-[11px] text-[var(--ink)] disabled:opacity-40"
+          className="m text-[11px] font-semibold text-[var(--accent)] disabled:opacity-40"
           disabled={busy !== null}
           onClick={() => void resolve("retry")}
         >
@@ -453,7 +454,7 @@ function AddItemModal({
   );
 }
 
-/* One lot, one line. Every column is a single recorded fact. */
+/* One lot, one tile. The name and its form, the date, the amount. */
 function LotRow({
   lot,
   onAdjust,
@@ -464,39 +465,42 @@ function LotRow({
   onAction: (lot: InventoryLot, action: "consume" | "discard") => void;
 }) {
   const printed = dateText(lot);
+  const pressing = printed != null && isDatePressing(lot);
   return (
     <article
       id={`lot-${lot.id}`}
-      className="row row-link min-h-[56px] flex-wrap gap-x-4 gap-y-1 px-1 py-3 sm:flex-nowrap sm:gap-4 sm:py-0"
+      className="row row-link !rounded-[18px] !px-[18px] !py-[15px] min-h-0 flex-wrap gap-x-3.5 gap-y-1 sm:flex-nowrap"
     >
-      <h3 className="nm min-w-0 flex-1 truncate">{lot.name}</h3>
-      <span className="m order-3 w-full text-[11px] text-[var(--ink-6)] sm:order-none sm:w-[150px] sm:truncate">
-        {formText(lot)}
+      <span className="min-w-0 flex-1">
+        <h3 className="truncate font-[family-name:var(--font-familjen)] text-[16.5px] font-semibold">
+          {lot.name}
+        </h3>
+        <span className="m mt-1 block truncate text-[11px] text-[var(--ink-5)]">{formText(lot)}</span>
       </span>
+      {pressing ? (
+        // Running out: the date becomes a small terracotta pill.
+        <span className="m order-3 rounded-[14px] bg-[var(--accent)] px-[11px] py-[5px] text-[10.5px] font-semibold text-[var(--accent-ink)] sm:order-none">
+          {relativeDate(lot.dateLabel!)}
+        </span>
+      ) : printed ? (
+        <span className="m order-3 whitespace-nowrap text-[11px] text-[var(--ink-4)] sm:order-none">
+          {relativeDate(lot.dateLabel!)}
+        </span>
+      ) : null}
       <span
         className={cn(
-          "m order-4 whitespace-nowrap text-[11px] sm:order-none sm:w-[134px]",
-          printed ? (isDatePressing(lot) ? "text-[var(--time)]" : "text-[var(--ink-4)]") : "text-[var(--ink-6)]",
-        )}
-      >
-        {printed ?? "—"}
-      </span>
-      <span
-        className={cn(
-          "m w-[76px] text-right text-[12px]",
+          "w-[56px] shrink-0 text-right font-[family-name:var(--font-familjen)]",
           lot.quantityStatus === "unknown"
-            ? "text-[11px] text-[var(--ink-6)]"
-            : lot.quantityStatus === "estimated"
-              ? "text-[var(--ink-2)]"
-              : "text-[var(--ink)]",
+            ? "m text-[12px] text-[var(--ink-5)]"
+            : "text-[15px] font-semibold",
         )}
       >
         {amountText(lot)}
       </span>
-      <span className="flex flex-none items-center gap-3.5 text-[var(--ink-5)]">
+      <span className="flex flex-none items-center gap-2 text-[var(--ink-5)]">
         <button
           type="button"
-          className="flex size-7 items-center justify-center hover:text-[var(--ink)]"
+          className="flex size-8 items-center justify-center rounded-full transition hover:bg-[var(--ground-tint)] hover:text-[var(--ink)]"
           onClick={() => onAdjust(lot)}
           aria-label={`Adjust ${lot.name}`}
         >
@@ -504,7 +508,7 @@ function LotRow({
         </button>
         <button
           type="button"
-          className="flex size-7 items-center justify-center hover:text-[var(--ink)]"
+          className="flex size-8 items-center justify-center rounded-full transition hover:bg-[var(--ground-tint)] hover:text-[var(--ink)]"
           onClick={() => onAction(lot, "consume")}
           aria-label={`Mark ${lot.name} used up`}
         >
@@ -512,7 +516,7 @@ function LotRow({
         </button>
         <button
           type="button"
-          className="flex size-7 items-center justify-center hover:text-[var(--time)]"
+          className="flex size-8 items-center justify-center rounded-full transition hover:bg-[var(--ground-tint)] hover:text-[var(--accent)]"
           onClick={() => onAction(lot, "discard")}
           aria-label={`Discard ${lot.name}`}
         >
@@ -611,8 +615,8 @@ export function InventoryScreen() {
     <Page>
       <header className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="ml">the kitchen</p>
-          <h1 className="hd mt-3 text-[clamp(1.6rem,6vw,1.75rem)]">
+          <p className="ml !text-[var(--accent)]">the kitchen</p>
+          <h1 className="hd mt-3 max-w-[26rem] text-[clamp(1.9rem,7vw,2.1rem)]">
             {hydrated
               ? active.length
                 ? `${capitalNumberWord(active.length)} thing${active.length === 1 ? "" : "s"}, on ${numberOfShelves(active)}.`
@@ -623,25 +627,26 @@ export function InventoryScreen() {
         <div className="flex items-center gap-5">
           <button
             type="button"
-            className="m text-[11px] text-[var(--ink-5)] hover:text-[var(--ink)]"
+            className="m text-[12px] text-[var(--ink-4)] hover:text-[var(--ink)]"
             onClick={() => setAdding(true)}
           >
             add one by hand
           </button>
           <Link
             href="/capture"
-            className="glow inline-flex min-h-10 items-center gap-2.5 rounded-[3px] px-4 text-[14px] font-light"
+            className="glow inline-flex min-h-12 items-center gap-2.5 rounded-full px-6 text-[14.5px]"
           >
-            <Plus className="size-4 text-[var(--accent-ink)]" aria-hidden="true" />
+            <Plus className="size-4" aria-hidden="true" />
             Photograph a batch
           </Link>
         </div>
       </header>
 
-      {/* Search and shelf filters share one hairline. */}
-      <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3 border-b border-[var(--hairline)] pb-3.5">
-        <div className="flex min-w-[12rem] flex-1 items-center gap-2.5">
-          <Search className="size-4 flex-none text-[var(--ink-6)]" aria-hidden="true" />
+      {/* Search is a soft bar; shelf filters are chips. The selected shelf is
+          the one cream chip on the screen. */}
+      <div className="mt-7 flex flex-col gap-3">
+        <div className="flex min-h-[52px] items-center gap-3 rounded-[26px] bg-[var(--ground-hi)] px-5">
+          <Search className="size-[17px] flex-none text-[var(--ink-5)]" aria-hidden="true" />
           <input
             type="search"
             className="bd min-h-9 w-full bg-transparent text-[var(--ink)] focus:outline-none"
@@ -653,7 +658,7 @@ export function InventoryScreen() {
           {query && (
             <button
               type="button"
-              className="flex size-7 flex-none items-center justify-center text-[var(--ink-6)] hover:text-[var(--ink)]"
+              className="flex size-7 flex-none items-center justify-center text-[var(--ink-5)] hover:text-[var(--ink)]"
               onClick={() => setQuery("")}
               aria-label="Clear search"
             >
@@ -661,17 +666,17 @@ export function InventoryScreen() {
             </button>
           )}
         </div>
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-2" role="group" aria-label="Filter by shelf">
+        <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Filter by shelf">
           {(["all", ...locationOrder] as const).map((value) => (
             <button
               key={value}
               type="button"
               aria-pressed={filter === value}
               className={cn(
-                "m pb-1 text-[10.5px] transition",
+                "m inline-flex items-center rounded-[20px] px-4 py-[9px] text-[13px] transition",
                 filter === value
-                  ? "border-b border-[var(--accent)] text-[var(--ink)]"
-                  : "text-[var(--ink-5)] hover:text-[var(--ink-2)]",
+                  ? "bg-[var(--ink)] font-semibold text-[var(--page)]"
+                  : "bg-[var(--ground-hi)] font-medium text-[var(--ink-3)] hover:bg-[var(--ground-tint)] hover:text-[var(--ink-2)]",
               )}
               onClick={() => setFilter(value)}
             >
@@ -703,36 +708,40 @@ export function InventoryScreen() {
       )}
 
       {!hydrated ? (
-        <div className="mt-9 space-y-3">
-          <div className="skeleton h-14" />
-          <div className="skeleton h-14" />
-          <div className="skeleton h-14" />
+        <div className="mt-9 space-y-2.5">
+          <div className="skeleton h-14 rounded-[18px]" />
+          <div className="skeleton h-14 rounded-[18px]" />
+          <div className="skeleton h-14 rounded-[18px]" />
         </div>
       ) : shelves.length ? (
         <div className="mt-9 flex flex-col gap-9">
           {shelves.map((location) => {
             const group = filtered.filter((lot) => lot.location === location);
             return (
-              <Section
-                key={location}
-                id={`shelf-${location}`}
-                label={locationNames[location]}
-                meta={String(group.length)}
-              >
-                {group.map((lot) => (
-                  <LotRow
-                    key={lot.id}
-                    lot={lot}
-                    onAdjust={setAdjusting}
-                    onAction={(item, action) => void applyStatus(item, action)}
-                  />
-                ))}
-              </Section>
+              <section key={location} id={`shelf-${location}`} className="flex flex-col gap-3">
+                {/* The shelf: a sage label, and its count as the only number. */}
+                <div className="flex items-baseline justify-between">
+                  <p className="ml !text-[var(--sage)]">{locationNames[location]}</p>
+                  <span className="font-[family-name:var(--font-familjen)] text-[16px] font-semibold text-[var(--ink-5)]">
+                    {String(group.length).padStart(2, "0")}
+                  </span>
+                </div>
+                <div className="ledger">
+                  {group.map((lot) => (
+                    <LotRow
+                      key={lot.id}
+                      lot={lot}
+                      onAdjust={setAdjusting}
+                      onAction={(item, action) => void applyStatus(item, action)}
+                    />
+                  ))}
+                </div>
+              </section>
             );
           })}
         </div>
       ) : (
-        <div className="mt-9 border-t border-[var(--hairline)] py-10">
+        <div className="mt-9 rounded-[20px] bg-[var(--ground)] px-6 py-10">
           <h2 className="hd text-[20px]">
             {query || filter !== "all" ? "Nothing matches." : "The kitchen is empty."}
           </h2>
@@ -744,7 +753,7 @@ export function InventoryScreen() {
           {!query && filter === "all" && (
             <Link
               href="/capture"
-              className="glow mt-6 inline-flex min-h-11 items-center gap-2.5 rounded-[3px] px-[18px] text-[15px] font-light"
+              className="glow mt-6 inline-flex min-h-12 items-center gap-2.5 rounded-full px-6 text-[15px]"
             >
               Photograph a batch
             </Link>
@@ -756,7 +765,7 @@ export function InventoryScreen() {
         <div className="mt-11">
           <Section label="lately gone">
             {removed.map((lot) => (
-              <div key={lot.id} className="row px-1">
+              <div key={lot.id} className="row min-h-0">
                 <span className="nm min-w-0 flex-1 truncate text-[var(--ink-5)]">{lot.name}</span>
                 <span className="m text-[10.5px] text-[var(--ink-6)]">{lot.status}</span>
                 <button
@@ -773,8 +782,8 @@ export function InventoryScreen() {
       )}
 
       {/* The closing line: the standing promise, and the last thing that moved. */}
-      <div className="mt-11 flex flex-col gap-4 border-t border-[var(--hairline)] pt-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="bd max-w-[32rem] text-[12px] text-[var(--ink-6)]">
+      <div className="mt-11 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <p className="bd max-w-[32rem] text-[12.5px] text-[var(--ink-5)]">
           Only presence is required. Amount, form, place and printed dates stay optional, and unknown
           stays unknown so a recipe never assumes more than you entered.
         </p>
@@ -783,7 +792,7 @@ export function InventoryScreen() {
             last change · {undo.label} ·{" "}
             <button
               type="button"
-              className="border-b border-[var(--accent-rule)] text-[var(--accent-ink)]"
+              className="font-semibold text-[var(--accent)]"
               onClick={() => void undoLast()}
             >
               undo

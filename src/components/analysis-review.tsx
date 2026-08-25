@@ -19,7 +19,6 @@ import {
   Button,
   Field,
   Page,
-  Section,
   StateNotice,
   cn,
   inputClass,
@@ -52,7 +51,7 @@ const destination: Record<FoodLocation, string> = {
   other: "into other storage",
 };
 
-/* A lit square when kept, an empty one when dropped. Nothing else moves. */
+/* A sage disc when kept, an empty ring when dropped. Nothing else moves. */
 function Tick({
   checked,
   label,
@@ -70,13 +69,13 @@ function Tick({
       aria-label={label}
       onClick={onClick}
       className={cn(
-        "flex size-[18px] flex-none items-center justify-center rounded-[2px] transition",
+        "flex size-6 flex-none items-center justify-center rounded-full transition",
         checked
-          ? "bg-[var(--accent-solid)] text-[var(--accent-on)]"
-          : "border border-[var(--edge-strong)] text-transparent hover:border-[var(--ink-5)]",
+          ? "bg-[var(--sage)] text-[var(--sage-ink)]"
+          : "border-2 border-[#3a322a] text-transparent hover:border-[var(--ink-5)]",
       )}
     >
-      <Check className="size-3" aria-hidden="true" />
+      <Check className="size-[14px]" aria-hidden="true" />
     </button>
   );
 }
@@ -100,7 +99,7 @@ function KeptCandidate({
   const name = candidate.suggestedName.trim();
 
   return (
-    <div className="border-b border-[var(--hairline)] px-1 py-3.5 last:border-b-0">
+    <div className="rounded-[18px] bg-[var(--ground-hi)] px-[18px] py-[15px]">
       <div className="flex items-center gap-3.5">
         <Tick
           checked
@@ -109,7 +108,7 @@ function KeptCandidate({
         />
         <button
           type="button"
-          className="nm min-w-0 flex-1 truncate text-left hover:text-[var(--accent-ink)]"
+          className="nm min-w-0 flex-1 truncate text-left text-[16.5px] hover:text-[var(--ink-2)]"
           aria-expanded={expanded}
           onClick={onToggleExpand}
         >
@@ -117,8 +116,8 @@ function KeptCandidate({
         </button>
         <span
           className={cn(
-            "m flex-none text-[11px]",
-            candidate.quantityStatus === "unknown" ? "text-[var(--ink-6)]" : "text-[var(--ink-2)]",
+            "m flex-none rounded-[14px] bg-[var(--ground-tint)] px-[11px] py-[5px] text-[11px] font-semibold",
+            candidate.quantityStatus === "unknown" ? "text-[var(--ink-5)]" : "text-[var(--ink-2)]",
           )}
         >
           {amountText(candidate)}
@@ -128,11 +127,11 @@ function KeptCandidate({
       {!expanded && hasNotes && (
         <div className="ml-8 mt-3 flex flex-wrap gap-x-6 gap-y-1.5">
           {candidate.form !== "unspecified" && (
-            <span className="m text-[10.5px] text-[var(--ink-6)]">{candidate.form}</span>
+            <span className="m text-[11px] text-[var(--ink-5)]">{candidate.form}</span>
           )}
-          <span className="m text-[10.5px] text-[var(--ink-6)]">{destination[candidate.location]}</span>
+          <span className="m text-[11px] text-[var(--ink-5)]">{destination[candidate.location]}</span>
           {candidate.uncertaintyReason && (
-            <span className="m text-[10.5px] text-[var(--time)]">{candidate.uncertaintyReason}</span>
+            <span className="m text-[11px] font-semibold text-[var(--time)]">{candidate.uncertaintyReason}</span>
           )}
         </div>
       )}
@@ -231,7 +230,7 @@ function KeptCandidate({
             </select>
           </Field>
           {candidate.uncertaintyReason && (
-            <p className="bd text-[12px] text-[var(--time)] sm:col-span-2">
+            <p className="bd text-[12.5px] font-medium text-[var(--time)] sm:col-span-2">
               {candidate.uncertaintyReason}
             </p>
           )}
@@ -384,16 +383,18 @@ export function AnalysisReview({ analysisId }: { analysisId: string }) {
     return (
       <Page className="flex min-h-[64dvh] max-w-[42rem] items-center">
         <div className="max-w-sm" role="status">
-          <p className="ml">add food · working</p>
-          <h1 className="hd mt-3 flex items-center gap-3 text-[26px]">
+          <p className="ml !text-[var(--accent)]">add food · working</p>
+          <h1 className="hd mt-3 flex items-center gap-3 text-[clamp(1.9rem,7vw,2.2rem)]">
             <LoaderCircle className="size-5 animate-spin text-[var(--accent)]" aria-hidden="true" />
             Looking for food
           </h1>
           <p className="bd mt-2.5">
             This usually takes a moment. You will see every suggestion before the kitchen changes.
           </p>
-          <div className="mt-7 h-px bg-[var(--hairline)]">
-            <div className="h-px w-1/2 animate-pulse bg-[var(--accent-rule)] shadow-[0_0_8px_1px_var(--accent-halo)]" />
+          <div className="mt-7 flex items-center gap-2">
+            <span className="h-[5px] w-9 animate-pulse rounded-full bg-[var(--accent)]" />
+            <span className="h-[5px] w-9 rounded-full bg-[var(--ground-tint)]" />
+            <span className="h-[5px] w-9 rounded-full bg-[var(--ground-tint)]" />
           </div>
           {error && (
             <p className="bd mt-4 text-[var(--time)]" role="alert">
@@ -416,8 +417,8 @@ export function AnalysisReview({ analysisId }: { analysisId: string }) {
   if (["failed", "cancelled", "expired"].includes(analysis.status)) {
     return (
       <Page className="max-w-[42rem]">
-        <p className="ml">add food · stopped</p>
-        <h1 className="hd mt-3 text-[26px]">
+        <p className="ml !text-[var(--accent)]">add food · stopped</p>
+        <h1 className="hd mt-3 text-[clamp(1.9rem,7vw,2.2rem)]">
           {analysis.status === "expired" ? "This review expired." : "These photos could not be read."}
         </h1>
         <p className="bd mt-2.5 max-w-md">
@@ -428,11 +429,14 @@ export function AnalysisReview({ analysisId }: { analysisId: string }) {
         <div className="mt-7 flex items-center gap-6">
           <Link
             href="/capture"
-            className="glow inline-flex min-h-11 items-center rounded-[3px] px-[18px] text-[15px] font-light"
+            className="glow inline-flex min-h-12 items-center rounded-full px-6 text-[15px]"
           >
             Try another photo
           </Link>
-          <Link href="/inventory#add-manually" className="m text-[11px] text-[var(--ink-4)] hover:text-[var(--ink)]">
+          <Link
+            href="/inventory#add-manually"
+            className="m text-[11px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+          >
             add one by hand
           </Link>
         </div>
@@ -443,14 +447,14 @@ export function AnalysisReview({ analysisId }: { analysisId: string }) {
   if (analysis.status === "applied") {
     return (
       <Page className="max-w-[42rem]">
-        <p className="ml">add food · done</p>
-        <h1 className="hd mt-3 text-[26px]">This batch is already in the kitchen.</h1>
+        <p className="ml !text-[var(--accent)]">add food · done</p>
+        <h1 className="hd mt-3 text-[clamp(1.9rem,7vw,2.2rem)]">This batch is already in the kitchen.</h1>
         <p className="bd mt-2.5 max-w-md">
           The review was confirmed and its raw photos deleted. Every item stays editable.
         </p>
         <Link
           href="/inventory"
-          className="glow mt-7 inline-flex min-h-11 items-center rounded-[3px] px-[18px] text-[15px] font-light"
+          className="glow mt-7 inline-flex min-h-12 items-center rounded-full px-6 text-[15px]"
         >
           Open the kitchen
         </Link>
@@ -465,16 +469,16 @@ export function AnalysisReview({ analysisId }: { analysisId: string }) {
     <Page className="max-w-[44rem]">
       <header className="flex items-start justify-between gap-6">
         <div>
-          <p className="ml">add food · second of two</p>
-          <h1 className="hd mt-3 text-[clamp(1.5rem,6vw,1.65rem)]">Keep what&rsquo;s right.</h1>
-          <p className="bd mt-2.5 max-w-[30rem]">
+          <p className="ml !text-[var(--accent)]">add food · second of two</p>
+          <h1 className="hd mt-3 text-[clamp(1.9rem,7vw,2.2rem)]">Keep what&rsquo;s right.</h1>
+          <p className="bd mt-3 max-w-[30rem] text-[15px]">
             {candidates.length} suggestion{candidates.length === 1 ? "" : "s"}. Drop anything wrong, fix
             anything close. Nothing is saved until you say so.
           </p>
         </div>
         <button
           type="button"
-          className="m flex-none text-[10.5px] text-[var(--ink-5)] hover:text-[var(--ink)] disabled:opacity-40"
+          className="m flex-none rounded-full px-4 py-2 text-[10.5px] text-[var(--ink-5)] transition hover:text-[var(--ink)] disabled:opacity-40"
           disabled={cancelling}
           onClick={() => void cancelBatch()}
         >
@@ -491,57 +495,78 @@ export function AnalysisReview({ analysisId }: { analysisId: string }) {
       )}
 
       <div className="mt-9 flex flex-col gap-8">
-        <Section label="keeping" meta={String(kept.length)} labelWidth="78px">
-          {kept.length ? (
-            kept.map((candidate) => (
-              <KeptCandidate
-                key={candidate.id}
-                candidate={candidate}
-                expanded={expanded.includes(candidate.id)}
-                onToggleExpand={() => toggleExpand(candidate.id)}
-                onChange={(next) => updateCandidate(candidate.id, next)}
-              />
-            ))
-          ) : (
-            <p className="bd py-4 text-[var(--ink-4)]">Nothing kept yet. Tick anything below to keep it.</p>
-          )}
-          <button
-            type="button"
-            className="row row-link min-h-[48px] w-full gap-3.5 px-1 text-left"
-            onClick={addMissed}
-          >
-            <Plus className="size-4 flex-none text-[var(--ink-6)]" aria-hidden="true" />
-            <span className="bd flex-1 italic text-[var(--ink-4)]">Something the photo missed…</span>
-          </button>
-        </Section>
+        <section className="flex flex-col gap-3 sm:flex-row sm:gap-7">
+          <div className="flex flex-none items-baseline justify-between sm:block" style={{ width: 78 }}>
+            <p className="ml !text-[var(--sage)]">keeping</p>
+            <span className="font-[family-name:var(--font-familjen)] text-[16px] font-semibold text-[var(--ink-5)]">
+              {String(kept.length).padStart(2, "0")}
+            </span>
+          </div>
+          <div className="flex min-w-0 flex-1 flex-col gap-2">
+            {kept.length ? (
+              kept.map((candidate) => (
+                <KeptCandidate
+                  key={candidate.id}
+                  candidate={candidate}
+                  expanded={expanded.includes(candidate.id)}
+                  onToggleExpand={() => toggleExpand(candidate.id)}
+                  onChange={(next) => updateCandidate(candidate.id, next)}
+                />
+              ))
+            ) : (
+              <p className="bd py-4 text-[var(--ink-4)]">Nothing kept yet. Tick anything below to keep it.</p>
+            )}
+            <button
+              type="button"
+              className="flex min-h-[52px] w-full items-center gap-3.5 rounded-[18px] bg-[var(--ground)] px-[18px] py-[15px] text-left transition hover:bg-[var(--ground-hi)]"
+              onClick={addMissed}
+            >
+              <span className="flex size-6 flex-none items-center justify-center rounded-full bg-[var(--ground-tint)]">
+                <Plus className="size-[14px] text-[var(--sage)]" aria-hidden="true" />
+              </span>
+              <span className="bd flex-1 italic">Something the photo missed…</span>
+            </button>
+          </div>
+        </section>
 
         {dropped.length > 0 && (
-          <Section label="dropped" meta={String(dropped.length)} labelWidth="78px">
-            {dropped.map((candidate) => (
-              <div key={candidate.id} className="row gap-3.5 px-1">
-                <Tick
-                  checked={false}
-                  label={`Keep ${candidate.suggestedName || "this suggestion"}`}
-                  onClick={() => updateCandidate(candidate.id, { ...candidate, accepted: true })}
-                />
-                <span className="nm min-w-0 flex-1 truncate text-[var(--ink-6)]">
-                  {candidate.suggestedName || "Unnamed suggestion"}
-                </span>
-                <button
-                  type="button"
-                  className="m flex-none border-b border-[var(--edge-strong)] pb-0.5 text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
-                  onClick={() => updateCandidate(candidate.id, { ...candidate, accepted: true })}
+          <section className="flex flex-col gap-3 sm:flex-row sm:gap-7">
+            <div className="flex flex-none items-baseline justify-between sm:block" style={{ width: 78 }}>
+              <p className="ml">dropped</p>
+              <span className="font-[family-name:var(--font-familjen)] text-[16px] font-semibold text-[var(--ink-5)]">
+                {String(dropped.length).padStart(2, "0")}
+              </span>
+            </div>
+            <div className="flex min-w-0 flex-1 flex-col gap-2">
+              {dropped.map((candidate) => (
+                <div
+                  key={candidate.id}
+                  className="flex items-center gap-3.5 rounded-[18px] bg-[var(--ground)] px-[18px] py-[15px]"
                 >
-                  keep it after all
-                </button>
-              </div>
-            ))}
-          </Section>
+                  <Tick
+                    checked={false}
+                    label={`Keep ${candidate.suggestedName || "this suggestion"}`}
+                    onClick={() => updateCandidate(candidate.id, { ...candidate, accepted: true })}
+                  />
+                  <span className="min-w-0 flex-1 truncate text-[16px] text-[var(--ink-5)] line-through">
+                    {candidate.suggestedName || "Unnamed suggestion"}
+                  </span>
+                  <button
+                    type="button"
+                    className="m flex-none rounded-[16px] bg-[var(--ground-tint)] px-[13px] py-[6px] text-[11.5px] font-semibold text-[var(--sage)] transition hover:bg-[var(--ground-hi)]"
+                    onClick={() => updateCandidate(candidate.id, { ...candidate, accepted: true })}
+                  >
+                    keep it after all
+                  </button>
+                </div>
+              ))}
+            </div>
+          </section>
         )}
       </div>
 
-      <div className="mt-9 flex flex-col gap-5 border-t border-[var(--hairline)] pt-4.5 sm:flex-row sm:items-center sm:justify-between">
-        <p className="bd max-w-[19rem] text-[12px] text-[var(--ink-6)]">
+      <div className="mt-9 flex flex-col gap-5 rounded-[26px] bg-[var(--ground-hi)] p-[22px] sm:flex-row sm:items-center sm:justify-between">
+        <p className="bd max-w-[19rem] text-[13px]">
           Saving adds {numberWord(kept.length)} item{kept.length === 1 ? "" : "s"} and deletes the photos.
           Every item stays editable afterwards.
         </p>

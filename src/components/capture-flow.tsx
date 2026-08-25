@@ -16,7 +16,7 @@ import {
 } from "@/lib/client/api";
 import { formatFileSize, prepareInventoryPhoto } from "@/lib/client/image";
 import { useOfflineInventory } from "./offline-provider";
-import { Button, Card, Page, Section, StateNotice } from "./ui";
+import { Button, Card, Page, Section, StateNotice, cn } from "./ui";
 
 type PreparedPhoto = { file: File; url: string };
 type PendingAnalysis = { analysisId: string; assetIds: string[] };
@@ -236,9 +236,13 @@ export function CaptureFlow() {
   return (
     <Page className="max-w-[42rem]">
       <header>
-        <p className="ml">add food · first of two</p>
-        <h1 className="hd mt-3 text-[clamp(1.5rem,6vw,1.65rem)]">Photograph the counter.</h1>
-        <p className="bd mt-2.5 max-w-[30rem]">
+        <div className="flex items-center gap-2">
+          <span className="h-[5px] w-9 rounded-full bg-[var(--accent)]" aria-hidden="true" />
+          <span className="h-[5px] w-9 rounded-full bg-[var(--ground-tint)]" aria-hidden="true" />
+        </div>
+        <p className="ml mt-2.5 !text-[var(--accent)]">add food · first of two</p>
+        <h1 className="hd mt-3 max-w-[22rem] text-[clamp(1.9rem,7vw,2.25rem)]">Photograph the counter.</h1>
+        <p className="bd mt-3 max-w-[30rem] text-[15px]">
           One clear overview is usually enough. Add an angle only when things overlap.
         </p>
       </header>
@@ -276,7 +280,7 @@ export function CaptureFlow() {
 
       {showConsent && (
         <Card className="mt-6" aria-live="polite">
-          <p className="ml">first photo analysis</p>
+          <p className="ml !text-[var(--accent)]">first photo analysis</p>
           <h2 className="hd mt-3 text-[22px]">Review the cloud-processing notice</h2>
           <div className="bd mt-4 flex flex-col gap-3">
             {apiMode === "connected" ? (
@@ -337,7 +341,7 @@ export function CaptureFlow() {
           </div>
           <Link
             href="/privacy"
-            className="m mt-4 inline-flex min-h-10 items-center border-b border-[var(--accent-rule)] pb-0.5 text-[11px] text-[var(--ink)]"
+            className="m mt-4 inline-flex min-h-10 items-center rounded-full bg-[var(--ground)] px-4 text-[11px] text-[var(--ink-2)] transition hover:bg-[var(--ground-tint)] hover:text-[var(--ink)]"
           >
             read the full beta privacy notice
           </Link>
@@ -363,40 +367,43 @@ export function CaptureFlow() {
       {/* Photos sit as plain tiles, no frame — the food is the subject. */}
       <div className="mt-8 grid grid-cols-2 gap-3.5">
         {photos.map((photo, index) => (
-          <figure key={photo.url} className="relative flex aspect-[4/3] items-end overflow-hidden rounded-[3px] bg-[var(--ground-tint)] p-2.5">
+          <figure key={photo.url} className="relative flex aspect-[4/3] items-end justify-between overflow-hidden rounded-[20px] bg-[var(--ground-tint)] p-3">
             {/* Prepared images are local blob URLs and cannot use the Next image optimizer. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={photo.url} alt={`Batch photo ${index + 1}`} className="absolute inset-0 size-full object-cover" />
-            <figcaption className="m relative flex w-full items-center justify-between bg-[#161411]/70 px-2 py-1 text-[11px] text-[var(--ink-2)] backdrop-blur-sm">
+            <figcaption className="m relative text-[11px] font-semibold text-[var(--ink-2)]">
               photo {index + 1} · {formatFileSize(photo.file.size)}
-              <button
-                type="button"
-                disabled={Boolean(pendingAnalysis)}
-                onClick={() => removePhoto(index)}
-                className="flex size-7 items-center justify-center text-[var(--ink-4)] hover:text-[var(--time)] disabled:opacity-40"
-                aria-label={`Remove photo ${index + 1}`}
-              >
-                <Trash2 className="size-3.5" aria-hidden="true" />
-              </button>
             </figcaption>
+            <button
+              type="button"
+              disabled={Boolean(pendingAnalysis)}
+              onClick={() => removePhoto(index)}
+              className="relative flex size-7 items-center justify-center rounded-full bg-[#171310]/75 text-[var(--ink-2)] transition hover:bg-[#171310]/90 hover:text-[var(--accent)] disabled:opacity-40"
+              aria-label={`Remove photo ${index + 1}`}
+            >
+              <Trash2 className="size-3.5" aria-hidden="true" />
+            </button>
           </figure>
         ))}
 
         {photos.length < 3 && !pendingAnalysis && (
           <button
             type="button"
-            className="flex aspect-[4/3] flex-col items-center justify-center gap-2.5 rounded-[3px] border border-dashed border-[var(--edge-strong)] text-[var(--ink-6)] transition hover:border-[var(--ink-5)] hover:text-[var(--ink-3)] disabled:opacity-40"
+            className={cn(
+              "flex items-center justify-center gap-2.5 rounded-[20px] bg-[var(--ground)] text-[var(--ink-3)] transition hover:bg-[var(--ground-hi)] hover:text-[var(--ink-2)] disabled:opacity-40",
+              photos.length === 0 ? "aspect-[4/3] flex-col" : "col-span-2 min-h-[76px]",
+            )}
             onClick={() => inputRef.current?.click()}
             disabled={preparing}
           >
             {preparing ? (
               <LoaderCircle className="size-5 animate-spin" aria-hidden="true" />
             ) : photos.length === 0 ? (
-              <Camera className="size-5" aria-hidden="true" />
+              <Camera className="size-[18px] text-[var(--sage)]" aria-hidden="true" />
             ) : (
-              <ImagePlus className="size-5" aria-hidden="true" />
+              <ImagePlus className="size-[18px] text-[var(--sage)]" aria-hidden="true" />
             )}
-            <span className="m text-[10.5px]">
+            <span className="m text-[12px]">
               {preparing ? "preparing…" : photos.length === 0 ? "take or choose a photo" : "add an angle"}
             </span>
           </button>
@@ -417,17 +424,17 @@ export function CaptureFlow() {
 
       <div className="mt-9">
         <Section label="how it works" labelWidth="78px">
-          <div className="row min-h-[46px] gap-3 px-1">
-            <span className="bd flex-1">Photos are re-encoded here, on your device.</span>
-            <span className="m text-[10.5px] text-[var(--ink-6)]">1600 px · 5 mb</span>
+          <div className="row min-h-[46px] gap-3">
+            <span className="bd flex-1 !text-[14px] !text-[var(--ink-2)]">Photos are re-encoded here, on your device.</span>
+            <span className="m flex-none rounded-[14px] bg-[var(--ground-tint)] px-3 py-1.5 text-[10.5px] font-semibold text-[var(--sage)]">1600 px · 5 mb</span>
           </div>
-          <div className="row min-h-[46px] gap-3 px-1">
-            <span className="bd flex-1">Location data is stripped before anything is sent.</span>
-            <span className="m text-[10.5px] text-[var(--ink-6)]">exif removed</span>
+          <div className="row min-h-[46px] gap-3">
+            <span className="bd flex-1 !text-[14px] !text-[var(--ink-2)]">Location data is stripped before anything is sent.</span>
+            <span className="m flex-none rounded-[14px] bg-[var(--ground-tint)] px-3 py-1.5 text-[10.5px] font-semibold text-[var(--sage)]">exif removed</span>
           </div>
-          <div className="row min-h-[46px] gap-3 px-1">
-            <span className="bd flex-1">Raw photos are deleted once you confirm.</span>
-            <span className="m text-[10.5px] text-[var(--ink-6)]">≤ 24 h</span>
+          <div className="row min-h-[46px] gap-3">
+            <span className="bd flex-1 !text-[14px] !text-[var(--ink-2)]">Raw photos are deleted once you confirm.</span>
+            <span className="m flex-none rounded-[14px] bg-[var(--ground-tint)] px-3 py-1.5 text-[10.5px] font-semibold text-[var(--sage)]">≤ 24 h</span>
           </div>
         </Section>
       </div>

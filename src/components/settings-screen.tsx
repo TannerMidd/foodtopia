@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { X } from "lucide-react";
+import { ChevronRight, Check, LogOut, Plus, X } from "lucide-react";
 
 import { DEFAULT_STAPLE_CONCEPT_IDS, getFoodConcept } from "@/domain/concepts";
 import { resolveFoodConcept } from "@/domain/normalization";
@@ -202,8 +202,8 @@ export function SettingsScreen({ isAdmin = false }: { isAdmin?: boolean }) {
   return (
     <Page className="max-w-[44rem]">
       <header>
-        <p className="ml">settings{householdName ? ` · ${householdName.toLowerCase()}` : ""}</p>
-        <h1 className="hd mt-3 text-[clamp(1.5rem,6vw,1.65rem)]">How Foodtopia behaves.</h1>
+        <p className="ml !text-[var(--accent)]">settings{householdName ? ` · ${householdName.toLowerCase()}` : ""}</p>
+        <h1 className="hd mt-3 text-[clamp(1.9rem,7vw,2.15rem)]">How Foodtopia behaves.</h1>
       </header>
 
       <div className="mt-9 flex flex-col gap-8">
@@ -212,7 +212,7 @@ export function SettingsScreen({ isAdmin = false }: { isAdmin?: boolean }) {
         </Section>
 
         <Section label="preferences" labelWidth="78px">
-          <div className="row min-h-[50px] flex-wrap gap-x-6 gap-y-2 px-1 py-2">
+          <div className="flex flex-wrap gap-2">
             {preferenceOptions.map((option) => {
               const selected = preferences.includes(option.value);
               const next = selected
@@ -225,19 +225,21 @@ export function SettingsScreen({ isAdmin = false }: { isAdmin?: boolean }) {
                   aria-checked={selected}
                   key={option.value}
                   className={cn(
-                    "inline-flex min-h-9 items-center gap-2.5 transition",
-                    selected ? "text-[var(--ink)]" : "text-[var(--ink-6)] hover:text-[var(--ink-3)]",
+                    "inline-flex min-h-9 items-center gap-2 rounded-[20px] px-4 text-[13px] transition",
+                    selected
+                      ? "chip-sage"
+                      : "chip font-medium text-[var(--ink-3)] hover:bg-[var(--ground-tint)] hover:text-[var(--ink-2)]",
                   )}
                   onClick={() => persist(next, staples)}
                 >
-                  <span className={selected ? "nm text-[14px]" : "m text-[10.5px]"}>{option.label}</span>
-                  {selected && <span className="m text-[10.5px] text-[var(--accent)]">on</span>}
+                  {selected && <Check className="size-3.5" aria-hidden="true" />}
+                  <span>{option.label}</span>
                 </button>
               );
             })}
           </div>
-          <div className="row min-h-0 px-1 py-3">
-            <p className="bd text-[12px] text-[var(--time)]">
+          <div className="mt-3 rounded-[18px] bg-[var(--ground-tint)] px-[18px] py-4">
+            <p className="bd text-[12.5px] !text-[var(--accent)]">
               Preferences only rank suggestions. They are not allergy controls — verify packages,
               preparation and cross-contact yourself.
             </p>
@@ -253,30 +255,33 @@ export function SettingsScreen({ isAdmin = false }: { isAdmin?: boolean }) {
         </Section>
 
         <Section label="staples" labelWidth="78px">
-          <div className="px-1 pt-3.5">
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2.5">
+          <div className="pt-1">
+            <div className="flex flex-wrap items-center gap-2">
               {staples.map((staple) => (
-                <span key={staple} className="m inline-flex items-center gap-1.5 text-[11px] text-[var(--ink-2)]">
+                <span
+                  key={staple}
+                  className="m inline-flex items-center gap-1 rounded-[20px] bg-[var(--ground-hi)] py-1.5 pl-4 pr-1.5 text-[13px] text-[var(--ink-2)]"
+                >
                   {stapleLabel(staple)}
                   <button
                     type="button"
-                    className="flex size-5 items-center justify-center text-[var(--ink-6)] hover:text-[var(--time)]"
+                    className="flex size-7 items-center justify-center rounded-full bg-[var(--ground-tint)] text-[var(--ink-5)] transition hover:text-[var(--accent)]"
                     onClick={() => persist(preferences, staples.filter((item) => item !== staple))}
                     aria-label={`Remove ${stapleLabel(staple)}`}
                   >
-                    <X className="size-2.5" aria-hidden="true" />
+                    <X className="size-3" aria-hidden="true" />
                   </button>
                 </span>
               ))}
               {addingStaple ? (
-                <form onSubmit={addStaple} className="inline-flex items-center gap-2.5">
+                <form onSubmit={addStaple} className="inline-flex items-center gap-2">
                   <label htmlFor="new-staple" className="sr-only">
                     Add staple
                   </label>
                   <input
                     id="new-staple"
                     autoFocus
-                    className="m w-40 border-b border-[var(--edge-strong)] bg-transparent pb-1 text-[11px] text-[var(--ink)] focus:border-[var(--accent)] focus:outline-none"
+                    className="m w-40 rounded-[16px] bg-[var(--ground-hi)] px-3.5 py-2 text-[13px] text-[var(--ink)] ring-[var(--accent)]/60 focus:bg-[var(--ground-tint)] focus:outline-none focus:ring-2"
                     maxLength={80}
                     value={newStaple}
                     onChange={(event) => setNewStaple(event.target.value)}
@@ -284,87 +289,83 @@ export function SettingsScreen({ isAdmin = false }: { isAdmin?: boolean }) {
                       if (!newStaple.trim()) setAddingStaple(false);
                     }}
                   />
-                  <button type="submit" className="m text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]">
+                  <button
+                    type="submit"
+                    className="m text-[12px] font-semibold text-[var(--ink-4)] transition hover:text-[var(--ink)]"
+                  >
                     add
                   </button>
                 </form>
               ) : (
                 <button
                   type="button"
-                  className="m text-[11px] text-[var(--ink-6)] hover:text-[var(--ink-3)]"
+                  className="chip !bg-[var(--ground)] font-semibold !text-[var(--sage)] transition hover:bg-[var(--ground-hi)]"
                   onClick={() => setAddingStaple(true)}
                 >
-                  + add
+                  <Plus className="size-3.5" aria-hidden="true" />
+                  add
                 </button>
               )}
             </div>
             {stapleError && (
-              <p className="bd mt-3 text-[12px] text-[var(--time)]" role="alert">
+              <p className="bd mt-3 text-[12.5px] !text-[var(--accent)]" role="alert">
                 {stapleError}
               </p>
             )}
-            <p className="bd mt-3 pb-4 text-[12px] text-[var(--ink-6)]">
+            <p className="bd mt-3 pb-1 text-[12.5px] text-[var(--ink-5)]">
               Recipes call these “staple”, never “known present.”
             </p>
           </div>
         </Section>
 
         <Section label="this device" labelWidth="78px">
-          <div className="row min-h-0 px-1 py-3.5">
-            <p className="bd text-[12.5px]">
-              Snapshots and queued edits live on this device for the active household. Raw photos never
-              do. Signing out clears both, along with Foodtopia&rsquo;s local keys and caches.
-            </p>
-          </div>
-          <div className="row min-h-[50px] px-1">
-            <span className="bd flex-1 text-[var(--ink-3)]">Install Foodtopia</span>
+          <p className="bd px-1 text-[13.5px]">
+            Snapshots and queued edits live on this device for the active household. Raw photos never
+            do. Signing out clears both, along with Foodtopia&rsquo;s local keys and caches.
+          </p>
+          <div className="row">
+            <span className="bd min-w-0 flex-1 text-[var(--ink-2)]">Install Foodtopia</span>
             {installed ? (
-              <span className="m text-[10.5px] text-[var(--ink-6)]">installed</span>
+              <span className="m text-[10.5px] text-[var(--ink-5)]">installed</span>
             ) : installPrompt ? (
               <button
                 type="button"
-                className="m border-b border-[var(--accent-rule)] pb-0.5 text-[10.5px] text-[var(--ink)]"
+                className="m inline-flex min-h-9 items-center rounded-[16px] bg-[var(--ground-tint)] px-3.5 text-[11.5px] font-semibold text-[var(--sage)] transition hover:bg-[var(--page)]"
                 onClick={() => void install()}
               >
                 install
               </button>
             ) : (
-              <span className="m text-[10.5px] text-[var(--ink-6)]">
+              <span className="m text-[10.5px] text-[var(--ink-5)]">
                 {isIOS ? "share → add to home screen" : "from the browser menu"}
               </span>
             )}
           </div>
-          <div className="row min-h-[50px] px-1">
-            <span className="bd flex-1 text-[var(--ink-3)]">The beta privacy notice</span>
-            <Link href="/privacy" className="m text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]">
-              read
-            </Link>
-          </div>
+          <Link href="/privacy" className="row row-link">
+            <span className="bd min-w-0 flex-1 text-[var(--ink-2)]">The beta privacy notice</span>
+            <ChevronRight className="size-4 text-[var(--ink-5)]" aria-hidden="true" />
+          </Link>
           {isAdmin && (
-            <div className="row min-h-[50px] px-1">
-              <span className="bd flex-1 text-[var(--ink-3)]">Beta admissions</span>
-              <Link
-                href="/admin/beta"
-                className="m text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
-              >
-                review signups
-              </Link>
-            </div>
+            <Link href="/admin/beta" className="row row-link">
+              <span aria-hidden="true" className="bd min-w-0 flex-1 text-[var(--ink-2)]">Beta admissions</span>
+              <span className="m text-[11px] font-semibold text-[var(--sage)]">review signups</span>
+            </Link>
           )}
-          <div className="row min-h-[50px] px-1">
-            <span className="bd flex-1 text-[var(--ink-3)]">Sign out and clear this device</span>
+          <div className="row">
+            <span className="bd min-w-0 flex-1 text-[var(--accent)]">Sign out and clear this device</span>
             <button
               type="button"
-              className="m text-[10.5px] text-[var(--ink-4)] hover:text-[var(--time)] disabled:opacity-40"
+              className="m inline-flex items-center gap-2 text-[12px] font-semibold text-[var(--accent)] transition hover:opacity-80 disabled:opacity-40"
               disabled={signingOut}
               onClick={() => void logout()}
             >
+              <LogOut className="size-4" aria-hidden="true" />
               {signingOut ? "signing out…" : "sign out"}
             </button>
           </div>
         </Section>
 
-        <p className="bd border-t border-[var(--hairline)] pt-4 text-[12px] text-[var(--ink-6)]">
+        <p className="bd px-1 text-[12.5px] text-[var(--ink-5)]">
           Offline edits replay only when Foodtopia is open, focused and reconnected. Photo analysis,
           uploads, recipes and the ingredient check all need connectivity.
         </p>

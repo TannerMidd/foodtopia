@@ -84,9 +84,9 @@ export function CookingScreen({ slug }: { slug: string }) {
   if (assessment === undefined) {
     return (
       <Page className="max-w-[42rem]">
-        <div className="skeleton h-4 w-40" />
-        <div className="skeleton mt-6 h-9 w-72" />
-        <div className="skeleton mt-8 h-40" />
+        <div className="skeleton h-4 w-40 rounded-full" />
+        <div className="skeleton mt-6 h-9 w-72 rounded-[16px]" />
+        <div className="skeleton mt-8 h-40 rounded-[24px]" />
       </Page>
     );
   }
@@ -94,15 +94,15 @@ export function CookingScreen({ slug }: { slug: string }) {
   if (!assessment || !sessionId) {
     return (
       <Page className="max-w-[42rem]">
-        <p className="ml">cooking</p>
-        <h1 className="hd mt-3 text-[26px]">No cooking session here.</h1>
-        <p className="bd mt-2.5 max-w-md">
+        <p className="ml !text-[var(--accent)]">cooking</p>
+        <h1 className="hd mt-3 text-[clamp(1.9rem,7vw,2.1rem)]">No cooking session here.</h1>
+        <p className="bd mt-3 max-w-md">
           Open a recipe from the suggestions and choose Cook this. Foodtopia will not invent a local
           session, because settling the kitchen afterwards needs a matching server session.
         </p>
         <Link
           href="/recipes"
-          className="glow mt-7 inline-flex min-h-11 items-center rounded-[3px] px-[18px] text-[15px] font-light"
+          className="glow mt-7 inline-flex min-h-12 items-center rounded-full px-6 text-[15px]"
         >
           Find a recipe
         </Link>
@@ -136,9 +136,9 @@ export function CookingScreen({ slug }: { slug: string }) {
   if (done) {
     return (
       <Page className="max-w-[42rem]">
-        <p className="ml">the ingredient check · done</p>
-        <h1 className="hd mt-3 text-[26px]">{undone ? "Kitchen changes undone" : "Kitchen updated"}</h1>
-        <p className="bd mt-2.5 max-w-md">
+        <p className="ml !text-[var(--sage)]">the ingredient check · done</p>
+        <h1 className="hd mt-3 text-[clamp(1.9rem,7vw,2.1rem)]">{undone ? "Kitchen changes undone" : "Kitchen updated"}</h1>
+        <p className="bd mt-3 max-w-md">
           {undone
             ? "The prior amounts and presence were restored through new inventory events."
             : "Your choices were settled against the latest household inventory."}
@@ -153,14 +153,14 @@ export function CookingScreen({ slug }: { slug: string }) {
         <div className="mt-7 flex flex-wrap items-center gap-6">
           <Link
             href="/inventory"
-            className="glow inline-flex min-h-11 items-center rounded-[3px] px-[18px] text-[15px] font-light"
+            className="glow inline-flex min-h-12 items-center rounded-full px-6 text-[15px]"
           >
             Open the kitchen
           </Link>
           {!undone && undoCommands.length > 0 && (
             <button
               type="button"
-              className="m border-b border-[var(--edge-strong)] pb-0.5 text-[11px] text-[var(--ink-4)] hover:text-[var(--ink)] disabled:opacity-40"
+              className="m inline-flex min-h-10 items-center rounded-full bg-[var(--ground-hi)] px-4 text-[11px] text-[var(--ink-4)] transition hover:bg-[var(--ground-tint)] hover:text-[var(--ink)] disabled:opacity-40"
               disabled={!online || undoing}
               onClick={() => void undoReconciliation()}
             >
@@ -263,9 +263,9 @@ export function CookingScreen({ slug }: { slug: string }) {
     return (
       <Page className="max-w-[42rem]">
         <header>
-          <p className="ml">the ingredient check</p>
-          <h1 className="hd mt-3 text-[clamp(1.5rem,6vw,1.65rem)]">What did you use?</h1>
-          <p className="bd mt-2.5 max-w-[30rem]">
+          <p className="ml !text-[var(--accent)]">the ingredient check</p>
+          <h1 className="hd mt-3 text-[clamp(1.9rem,7vw,2.1rem)]">What did you use?</h1>
+          <p className="bd mt-3 max-w-[30rem]">
             {lotCount
               ? `${numberWord(lotCount)} lot${lotCount === 1 ? "" : "s"} to settle. Leave one alone if you are not sure — “no change” is always fine.`
               : "Nothing here is linked to the kitchen, so finishing changes nothing."}
@@ -303,7 +303,7 @@ export function CookingScreen({ slug }: { slug: string }) {
 
                 if (!lot) {
                   return (
-                    <p key={choiceKey} className="bd py-4 text-[var(--time)]">
+                    <p key={choiceKey} className="bd rounded-[16px] bg-[var(--ground)] px-4 py-3 text-[var(--accent)]">
                       This inventory lot changed or is no longer available.
                     </p>
                   );
@@ -319,7 +319,7 @@ export function CookingScreen({ slug }: { slug: string }) {
                         : "A partial amount is unavailable, because this amount is unknown or incompatible with the recipe unit.";
 
                 return (
-                  <div key={choiceKey} className="border-b border-[var(--hairline)] py-4 last:border-b-0">
+                  <div key={choiceKey} className="rounded-[18px] bg-[var(--ground-hi)] px-[18px] py-4">
                     <div className="flex items-baseline justify-between gap-4">
                       <h2 className="nm">
                         {lot.name}{" "}
@@ -354,10 +354,10 @@ export function CookingScreen({ slug }: { slug: string }) {
                             disabled={action === "used_some" && !allocation?.canUseSome}
                             onClick={() => setChoice(choiceKey, { action }, fallback)}
                             className={cn(
-                              "m min-h-9 pb-0.5 text-[11px] transition disabled:cursor-not-allowed disabled:opacity-35",
+                              "m inline-flex min-h-9 items-center rounded-full px-4 text-[11px] font-semibold transition disabled:cursor-not-allowed disabled:opacity-35",
                               selected
-                                ? "border-b border-[var(--accent-rule)] text-[var(--ink)]"
-                                : "text-[var(--ink-5)] hover:text-[var(--ink-2)]",
+                                ? "bg-[var(--ink)] text-[var(--page)]"
+                                : "text-[var(--ink-5)] hover:bg-[var(--ground-hi)] hover:text-[var(--ink-2)]",
                             )}
                           >
                             {actionLabels[action]}
@@ -392,7 +392,7 @@ export function CookingScreen({ slug }: { slug: string }) {
           ))}
         </div>
 
-        <div className="mt-9 flex flex-wrap items-center justify-between gap-5 border-t border-[var(--hairline)] pt-4.5">
+        <div className="mt-9 flex flex-wrap items-center justify-between gap-5">
           <span className="m text-[10.5px] text-[var(--ink-4)]">undo stays available afterwards</span>
           <div className="flex items-center gap-6">
             <button
@@ -417,27 +417,30 @@ export function CookingScreen({ slug }: { slug: string }) {
   return (
     <Page className="max-w-[42rem]">
       <header>
-        <p className="ml">
+        <p className="ml !text-[var(--accent)]">
           cooking · step {checked.size >= recipe.steps.length ? "done" : `${Math.min(checked.size + 1, recipe.steps.length)} of ${recipe.steps.length}`}
         </p>
-        <h1 className="hd mt-3 text-[clamp(1.5rem,6vw,1.65rem)]">{recipe.title}</h1>
+        <h1 className="hd mt-3 text-[clamp(1.9rem,7vw,2.1rem)]">{recipe.title}</h1>
       </header>
 
-      <div className="mt-6 h-px bg-[var(--hairline)]">
+      <div className="mt-6 h-[5px] rounded-full bg-[var(--ground-hi)]">
         <div
-          className="h-px bg-[var(--accent-rule)] shadow-[0_0_8px_1px_var(--accent-halo)] transition-all"
+          className="h-full rounded-full bg-[var(--accent)] transition-all"
           style={{ width: `${progress * 100}%` }}
         />
       </div>
 
-      <ol>
+      <ol className="mt-6 flex flex-col gap-2.5">
         {recipe.steps.map((step, index) => {
           const complete = checked.has(index);
           return (
-            <li key={`${index}-${step}`} className="border-b border-[var(--hairline)] last:border-b-0">
+            <li key={`${index}-${step}`}>
               <button
                 type="button"
-                className="flex w-full items-start gap-4 py-5 text-left"
+                className={cn(
+                  "flex w-full items-start gap-4 rounded-[18px] px-[18px] py-4 text-left transition",
+                  complete ? "bg-[var(--ground)]" : "bg-[var(--ground-hi)] hover:bg-[var(--ground-tint)]",
+                )}
                 aria-pressed={complete}
                 onClick={() =>
                   setChecked((current) => {
@@ -450,13 +453,19 @@ export function CookingScreen({ slug }: { slug: string }) {
               >
                 <span
                   className={cn(
-                    "mt-1 flex size-[18px] flex-none items-center justify-center rounded-[2px]",
+                    "mt-0.5 flex size-7 flex-none items-center justify-center rounded-full",
                     complete
-                      ? "bg-[var(--accent-solid)] text-[var(--accent-on)]"
-                      : "m border border-[var(--edge-strong)] text-[10px] text-[var(--ink-4)]",
+                      ? "bg-[var(--sage)] text-[var(--sage-ink)]"
+                      : "bg-[var(--ground-tint)] text-[var(--ink-4)]",
                   )}
                 >
-                  {complete ? <Check className="size-3" aria-hidden="true" /> : index + 1}
+                  {complete ? (
+                    <Check className="size-4" aria-hidden="true" />
+                  ) : (
+                    <span className="font-[family-name:var(--font-familjen)] text-[12px] font-semibold">
+                      {index + 1}
+                    </span>
+                  )}
                 </span>
                 <span className={cn("bd flex-1", complete ? "text-[var(--ink-6)]" : "text-[var(--ink)]")}>
                   {step}
@@ -467,7 +476,7 @@ export function CookingScreen({ slug }: { slug: string }) {
         })}
       </ol>
 
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-5 border-t border-[var(--hairline)] pt-4.5">
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-5">
         <p className="bd max-w-[16rem] text-[12px] text-[var(--ink-6)]">
           Ticks stay on this device. The kitchen only changes in the next step.
         </p>

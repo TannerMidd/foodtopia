@@ -14,8 +14,8 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 /*
- * Primary is the only lit control on a screen — accent as light, not paint.
- * Everything else steps back to a hairline or to bare mono text.
+ * Primary is the only solid terracotta control on a screen — the one action,
+ * fully rounded. Everything else steps back to a soft tile or to plain text.
  */
 export function Button({
   className,
@@ -29,14 +29,14 @@ export function Button({
   const variants = {
     primary: "glow",
     secondary:
-      "border border-[var(--edge-strong)] text-[var(--ink-2)] hover:border-[var(--ink-5)] hover:text-[var(--ink)]",
-    ghost: "text-[var(--ink-4)] hover:text-[var(--ink)]",
-    danger: "text-[var(--ink-3)] hover:text-[var(--time)]",
+      "bg-[var(--ground-hi)] text-[var(--ink-2)] font-medium hover:bg-[var(--ground-tint)] hover:text-[var(--ink)]",
+    ghost: "text-[var(--ink-4)] font-medium hover:text-[var(--ink)]",
+    danger: "text-[var(--ink-3)] font-medium hover:text-[var(--accent)]",
   };
   const sizes = {
-    default: "min-h-11 rounded-[3px] px-[18px] text-[15px]",
-    small: "min-h-11 rounded-[3px] px-4 text-[13.5px]",
-    icon: "size-11 shrink-0 rounded-[3px]",
+    default: "min-h-12 rounded-full px-6 text-[15px]",
+    small: "min-h-12 rounded-full px-5 text-[13.5px]",
+    icon: "size-12 shrink-0 rounded-full",
   };
   return (
     <button
@@ -77,9 +77,9 @@ export function PageHeader({
   return (
     <header className="mb-9 flex items-end justify-between gap-6">
       <div className="min-w-0">
-        {eyebrow && <p className="ml">{eyebrow}</p>}
-        <h1 className="hd mt-3 text-[clamp(1.6rem,6vw,1.9rem)]">{title}</h1>
-        {description && <p className="bd mt-2.5 max-w-[34rem]">{description}</p>}
+        {eyebrow && <p className="ml !text-[var(--accent)]">{eyebrow}</p>}
+        <h1 className="hd mt-3 text-[clamp(1.9rem,7vw,2.3rem)]">{title}</h1>
+        {description && <p className="bd mt-3 max-w-[34rem] text-[15px]">{description}</p>}
       </div>
       {action && <div className="shrink-0">{action}</div>}
     </header>
@@ -87,8 +87,8 @@ export function PageHeader({
 }
 
 /*
- * The signature layout. The label sits in a wide left margin — outside the
- * content — so each row below the rule reads as exactly one fact.
+ * A labelled group of tiles. The label sits in a wide left margin on desktop —
+ * outside the content — so each tile below reads as exactly one fact.
  */
 export function Section({
   label,
@@ -106,14 +106,9 @@ export function Section({
   id?: string;
 }) {
   return (
-    // The rule spans the whole group — label included — so each section reads
-    // as one bounded block, clearly cut off from its neighbours.
     <section
       id={id}
-      className={cn(
-        "flex flex-col gap-3 border-t border-[var(--hairline)] pt-4 sm:flex-row sm:gap-7",
-        className,
-      )}
+      className={cn("flex flex-col gap-3 sm:flex-row sm:gap-7", className)}
     >
       <div className="flex-none" style={{ width: labelWidth }}>
         <p className="ml">{label}</p>
@@ -143,14 +138,16 @@ export function Badge({
   className?: string;
 }) {
   const tones = {
-    neutral: "text-[var(--ink-5)]",
-    green: "text-[var(--ink-2)]",
-    orange: "text-[var(--time)]",
-    red: "text-[var(--time)]",
-    yellow: "text-[var(--time)]",
+    neutral: "text-[var(--ink-4)]",
+    green: "text-[var(--sage)]",
+    orange: "text-[var(--accent)]",
+    red: "text-[var(--accent)]",
+    yellow: "text-[var(--accent)]",
   };
   return (
-    <span className={cn("m text-[11px] whitespace-nowrap", tones[tone], className)}>{children}</span>
+    <span className={cn("m text-[11px] font-semibold whitespace-nowrap", tones[tone], className)}>
+      {children}
+    </span>
   );
 }
 
@@ -165,16 +162,16 @@ export function StateNotice({
   tone?: "neutral" | "warning" | "error" | "success";
   action?: ReactNode;
 }) {
-  // Trouble is marked by a lit left rule, not by a coloured box.
+  // Trouble is a soft tile with a lit left rule — never a coloured box.
   const rules = {
-    neutral: "shadow-[inset_2px_0_0_0_var(--edge-strong)]",
-    warning: "shadow-[inset_2px_0_0_0_var(--time)]",
-    error: "shadow-[inset_2px_0_0_0_var(--time)]",
-    success: "shadow-[inset_2px_0_0_0_var(--accent-solid)]",
+    neutral: "bg-[var(--ground-hi)] shadow-[inset_5px_0_0_0_var(--edge-strong)]",
+    warning: "bg-[var(--ground-hi)] shadow-[inset_5px_0_0_0_var(--accent)]",
+    error: "bg-[var(--ground-hi)] shadow-[inset_5px_0_0_0_var(--accent)]",
+    success: "bg-[var(--ground-hi)] shadow-[inset_5px_0_0_0_var(--sage)]",
   };
   return (
     <div
-      className={cn("flex items-start justify-between gap-5 py-3.5 pl-5", rules[tone])}
+      className={cn("flex items-start justify-between gap-5 rounded-[20px] py-4 pl-6 pr-5", rules[tone])}
       role={tone === "error" ? "alert" : "status"}
     >
       <div className="min-w-0 flex-1">
@@ -198,7 +195,7 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="border-t border-[var(--hairline)] py-10">
+    <div className="rounded-[20px] bg-[var(--ground)] px-6 py-10">
       <span className="flex text-[var(--ink-5)]" aria-hidden="true">
         {icon}
       </span>
@@ -210,13 +207,13 @@ export function EmptyState({
 }
 
 /*
- * Inputs are ruled, not boxed — a single hairline under the value, lit by the
- * accent on focus.
+ * Inputs are soft tiles — a quiet field that lights up in terracotta on
+ * focus, never a drawn box or an underline.
  */
 export const inputClass =
-  "min-h-11 w-full border-b border-[var(--edge-strong)] bg-transparent pb-2.5 text-[15px] text-[var(--ink)] transition focus:border-[var(--accent)] focus:outline-none focus:ring-0 disabled:opacity-45";
+  "min-h-12 w-full rounded-[16px] bg-[var(--ground)] px-4 py-3 text-[15px] text-[var(--ink)] transition focus:bg-[var(--ground-tint)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/60 disabled:opacity-45 placeholder:text-[var(--ink-5)]";
 
-export const selectClass = `${inputClass} m appearance-none pr-7 text-[13px]`;
+export const selectClass = `${inputClass} m appearance-none pr-7 text-[13.5px]`;
 
 export function Field({
   label,
@@ -256,17 +253,17 @@ export function Modal({
   if (!open) return null;
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-[#161411]/75 p-0 backdrop-blur-[2px] sm:items-center sm:p-6"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-[#171310]/75 p-0 backdrop-blur-[2px] sm:items-center sm:p-6"
       onMouseDown={onClose}
     >
       <section
-        className="frame safe-bottom max-h-[92dvh] w-full max-w-xl overflow-y-auto rounded-b-none px-6 pb-6 pt-7 sm:rounded-[4px] sm:px-8 sm:pb-8"
+        className="frame safe-bottom max-h-[92dvh] w-full max-w-xl overflow-y-auto rounded-b-none px-6 pb-6 pt-7 sm:rounded-[28px] sm:px-8 sm:pb-8"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
         onMouseDown={(event) => event.stopPropagation()}
       >
-        <div className="mx-auto mb-5 h-px w-10 bg-[var(--edge-strong)] sm:hidden" />
+        <div className="mx-auto mb-5 h-[5px] w-10 rounded-full bg-[var(--edge-strong)] sm:hidden" />
         <div className="mb-7">
           <h2 id="modal-title" className="hd text-[24px]">
             {title}

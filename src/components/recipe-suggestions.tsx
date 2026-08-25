@@ -2,13 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search } from "lucide-react";
 import type { IngredientEvidenceStatus, RecipeAssessment, RecipeTier } from "@/contracts/domain";
 import type { RecipeSuggestionResponse } from "@/contracts/api";
 import { getRecipeSuggestions } from "@/lib/client/api";
 import { saveRecipeAssessment } from "@/lib/client/recipe-cache";
 import { useOfflineInventory } from "./offline-provider";
-import { Button, Page, Section, StateNotice, cn } from "./ui";
+import { Button, Page, StateNotice, cn } from "./ui";
 
 const evidenceLabels: Record<IngredientEvidenceStatus, string> = {
   present_sufficient: "Have it",
@@ -80,28 +79,28 @@ function RecipeRow({
       onClick={onOpen}
       aria-label={`Open ${recipe.title}`}
       className={cn(
-        "block w-full border-b border-[var(--hairline)] py-4 pr-1 text-left transition last:border-b-0 hover:bg-[var(--ground-hi)]",
-        lit ? "pl-4 shadow-[inset_3px_0_0_-1px_var(--accent-solid)]" : "pl-4",
+        "block w-full rounded-[24px] bg-[var(--ground-hi)] p-5 text-left transition hover:bg-[var(--ground-tint)]",
+        lit && "shadow-[inset_5px_0_0_0_var(--sage)]",
       )}
     >
-      <div className="flex items-baseline justify-between gap-3.5">
-        <span className={cn("nm text-[16px]", tier === "almost_ready" && "text-[var(--ink-3)]")}>
-          {recipe.title}
-        </span>
+      <div className="flex items-start justify-between gap-3.5">
         <span
           className={cn(
-            "m flex-none text-[10.5px]",
-            tier === "almost_ready" ? "text-[var(--ink-6)]" : "text-[var(--ink-4)]",
+            "font-[family-name:var(--font-familjen)] text-[20px] font-semibold leading-tight tracking-[-0.015em]",
+            tier === "almost_ready" && "text-[var(--ink-3)]",
           )}
         >
+          {recipe.title}
+        </span>
+        <span className="m flex-none rounded-[14px] bg-[var(--ground-tint)] px-3 py-1 text-[11px] font-semibold text-[var(--ink-2)]">
           {recipe.totalMinutes} min · {recipe.servings}
         </span>
       </div>
-      <p className={cn("bd mt-1.5 text-[12.5px]", tier === "almost_ready" && "text-[var(--ink-6)]")}>
+      <p className={cn("mt-2.5 text-[13.5px] leading-relaxed text-[var(--ink-3)]")}>
         {reasonFor(assessment)}
       </p>
       {notes.length > 0 && (
-        <p className="m mt-2 flex flex-wrap gap-x-5 gap-y-1 text-[10.5px] text-[var(--ink-6)]">
+        <p className="m mt-2.5 flex flex-wrap gap-x-5 gap-y-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-[var(--ink-5)]">
           {notes.map((item) => (
             <span key={item.ingredientId}>
               {item.ingredientName} · {evidenceLabels[item.status]}
@@ -172,54 +171,53 @@ export function RecipeSuggestions() {
   return (
     <Page className="max-w-[46rem]">
       <header>
-        <p className="ml">cook</p>
-        <h1 className="hd mt-3 text-[clamp(1.6rem,6vw,1.75rem)]">What sounds good?</h1>
+        <p className="ml !text-[var(--accent)]">cook</p>
+        <h1 className="hd mt-3 text-[clamp(2rem,7.5vw,2.3rem)]">What sounds good?</h1>
       </header>
 
-      {/* The request line: one lit rule, the count in mono. */}
+      {/* The request: one soft tile holding the ask, the count and the action. */}
       <form
-        className="mt-6"
+        className="mt-7"
         onSubmit={(event) => {
           event.preventDefault();
           const value = new FormData(event.currentTarget).get("prompt");
           void searchRecipes(typeof value === "string" ? value : "");
         }}
       >
-        <label htmlFor="recipe-prompt" className="sr-only">
-          What sounds good?
-        </label>
-        <div className="flex items-start gap-3 border-b border-[var(--accent-line)] pb-3">
-          <Search className="mt-1.5 size-4 flex-none text-[var(--accent)]" aria-hidden="true" />
+        <div className="rounded-[24px] bg-[var(--ground-hi)] p-5">
+          <label htmlFor="recipe-prompt" className="sr-only">
+            What sounds good?
+          </label>
           <textarea
             name="prompt"
             id="recipe-prompt"
             rows={2}
             maxLength={500}
             disabled={!hydrated}
-            className="bd w-full resize-none bg-transparent text-[var(--ink)] focus:outline-none disabled:cursor-wait disabled:opacity-60"
+            className="w-full resize-none bg-transparent text-[15px] leading-relaxed text-[var(--ink)] focus:outline-none disabled:cursor-wait disabled:opacity-60"
             placeholder="something cozy, vegetarian, under 30 minutes"
             value={prompt}
             onChange={(event) => setPrompt(event.target.value)}
           />
-          <span className="m mt-1.5 flex-none text-[10.5px] text-[var(--ink-6)]">{prompt.length}/500</span>
-        </div>
-        <div className="mt-3.5 flex flex-wrap items-center justify-between gap-4">
-          <div className="flex flex-wrap gap-x-5 gap-y-2">
-            {starters.map((suggestion) => (
-              <button
-                type="button"
-                key={suggestion}
-                onClick={() => void searchRecipes(suggestion)}
-                disabled={!online || !hydrated}
-                className="m min-h-8 text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-45"
-              >
-                {suggestion}
-              </button>
-            ))}
+          <div className="mt-4 flex items-center justify-between gap-3">
+            <span className="m text-[11px] text-[var(--ink-5)]">{prompt.length}/500</span>
+            <Button type="submit" size="small" disabled={!online || !hydrated} busy={loading}>
+              Find recipes
+            </Button>
           </div>
-          <Button type="submit" size="small" disabled={!online || !hydrated} busy={loading}>
-            Find recipes
-          </Button>
+        </div>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {starters.map((suggestion) => (
+            <button
+              type="button"
+              key={suggestion}
+              onClick={() => void searchRecipes(suggestion)}
+              disabled={!online || !hydrated}
+              className="chip transition hover:text-[var(--ink)] disabled:cursor-wait disabled:opacity-45"
+            >
+              {suggestion}
+            </button>
+          ))}
         </div>
       </form>
 
@@ -249,49 +247,59 @@ export function RecipeSuggestions() {
 
       {loading && (
         <div className="mt-9 space-y-3" aria-label="Finding recipes">
-          <div className="skeleton h-20" />
-          <div className="skeleton h-20" />
+          <div className="skeleton h-20 rounded-[24px]" />
+          <div className="skeleton h-20 rounded-[24px]" />
         </div>
       )}
 
       {response && !loading && (
         <div className="mt-10 flex flex-col gap-9">
-          <Section label="understood" labelWidth="74px">
-            <p className="m flex flex-wrap gap-x-5 gap-y-1.5 py-3.5 text-[10.5px] text-[var(--ink-4)]">
-              {understood.length ? (
-                understood.map((item) => <span key={item}>{item}</span>)
-              ) : (
-                <span>no extra filters inferred</span>
-              )}
-            </p>
-          </Section>
+          <section className="flex flex-col gap-3">
+            <p className="ml">understood</p>
+            {understood.length ? (
+              <p className="flex flex-wrap gap-2">
+                {understood.map((item) => (
+                  <span key={item} className="chip-sage chip">
+                    {item}
+                  </span>
+                ))}
+              </p>
+            ) : (
+              <p className="m py-1 text-[11px] text-[var(--ink-4)]">no extra filters inferred</p>
+            )}
+          </section>
 
           {groups.map((group) => (
-            <Section
-              key={group.tier}
-              label={tierCopy[group.tier].label}
-              meta={String(group.assessments.length)}
-              labelWidth="74px"
-            >
-              {group.assessments.map((assessment, index) => (
-                <RecipeRow
-                  key={assessment.recipe.id}
-                  assessment={assessment}
-                  lit={group.tier === "ready" && index === 0}
-                  onOpen={() => openRecipe(assessment)}
-                />
-              ))}
-            </Section>
+            <section key={group.tier} className="flex flex-col gap-3">
+              <div className="flex items-baseline justify-between">
+                <p className={cn("ml", group.tier === "ready" && "!text-[var(--sage)]")}>
+                  {tierCopy[group.tier].label}
+                </p>
+                <span className="font-[family-name:var(--font-familjen)] text-[16px] font-semibold text-[var(--ink-5)]">
+                  {String(group.assessments.length).padStart(2, "0")}
+                </span>
+              </div>
+              <div className="flex flex-col gap-2.5">
+                {group.assessments.map((assessment, index) => (
+                  <RecipeRow
+                    key={assessment.recipe.id}
+                    assessment={assessment}
+                    lit={group.tier === "ready" && index === 0}
+                    onOpen={() => openRecipe(assessment)}
+                  />
+                ))}
+              </div>
+            </section>
           ))}
 
           {!groups.length && (
-            <p className="bd border-t border-[var(--hairline)] py-8 text-[var(--ink-4)]">
+            <p className="bd rounded-[20px] bg-[var(--ground)] px-5 py-8 text-[var(--ink-4)]">
               No feasible recipes this time. Try a broader request, or update the kitchen — Foodtopia
               will not invent a recipe to fill the gap.
             </p>
           )}
 
-          <p className="bd border-t border-[var(--hairline)] pt-4 text-[12px] text-[var(--time)]">
+          <p className="bd text-[12px] text-[var(--time)]">
             {response.allergyNotice} Preferences only rank suggestions. They are not allergy controls —
             check every package label, ingredient and cross-contact risk yourself.
           </p>

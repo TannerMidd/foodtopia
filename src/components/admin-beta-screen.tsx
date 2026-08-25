@@ -48,7 +48,7 @@ function AccountRow({
   const joined = stamp(account.createdAt);
   const enabled = stamp(account.enabledAt);
   return (
-    <div className="flex min-h-11 flex-wrap items-center gap-x-4 gap-y-1 py-1.5">
+    <div className="row flex-wrap gap-x-4 gap-y-1">
       <span className="bd min-w-0 flex-1 break-all">{account.email}</span>
       <span className="m flex-none text-[10.5px] text-[var(--ink-5)]">
         {enabled ? `enabled ${enabled}` : joined ? `requested ${joined}` : ""}
@@ -284,7 +284,7 @@ export function AdminBetaScreen() {
         <>
           <section className="ledger mb-9">
             <div className="row">
-              <p className="ml w-28 flex-none pt-0.5">signup window</p>
+              <p className="ml w-28 flex-none">signup window</p>
               <div className="flex flex-1 flex-wrap items-center justify-between gap-3">
                 <p className="bd">
                   {roster.signupsOpen
@@ -303,7 +303,7 @@ export function AdminBetaScreen() {
               </div>
             </div>
             <div className="row">
-              <p className="ml w-28 flex-none pt-0.5">accounts</p>
+              <p className="ml w-28 flex-none">accounts</p>
               <p className="bd">
                 {pending.length} waiting · {awaitingEmail.length} awaiting email ·{" "}
                 {roster.counts.enabled} enabled ·{" "}
@@ -324,7 +324,7 @@ export function AdminBetaScreen() {
               <label className="m flex items-center gap-2 text-[10.5px] text-[var(--ink-4)]">
                 <input
                   type="checkbox"
-                  className="size-3.5 accent-[var(--accent-solid)]"
+                  className="size-3.5 accent-[var(--accent)]"
                   checked={allPendingSelected}
                   disabled={selectableBatch.length === 0 || controlsDisabled}
                   onChange={() =>
@@ -338,7 +338,7 @@ export function AdminBetaScreen() {
                 {pending.length > MAX_ENABLE_BATCH ? "select first 50" : "select all"}
               </label>
             </div>
-            <div className="mt-4 border-t border-[var(--hairline)]">
+            <div className="ledger mt-4">
               {pending.length === 0 ? (
                 <EmptyState
                   icon={<Inbox className="size-6" />}
@@ -350,7 +350,7 @@ export function AdminBetaScreen() {
                   <AccountRow key={account.userId} account={account}>
                     <input
                       type="checkbox"
-                      className="size-4 accent-[var(--accent-solid)]"
+                      className="size-4 accent-[var(--accent)]"
                       aria-label={`Enable ${account.email}`}
                       checked={selected.has(account.userId)}
                       disabled={
@@ -382,7 +382,7 @@ export function AdminBetaScreen() {
           {awaitingEmail.length > 0 && (
             <section className="mt-12">
               <p className="ml">awaiting email confirmation</p>
-              <div className="mt-4 border-t border-[var(--hairline)]">
+              <div className="ledger mt-4">
                 {awaitingEmail.map((account) => (
                   <AccountRow key={account.userId} account={account}>
                     <span className="m flex-none text-[10.5px] text-[var(--ink-6)]">
@@ -396,7 +396,7 @@ export function AdminBetaScreen() {
 
           <section className="mt-12">
             <p className="ml">enabled</p>
-            <div className="mt-4 border-t border-[var(--hairline)]">
+            <div className="ledger mt-4">
               {enabledAccounts.map((account) => (
                 <AccountRow key={account.userId} account={account}>
                   {confirmingDisable === account.userId ? (
@@ -406,13 +406,14 @@ export function AdminBetaScreen() {
                         size="small"
                         busy={working === "disable"}
                         disabled={refreshing}
+                        className="!min-h-9 rounded-full bg-[var(--accent)] px-4 text-[12px] font-semibold !text-[var(--accent-ink)] hover:!text-[var(--accent-ink)]"
                         onClick={() => void disable([account.userId])}
                       >
                         confirm
                       </Button>
                       <button
                         type="button"
-                        className="m min-h-11 text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+                        className="m min-h-9 rounded-full px-3 text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
                         onClick={() => setConfirmingDisable(null)}
                       >
                         cancel
@@ -422,8 +423,8 @@ export function AdminBetaScreen() {
                     <button
                       type="button"
                       className={cn(
-                        "m flex-none min-h-11 text-[10.5px]",
-                        controlsDisabled ? "text-[var(--ink-6)]" : "text-[var(--ink-4)] hover:text-[var(--time)]",
+                        "m flex-none min-h-9 rounded-full bg-[var(--ground-hi)] px-4 text-[10.5px] transition hover:bg-[var(--ground-tint)]",
+                        controlsDisabled ? "text-[var(--ink-6)]" : "text-[var(--ink-2)] hover:text-[var(--accent)]",
                       )}
                       disabled={controlsDisabled}
                       onClick={() => setConfirmingDisable(account.userId)}
@@ -439,12 +440,12 @@ export function AdminBetaScreen() {
           {disabledAccounts.length > 0 && (
             <section className="mt-12">
               <p className="ml">disabled</p>
-              <div className="mt-4 border-t border-[var(--hairline)]">
+              <div className="ledger mt-4">
                 {disabledAccounts.map((account) => (
                   <AccountRow key={account.userId} account={account}>
                     <button
                       type="button"
-                      className="m flex-none min-h-11 text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)] disabled:text-[var(--ink-6)]"
+                      className="m flex-none min-h-9 rounded-full bg-[var(--ground-hi)] px-4 text-[10.5px] text-[var(--ink-2)] transition hover:bg-[var(--sage)] hover:text-[var(--sage-ink)] disabled:text-[var(--ink-6)] disabled:hover:bg-[var(--ground-hi)] disabled:hover:text-[var(--ink-2)]"
                       disabled={controlsDisabled}
                       onClick={() => void enable([account.userId])}
                     >

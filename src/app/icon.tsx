@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 export const size = { width: 512, height: 512 };
 export const contentType = "image/png";
 
-// The app's mark is the lamp, not a letter: one lit square on warm charcoal.
+// The app's mark is the bowl, not a letter: terracotta, with something in it.
 export default function Icon() {
   return new ImageResponse(
     (
@@ -14,20 +14,43 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#181715",
-          border: "6px solid #2b2a26",
-          borderRadius: 108,
+          background: "#171310",
         }}
       >
         <div
           style={{
-            width: 132,
-            height: 132,
-            borderRadius: 20,
-            background: "#5b7fb8",
-            boxShadow: "0 0 96px 32px rgba(91, 127, 184, 0.45)",
+            width: 340,
+            height: 340,
+            borderRadius: 999,
+            background: "#d2734a",
+            overflow: "hidden",
+            display: "flex",
+            alignItems: "flex-end",
+            justifyContent: "center",
+            position: "relative",
           }}
-        />
+        >
+          <div
+            style={{
+              position: "absolute",
+              top: 62,
+              width: 96,
+              height: 96,
+              borderRadius: 999,
+              background: "#f2eae0",
+              display: "flex",
+            }}
+          />
+          <div
+            style={{
+              width: 170,
+              height: 62,
+              borderRadius: "62px 62px 0 0",
+              background: "#8c9e7e",
+              display: "flex",
+            }}
+          />
+        </div>
       </div>
     ),
     size,

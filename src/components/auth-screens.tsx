@@ -24,17 +24,25 @@ import { Button, Field, StateNotice, cn, inputClass } from "./ui";
 
 /*
  * The sign-in surfaces are the one place the app shows a frame. On phones it
- * stays a single quiet, centred sheet with the lit mark on top. From `lg` up
- * the frame becomes a two-panel spread: a brand rail that gives the page real
- * desktop presence, and the form sheet on a hairline of its own.
+ * stays a single centred sheet with the bowl wordmark on top. From `lg` up
+ * the page becomes a two-panel spread: a brand rail that gives the page real
+ * desktop presence, and the form sheet as a soft rounded panel.
  */
 
-/* The lit mark: one small lamp and the wordmark, nothing heavier. */
+/* The bowl wordmark: terracotta, with something in it. */
 function Mark({ className }: { className?: string }) {
   return (
     <Link href="/" className={cn("inline-flex items-center gap-2.5", className)} aria-label="Foodtopia home">
-      <span className="lamp size-[7px] rounded-[1px]" aria-hidden="true" />
-      <span className="text-[16px] font-light tracking-[0.01em]">foodtopia</span>
+      <span
+        aria-hidden="true"
+        className="relative flex size-[26px] flex-none items-end justify-center overflow-hidden rounded-full bg-[var(--accent)]"
+      >
+        <span className="absolute top-[5px] size-[12px] rounded-full bg-[var(--ink)]" />
+        <span className="h-[7px] w-[20px] rounded-t-[10px] bg-[var(--sage)]" />
+      </span>
+      <span className="font-[family-name:var(--font-familjen)] text-[22px] font-semibold tracking-[-0.02em] text-[var(--ink)]">
+        Foodtopia
+      </span>
     </Link>
   );
 }
@@ -47,7 +55,7 @@ const BRAND_FACTS = [
 
 function BrandRail() {
   return (
-    <aside className="relative hidden overflow-hidden border-r border-[var(--hairline)] lg:flex lg:flex-col">
+    <aside className="relative hidden overflow-hidden lg:flex lg:flex-col">
       {/* Accent as light: one wide, faint halo entering from the top left. */}
       <div
         aria-hidden="true"
@@ -56,8 +64,8 @@ function BrandRail() {
       <div className="relative flex h-full flex-col justify-between px-14 py-10 xl:px-20 xl:py-12">
         <Mark />
         <div className="max-w-[36rem] py-12">
-          <p className="ml">a quieter kitchen ledger</p>
-          <h2 className="hd mt-5 text-[clamp(1.9rem,3vw,2.7rem)]">
+          <p className="ml !text-[var(--accent)]">a quieter kitchen ledger</p>
+          <h2 className="hd mt-5 text-[clamp(2rem,3.2vw,2.8rem)]">
             From grocery photo to tonight&rsquo;s dinner.
           </h2>
           <p className="bd mt-5 max-w-[30rem] text-[15px]">
@@ -73,7 +81,7 @@ function BrandRail() {
             ))}
           </div>
         </div>
-        <p className="m text-[11px] lowercase tracking-[0.14em] text-[var(--ink-6)]">private beta</p>
+        <p className="m text-[11px] tracking-[0.14em] text-[var(--ink-6)]">private beta</p>
       </div>
     </aside>
   );
@@ -88,9 +96,9 @@ function AuthFrame({ children }: { children: React.ReactNode }) {
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(30rem_14rem_at_50%_-20%,var(--accent-halo),transparent_70%)] lg:hidden"
         />
-        <div className="relative w-full max-w-[24rem]">
+        <div className="relative w-full max-w-[26rem]">
           <Mark className="lg:hidden" />
-          {children}
+          <div className="frame mt-6 rounded-[28px] p-7 sm:p-9 lg:mt-0">{children}</div>
         </div>
       </div>
     </main>
@@ -150,8 +158,8 @@ function MagicLinkForm({
     const copy = MAGIC_LINK_SENT_COPY[audience];
     return (
       <div role="status">
-        <p className="ml">check your email</p>
-        <h2 className="hd mt-3 text-[22px]">{copy.title}</h2>
+        <p className="ml !text-[var(--accent)]">check your email</p>
+        <h2 className="hd mt-3 text-[24px]">{copy.title}</h2>
         <p className="bd mt-2.5">{copy.body}</p>
         {audience === "open-beta" && (
           <div className="mt-5">
@@ -164,7 +172,7 @@ function MagicLinkForm({
         )}
         <button
           type="button"
-          className="m mt-6 min-h-9 text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+          className="m mt-6 inline-flex min-h-9 items-center rounded-full px-3 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[var(--ink-4)] transition hover:bg-[var(--ground-hi)] hover:text-[var(--ink)]"
           onClick={() => setState("idle")}
         >
           use another email
@@ -178,15 +186,18 @@ function MagicLinkForm({
       <label htmlFor="auth-email" className="ml block">
         Email
       </label>
-      <div className="mt-2.5 flex items-center gap-3 border-b border-[var(--edge-strong)] pb-3 focus-within:border-[var(--accent)]">
-        <Mail className="size-4 flex-none text-[var(--ink-6)]" aria-hidden="true" />
+      <div className="relative mt-2.5">
+        <Mail
+          className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[var(--ink-5)]"
+          aria-hidden="true"
+        />
         <input
           id="auth-email"
           name="email"
           type="email"
           autoComplete="email"
           required
-          className="bd min-h-8 w-full bg-transparent text-[var(--ink)] focus:outline-none"
+          className={`${inputClass} pl-11`}
           placeholder="you@example.com"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
@@ -218,7 +229,7 @@ function MagicLinkForm({
       {state === "demo" && (
         <Link
           href="/"
-          className="m mt-5 flex min-h-9 items-center justify-center text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+          className="m mt-5 flex min-h-9 items-center justify-center rounded-full text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[var(--ink-4)] transition hover:text-[var(--ink)]"
         >
           explore the demo household
         </Link>
@@ -309,7 +320,7 @@ function PasswordSignInForm({ nextPath }: { nextPath: string }) {
       {state === "demo" ? (
         <Link
           href="/"
-          className="m mt-5 flex min-h-9 items-center justify-center text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+          className="m mt-5 flex min-h-9 items-center justify-center rounded-full text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[var(--ink-4)] transition hover:text-[var(--ink)]"
         >
           explore the demo household
         </Link>
@@ -362,15 +373,15 @@ function PasswordSignUpForm() {
   if (state === "sent") {
     return (
       <div role="status">
-        <p className="ml">check your email</p>
-        <h2 className="hd mt-3 text-[22px]">Confirm your email address.</h2>
+        <p className="ml !text-[var(--accent)]">check your email</p>
+        <h2 className="hd mt-3 text-[24px]">Confirm your email address.</h2>
         <p className="bd mt-2.5">
           Open the confirmation email, then sign in with your email and password. Your account will
           remain in review until an administrator enables it.
         </p>
         <Link
           href="/sign-in"
-          className="m mt-6 inline-flex min-h-9 items-center gap-2 text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+          className="m mt-6 inline-flex min-h-9 items-center gap-2 rounded-full px-3 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[var(--ink-4)] transition hover:bg-[var(--ground-hi)] hover:text-[var(--ink)]"
         >
           go to sign in
           <ArrowRight className="size-3.5" aria-hidden="true" />
@@ -382,8 +393,8 @@ function PasswordSignUpForm() {
   if (state === "sign-in") {
     return (
       <div role="status">
-        <p className="ml">continue securely</p>
-        <h2 className="hd mt-3 text-[22px]">Try signing in.</h2>
+        <p className="ml !text-[var(--accent)]">continue securely</p>
+        <h2 className="hd mt-3 text-[24px]">Try signing in.</h2>
         <p className="bd mt-2.5">
           Account setup could not continue here. Try the sign-in page. If you previously used an
           email sign-in link and do not have a password, ask the administrator to migrate your
@@ -391,7 +402,7 @@ function PasswordSignUpForm() {
         </p>
         <Link
           href="/sign-in"
-          className="m mt-6 inline-flex min-h-9 items-center gap-2 text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+          className="m mt-6 inline-flex min-h-9 items-center gap-2 rounded-full px-3 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[var(--ink-4)] transition hover:bg-[var(--ground-hi)] hover:text-[var(--ink)]"
         >
           go to sign in
           <ArrowRight className="size-3.5" aria-hidden="true" />
@@ -507,7 +518,7 @@ export function SignInScreen({
   return (
     <AuthFrame>
       {householdDeletion ? (
-        <div className="mt-10">
+        <div className="mb-7">
           <StateNotice
             title={
               householdDeletion === "pending" ? "Household deletion scheduled" : "Household deleted"
@@ -521,14 +532,14 @@ export function SignInScreen({
         </div>
       ) : null}
       {authError ? (
-        <div className="mt-10">
+        <div className="mb-7">
           <StateNotice title="That sign-in link could not be completed" tone="error">
             Request a fresh link below. Your invitation and offline household data are unchanged.
           </StateNotice>
         </div>
       ) : null}
       {emailConfirmed ? (
-        <div className="mt-10">
+        <div className="mb-7">
           <StateNotice title="Email confirmed" tone="success">
             Your email address is confirmed. Sign in with the password you chose when creating the
             account.
@@ -536,9 +547,9 @@ export function SignInScreen({
         </div>
       ) : null}
 
-      <section className="mt-12">
-        <p className="ml">private beta</p>
-        <h1 className="hd mt-3 text-[26px] lg:text-[30px]">Welcome back.</h1>
+      <section className="mt-1">
+        <p className="ml !text-[var(--accent)]">private beta</p>
+        <h1 className="hd mt-3 text-[30px] sm:text-[34px]">Welcome back.</h1>
         <p className="bd mt-2.5">
           Sign in with your email address and password.
         </p>
@@ -550,7 +561,7 @@ export function SignInScreen({
       <p className="bd mt-8 text-[13px] text-[var(--ink-5)]">
         New here?{" "}
         <Link
-          className="border-b border-[var(--edge-strong)] text-[var(--ink-3)]"
+          className="font-semibold text-[var(--ink-2)] transition hover:text-[var(--ink)]"
           href="/sign-up"
         >
           Request open-beta access
@@ -559,7 +570,7 @@ export function SignInScreen({
       </p>
       <p className="bd mt-4 text-[13px] text-[var(--ink-5)]">
         Continuing means keeping household photos and inventory private, and acknowledging the{" "}
-        <Link className="border-b border-[var(--edge-strong)] text-[var(--ink-3)]" href="/privacy">
+        <Link className="font-semibold text-[var(--ink-2)] transition hover:text-[var(--ink)]" href="/privacy">
           beta privacy notice
         </Link>
         . US English for now.
@@ -571,9 +582,9 @@ export function SignInScreen({
 export function SignUpScreen({ signupsOpen = true }: { signupsOpen?: boolean }) {
   return (
     <AuthFrame>
-      <section className="mt-12">
-        <p className="ml">open beta</p>
-        <h1 className="hd mt-3 text-[26px] lg:text-[30px]">Set up your shared kitchen.</h1>
+      <section className="mt-1">
+        <p className="ml !text-[var(--accent)]">open beta</p>
+        <h1 className="hd mt-3 text-[30px] sm:text-[34px]">Set up your shared kitchen.</h1>
         <p className="bd mt-2.5">
           Choose a username, enter your email, and create a password. Your account will enter review
           immediately.
@@ -593,7 +604,7 @@ export function SignUpScreen({ signupsOpen = true }: { signupsOpen?: boolean }) 
             <StateNotice title="Signups are closed right now" tone="warning">
               The open beta is not accepting new accounts at the moment. If you received a personal
               invitation, sign in with the invited email on the{" "}
-              <Link className="border-b border-[var(--edge-strong)]" href="/sign-in">
+              <Link className="font-semibold text-[var(--ink-2)] transition hover:text-[var(--ink)]" href="/sign-in">
                 sign-in page
               </Link>{" "}
               instead.
@@ -604,7 +615,7 @@ export function SignUpScreen({ signupsOpen = true }: { signupsOpen?: boolean }) 
 
       <p className="bd mt-8 text-[13px] text-[var(--ink-5)]">
         Signing up means keeping household photos and inventory private, and acknowledging the{" "}
-        <Link className="border-b border-[var(--edge-strong)] text-[var(--ink-3)]" href="/privacy">
+        <Link className="font-semibold text-[var(--ink-2)] transition hover:text-[var(--ink)]" href="/privacy">
           beta privacy notice
         </Link>
         . US English for now.
@@ -645,9 +656,9 @@ export function SetPasswordScreen() {
 
   return (
     <AuthFrame>
-      <section className="mt-12">
-        <p className="ml">secure account migration</p>
-        <h1 className="hd mt-3 text-[26px] lg:text-[30px]">Choose your password.</h1>
+      <section className="mt-1">
+        <p className="ml !text-[var(--accent)]">secure account migration</p>
+        <h1 className="hd mt-3 text-[30px] sm:text-[34px]">Choose your password.</h1>
         <p className="bd mt-2.5">
           This one-time step converts your earlier email-link account to password access. Your
           account will remain in administrator review.
@@ -750,8 +761,8 @@ export function PendingAccountScreen({ nextPath = "/" }: { nextPath?: string }) 
   return (
     <AuthFrame>
       <section className="mt-12" role="status">
-        <p className="ml">account review</p>
-        <h1 className="hd mt-3 flex items-center gap-3 text-[26px]">
+        <p className="ml !text-[var(--accent)]">account review</p>
+        <h1 className="hd mt-3 flex items-center gap-3 text-[28px]">
           {!disabled && (
             <LoaderCircle className="size-5 animate-spin text-[var(--accent)]" aria-hidden="true" />
           )}
@@ -764,7 +775,7 @@ export function PendingAccountScreen({ nextPath = "/" }: { nextPath?: string }) 
         </p>
         <button
           type="button"
-          className="m mt-6 min-h-9 text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+          className="m mt-6 inline-flex min-h-9 items-center rounded-full px-3 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[var(--ink-4)] transition hover:bg-[var(--ground-hi)] hover:text-[var(--ink)]"
           onClick={() => void signOut().then(() => window.location.replace("/sign-in"))}
         >
           sign out
@@ -806,9 +817,9 @@ export function InviteScreen({ token }: { token: string }) {
 
   return (
     <AuthFrame>
-      <section className="mt-12">
-        <p className="ml">household invite</p>
-        <h1 className="hd mt-3 text-[26px]">Join the shared kitchen.</h1>
+      <section className="mt-1">
+        <p className="ml !text-[var(--accent)]">household invite</p>
+        <h1 className="hd mt-3 text-[28px]">Join the shared kitchen.</h1>
         <p className="bd mt-2.5">
           Enter the invited email. Membership is checked after the one-time sign-in link opens.
         </p>
@@ -872,9 +883,9 @@ export function OnboardingScreen({ token }: { token?: string | null }) {
 
   return (
     <AuthFrame>
-      <section className="mt-12">
-        <p className="ml">{invited ? "private-beta invitation" : "create your kitchen"}</p>
-        <h1 className="hd mt-3 text-[26px]">Create your shared kitchen.</h1>
+      <section className="mt-1">
+        <p className="ml !text-[var(--accent)]">{invited ? "private-beta invitation" : "create your kitchen"}</p>
+        <h1 className="hd mt-3 text-[28px]">Create your shared kitchen.</h1>
         <p className="bd mt-2.5">
           {invited
             ? "Sign in with the invited email, then choose the household name everyone will see."
@@ -955,8 +966,8 @@ export function AuthCompletion({ nextPath }: { nextPath: string }) {
   return (
     <AuthFrame>
       <section className="mt-12" role="status">
-        <p className="ml">signing in</p>
-        <h1 className="hd mt-3 flex items-center gap-3 text-[26px]">
+        <p className="ml !text-[var(--accent)]">signing in</p>
+        <h1 className="hd mt-3 flex items-center gap-3 text-[28px]">
           <LoaderCircle className="size-5 animate-spin text-[var(--accent)]" aria-hidden="true" />
           Opening your kitchen
         </h1>
