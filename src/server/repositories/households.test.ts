@@ -112,12 +112,19 @@ describe("deleteCurrentHousehold owner-required faults", () => {
 
 describe("finalizePendingHouseholdDeletions orphaned-object purge", () => {
   it("removes tracked assets together with prefix-scoped orphans before finalizing", async () => {
-    adminMocks.list.mockResolvedValue({
-      data: [
-        { id: "orphan-1", name: "orphan-a.bin" },
-        { id: null, name: "subfolder/" },
-      ],
-      error: null,
+    // Flat orphan plus an empty pseudo-folder: the folder must be descended
+    // into (finding nothing) without breaking the sweep.
+    adminMocks.list.mockImplementation((prefix?: string) => {
+      if (prefix === HOUSEHOLD_ID) {
+        return Promise.resolve({
+          data: [
+            { id: "orphan-1", name: "orphan-a.bin" },
+            { id: null, name: "empty-folder/" },
+          ],
+          error: null,
+        });
+      }
+      return Promise.resolve({ data: [], error: null });
     });
     adminMocks.remove.mockResolvedValue({ error: null });
     adminMocks.rpc.mockResolvedValue({
@@ -131,6 +138,48 @@ describe("finalizePendingHouseholdDeletions orphaned-object purge", () => {
     expect(adminMocks.remove).toHaveBeenCalledWith([
       `${HOUSEHOLD_ID}/tracked.webp`,
       `${HOUSEHOLD_ID}/orphan-a.bin`,
+    ]);
+    expect(adminMocks.rpc).toHaveBeenCalledWith("finalize_household_deletion", {
+      p_household_id: HOUSEHOLD_ID,
+    });
+  });
+
+  it("recurses through nested pseudo-folders to reach deeply orphaned uploads", async () => {
+    const userId = "33333333-3333-4333-8333-333333333333";
+    const analysisId = "44444444-4444-4444-8444-444444444444";
+    adminMocks.list.mockImplementation((prefix?: string) => {
+      switch (prefix) {
+        case HOUSEHOLD_ID:
+          return Promise.resolve({
+            data: [{ id: null, name: `${userId}/` }],
+            error: null,
+          });
+        case `${HOUSEHOLD_ID}/${userId}`:
+          return Promise.resolve({
+            data: [{ id: null, name: `${analysisId}/` }],
+            error: null,
+          });
+        case `${HOUSEHOLD_ID}/${userId}/${analysisId}`:
+          return Promise.resolve({
+            data: [{ id: "orphan-deep", name: "orphan.jpg" }],
+            error: null,
+          });
+        default:
+          return Promise.resolve({ data: [], error: null });
+      }
+    });
+    adminMocks.remove.mockResolvedValue({ error: null });
+    adminMocks.rpc.mockResolvedValue({
+      data: { deleted: true, replayed: false },
+      error: null,
+    });
+
+    const { finalized } = await finalizePendingHouseholdDeletions();
+
+    expect(finalized).toBe(1);
+    expect(adminMocks.remove).toHaveBeenCalledWith([
+      `${HOUSEHOLD_ID}/tracked.webp`,
+      `${HOUSEHOLD_ID}/${userId}/${analysisId}/orphan.jpg`,
     ]);
     expect(adminMocks.rpc).toHaveBeenCalledWith("finalize_household_deletion", {
       p_household_id: HOUSEHOLD_ID,

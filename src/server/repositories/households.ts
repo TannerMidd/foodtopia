@@ -139,33 +139,67 @@ export async function deleteCurrentHousehold(
 }
 
 /**
+ * Uploads nest as `<household>/<user>/<analysis>/<asset>`, so a healthy
+ * household never grows pseudo-folders past five path segments. Deeper
+ * nesting means something wrote outside the app's scheme and must fail
+ * loudly instead of silently leaving objects behind.
+ */
+const MAX_HOUSEHOLD_STORAGE_DEPTH = 5;
+
+/**
  * Enumerates every Storage object under a household's raw-images prefix using
  * the typed Storage list API (the generated Database type only exposes the
- * public schema). Mirrors the storage.objects prefix scan performed by
- * finalize_household_deletion so orphaned uploads cannot stall erasure.
+ * public schema). Recurses through folder pseudo-entries (`id === null`) so
+ * nested orphaned uploads are found too, mirroring the storage.objects prefix
+ * scan performed by finalize_household_deletion.
  */
-async function listHouseholdStorageObjects(
+async function collectRawImageObjects(
   admin: ReturnType<typeof createAdminSupabaseClient>,
-  householdId: string,
-): Promise<string[]> {
+  prefix: string,
+  depth: number,
+  paths: string[],
+): Promise<void> {
+  if (depth > MAX_HOUSEHOLD_STORAGE_DEPTH) {
+    throw new Error(
+      `raw-images nesting exceeds ${MAX_HOUSEHOLD_STORAGE_DEPTH} path segments under "${prefix}"`,
+    );
+  }
   const pageSize = 1000;
-  const paths: string[] = [];
+  let fetched = 0;
   for (;;) {
     const { data, error } = await admin.storage
       .from("raw-images")
-      .list(householdId, {
+      .list(prefix, {
         limit: pageSize,
-        offset: paths.length,
+        offset: fetched,
         sortBy: { column: "name", order: "asc" },
       });
     if (error) throw error;
     if (!data || data.length === 0) break;
+    fetched += data.length;
     for (const entry of data) {
-      // Folder pseudo-entries carry no storage id and cannot be removed.
-      if (entry.id !== null) paths.push(`${householdId}/${entry.name}`);
+      // Folder pseudo-entries carry no storage id and cannot be removed;
+      // descend into them so nested objects stay reachable. Their names are
+      // reported with a trailing slash, which must not leak into prefixes or
+      // object paths.
+      const entryName = entry.name.replace(/\/+$/, "");
+      const entryPath = `${prefix}/${entryName}`;
+      if (entry.id === null) {
+        await collectRawImageObjects(admin, entryPath, depth + 1, paths);
+      } else {
+        paths.push(entryPath);
+      }
     }
     if (data.length < pageSize) break;
   }
+}
+
+async function listHouseholdStorageObjects(
+  admin: ReturnType<typeof createAdminSupabaseClient>,
+  householdId: string,
+): Promise<string[]> {
+  const paths: string[] = [];
+  await collectRawImageObjects(admin, householdId, 1, paths);
   return paths;
 }
 
