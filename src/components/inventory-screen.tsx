@@ -381,7 +381,6 @@ function AddItemModal({
           <Field label="Food name" htmlFor="manual-food-name">
             <input
               id="manual-food-name"
-              autoFocus
               className={inputClass}
               maxLength={120}
               placeholder="e.g. Greek yogurt"

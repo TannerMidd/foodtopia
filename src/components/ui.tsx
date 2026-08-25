@@ -211,9 +211,9 @@ export function EmptyState({
  * focus, never a drawn box or an underline.
  */
 export const inputClass =
-  "min-h-12 w-full rounded-[16px] bg-[var(--ground)] px-4 py-3 text-[15px] text-[var(--ink)] transition focus:bg-[var(--ground-tint)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/60 disabled:opacity-45 placeholder:text-[var(--ink-5)]";
+  "min-h-12 w-full rounded-[16px] bg-[var(--ground)] px-4 py-3 text-[16px] text-[var(--ink)] transition focus:bg-[var(--ground-tint)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/60 disabled:opacity-45 placeholder:text-[var(--ink-5)]";
 
-export const selectClass = `${inputClass} m appearance-none pr-7 text-[13.5px]`;
+export const selectClass = `${inputClass} m appearance-none pr-7`;
 
 export function Field({
   label,
