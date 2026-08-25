@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 /*
- * Foodtopia — "a quieter kitchen ledger".
+ * Foodtopia — "Larder": warm, rounded, dark.
  *
- * Warm charcoal instead of blue-black. Labels live in a wide left margin, so
- * every line of the app is one fact: a reading serif with its numbers in mono.
- * No cards and no boxed panels — shelves are separated by a single hairline.
- * The accent behaves like light rather than paint, and one soft glow marks the
- * only action that matters on each screen.
+ * Terracotta on warm black. The whole interface is built from the shape of a
+ * bowl: round, full, domestic. There are no hairlines — surfaces separate by
+ * being soft tiles, and the disc is the only shape that carries a number.
+ * Terracotta is the one action and anything running out; sage is fine,
+ * present, kept.
  *
  * The shared classes below live in the `components` layer so ordinary Tailwind
  * utilities still win against them — `.row min-h-0` has to mean what it says.
@@ -16,46 +16,50 @@
 @theme inline {
   --color-background: var(--page);
   --color-foreground: var(--ink);
-  --font-serif: var(--font-newsreader), Newsreader, Georgia, serif;
-  --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
+  --font-sans: var(--font-work-sans), "Work Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-familjen), "Familjen Grotesk", var(--font-work-sans), sans-serif;
 }
 
 @layer base {
   :root {
-    /* Ground — lifted just enough off true black that large dark surfaces
-       stop glowing harshly against bright text. Still warm charcoal. */
-    --page: #161411;
-    --ground: #1e1b18;
-    --ground-hi: #252220;
-    --ground-tint: #2a2724;
+    /* Ground — warm black, never blue-black. Tiles lift off it. */
+    --page: #171310;
+    --ground: #1e1915;
+    --ground-hi: #221c17;
+    --ground-tint: #2b231c;
 
-    /* Edges. Lifted one visible step off the ground so rules and underlines
-       actually read as boundaries instead of vanishing into the page. */
-    --hairline: #35322c;
-    --edge: #403c34;
-    --edge-strong: #4d483e;
+    /* Soft edges. Used only where a boundary is unavoidable (inputs at rest,
+       legacy rules) — they read as shadow, not as a drawn line. */
+    --hairline: #2b231c;
+    --edge: #352d25;
+    --edge-strong: #4e453c;
 
-    /* Ink, brightest to faintest. The faint stops stay above ~4:1 against
-       --page so labels and meta text never disappear into the ground. */
-    --ink: #f2efe8;
-    --ink-2: #d9d3c7;
-    --ink-3: #bcb4a6;
-    --ink-4: #a49c8e;
-    --ink-5: #90887a;
-    --ink-6: #7e7668;
+    /* Ink, brightest to faintest. The faint stops stay readable on --page. */
+    --ink: #f2eae0;
+    --ink-2: #c9bdb0;
+    --ink-3: #a39485;
+    --ink-4: #8d8174;
+    --ink-5: #7c7166;
+    --ink-6: #5a5148;
 
-    /* Accent behaves like light, never paint */
-    --accent: #6b8ec6;
-    --accent-ink: #e4eaf6;
-    --accent-on: #0f1319;
+    /* Terracotta: the one action, and anything running out. */
+    --accent: #d2734a;
+    --accent-ink: #231007;
+    --accent-on: #f2eae0;
+    --accent-deep: #7a3315;
+    --accent-deep-2: #5c2611;
 
-    /* Printed dates and anything time-bound */
-    --time: #d4a469;
+    /* Printed dates and anything time-bound — running out is terracotta. */
+    --time: var(--accent);
+
+    /* Sage: fine, present, kept. */
+    --sage: #8c9e7e;
+    --sage-ink: #16200f;
 
     /* Derived accent washes, so every surface mixes it the same way */
     --accent-line: color-mix(in oklab, var(--accent) 55%, transparent);
     --accent-wash: color-mix(in oklab, var(--accent) 20%, transparent);
-    --accent-halo: color-mix(in oklab, var(--accent) 7%, transparent);
+    --accent-halo: color-mix(in oklab, var(--accent) 14%, transparent);
     --accent-solid: color-mix(in oklab, var(--accent) 60%, transparent);
     --accent-rule: color-mix(in oklab, var(--accent) 75%, transparent);
   }
@@ -78,10 +82,8 @@
     margin: 0;
     background: var(--page);
     color: var(--ink);
-    font-family: var(--font-newsreader), Newsreader, Georgia, serif;
-    /* Regular weight: light serifs halate on dark ground and tire the eyes. */
+    font-family: var(--font-work-sans), "Work Sans", ui-sans-serif, system-ui, sans-serif;
     font-weight: 400;
-    font-synthesis-weight: none;
   }
 
   button,
@@ -105,13 +107,13 @@
   textarea:focus-visible,
   select:focus-visible,
   [tabindex]:focus-visible {
-    outline: 1px solid var(--accent);
+    outline: 2px solid var(--accent);
     outline-offset: 3px;
-    border-radius: 2px;
+    border-radius: 12px;
   }
 
   ::selection {
-    background: color-mix(in oklab, var(--accent) 40%, transparent);
+    background: color-mix(in oklab, var(--accent) 45%, transparent);
     color: var(--ink);
   }
 
@@ -123,116 +125,185 @@
 @layer components {
   /* -------------------------------------------------------------- type --- */
 
-  /* Mono label. Lives in the left margin and never inside the content. */
+  /* The label. Small, uppercase, insistent — the voice of the shelves. */
   .ml {
     margin: 0;
-    font-family: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
-    font-size: 11px;
-    font-weight: 400;
-    letter-spacing: 0.14em;
-    text-transform: lowercase;
+    font-family: var(--font-work-sans), "Work Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
     color: var(--ink-5);
   }
 
-  /* Mono: numbers, amounts, and any machine-recorded fact. */
+  /* Meta text and any recorded fact. Numbers stay tabular so columns hold. */
   .m {
-    font-family: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
-    font-weight: 400;
+    font-family: var(--font-work-sans), "Work Sans", ui-sans-serif, system-ui, sans-serif;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
   }
 
   /* The name of a thing. */
   .nm {
+    font-family: var(--font-familjen), "Familjen Grotesk", var(--font-work-sans), sans-serif;
     font-size: 16px;
-    font-weight: 400;
-    letter-spacing: 0.005em;
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
 
   /* Running prose. */
   .bd {
     font-size: 14.5px;
     font-weight: 400;
-    line-height: 1.65;
+    line-height: 1.6;
     color: var(--ink-3);
   }
 
   .hd {
     margin: 0;
-    font-weight: 250;
-    letter-spacing: -0.015em;
-    line-height: 1.15;
+    font-family: var(--font-familjen), "Familjen Grotesk", var(--font-work-sans), sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
     color: var(--ink);
     text-wrap: pretty;
   }
 
   /* ---------------------------------------------------------- surfaces --- */
 
-  /* A frame, used only where the design shows a device or standalone panel. */
+  /* A self-contained panel: a sign-in sheet, a modal, a staged surface. */
   .frame {
-    border: 1px solid var(--edge);
-    border-radius: 4px;
+    border-radius: 24px;
     overflow: hidden;
-    background:
-      radial-gradient(760px 340px at 14% -12%, color-mix(in oklab, var(--accent) 9%, transparent), transparent 72%),
-      var(--ground);
+    background: var(--ground-hi);
   }
 
-  /* ------------------------------------------------------------ ledger --- */
+  /* ------------------------------------------------------------ shelves --- */
 
   /*
-   * The signature layout: a hairline above the group, one hairline under every
-   * row, and none under the last. Rows are facts, not cards.
+   * The signature surface: rows are soft tiles, not ruled lines. A group of
+   * rows is a stack of tiles with breathing room between them.
    */
   .ledger {
-    border-top: 1px solid var(--hairline);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
   .row {
     display: flex;
     align-items: center;
     gap: 16px;
-    min-height: 52px;
-    border-bottom: 1px solid var(--hairline);
-  }
-
-  .ledger > .row:last-child,
-  .row:last-child {
-    border-bottom: none;
+    min-height: 56px;
+    padding: 14px 18px;
+    background: var(--ground-hi);
+    border-radius: 20px;
   }
 
   .row-link {
-    transition: background-color 140ms ease;
+    transition: background-color 140ms ease, transform 140ms ease;
   }
 
   .row-link:hover {
+    background: var(--ground-tint);
+  }
+
+  .row-link:active {
+    transform: scale(0.99);
+  }
+
+  /* ------------------------------------------------------------- discs --- */
+
+  /*
+   * The disc. Every count, date and confirmation is a disc — the only shape
+   * that carries a number. Variants: terracotta (running out / the action),
+   * sage (fine, kept), neutral (a plain count).
+   */
+  .disc {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--ground-tint);
+    color: var(--ink);
+  }
+
+  .disc-accent {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  .disc-sage {
+    background: var(--sage);
+    color: var(--sage-ink);
+  }
+
+  /* The number inside a disc. */
+  .disc-num {
+    font-family: var(--font-familjen), "Familjen Grotesk", var(--font-work-sans), sans-serif;
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  /* The small caption under a disc's number. */
+  .disc-sub {
+    font-size: 7.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+
+  /* ------------------------------------------------------------- chips --- */
+
+  /* A small rounded fact: a suggestion, a preference, a duration. */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 15px;
+    border-radius: 20px;
     background: var(--ground-hi);
+    color: var(--ink-3);
+    font-size: 12.5px;
+    font-weight: 500;
+  }
+
+  .chip-sage {
+    background: var(--sage);
+    color: var(--sage-ink);
+    font-weight: 600;
   }
 
   /* ------------------------------------------------------------ action --- */
 
   /*
-   * The one action that matters on a screen. Accent as light: a thin lit edge,
-   * a low wash, and a soft halo bleeding past the border.
+   * The one action that matters on a screen. Solid terracotta, fully rounded —
+   * a bowl, not a rectangle.
    */
   .glow {
-    border: 1px solid var(--accent-line);
-    background: var(--accent-wash);
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 600;
     box-shadow: 0 0 0 5px var(--accent-halo);
-    color: var(--ink);
   }
 
   .glow:hover:not(:disabled) {
-    background: color-mix(in oklab, var(--accent) 28%, transparent);
-    box-shadow: 0 0 0 6px color-mix(in oklab, var(--accent) 10%, transparent);
+    background: color-mix(in oklab, var(--accent) 88%, #231007);
+    box-shadow: 0 0 0 6px color-mix(in oklab, var(--accent) 22%, transparent);
   }
 
   .glow:disabled {
     box-shadow: none;
   }
 
-  /* The lit mark: nav dots, the wordmark, anything that reads as a small lamp. */
+  /* The lit mark: nav dots, small indicators — a bead of terracotta. */
   .lamp {
     background: var(--accent);
-    box-shadow: 0 0 12px 2px color-mix(in oklab, var(--accent) 45%, transparent);
   }
 
   /* ------------------------------------------------------------ motion --- */
@@ -260,7 +331,7 @@
     inset: 0;
     content: "";
     transform: translateX(-100%);
-    background: linear-gradient(90deg, transparent, rgba(236, 234, 229, 0.05), transparent);
+    background: linear-gradient(90deg, transparent, rgba(242, 234, 224, 0.05), transparent);
     animation: shimmer 1.35s infinite;
   }
 }

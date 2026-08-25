@@ -210,15 +210,15 @@ export function AiProviderSettings({
   if (apiMode !== "connected") {
     return (
       <>
-        <div className="row min-h-[50px] px-1">
-          <span className="bd flex-1">Local demo assistants</span>
-          <span className="m text-[10.5px] text-[var(--ink-4)]">in use</span>
+        <div className="row">
+          <span className="bd min-w-0 flex-1">Local demo assistants</span>
+          <span className="m text-[11px] font-semibold text-[var(--sage)]">in use</span>
         </div>
-        <div className="row min-h-[50px] px-1">
-          <span className="bd flex-1 text-[var(--ink-4)]">
+        <div className="row">
+          <span className="bd min-w-0 flex-1 text-[var(--ink-4)]">
             Connect Supabase to choose OpenAI or OpenRouter
           </span>
-          <span className="m text-[10.5px] text-[var(--ink-6)]">owner only</span>
+          <span className="m text-[11px] text-[var(--ink-5)]">owner only</span>
         </div>
       </>
     );
@@ -321,41 +321,39 @@ export function AiProviderSettings({
   const keyIsBoundToCurrentProvider = householdKeyStillValid();
 
   return (
-    <div>
-      <div className="row min-h-[50px] px-1">
-        <span className="bd min-w-0 flex-1 truncate">
+    <div className="flex flex-col gap-3">
+      <div className="row">
+        <span className="nm min-w-0 flex-1 truncate">
           {settings
             ? `${providerLabel(settings.provider)} · ${settings.visionModelId}`
             : "AI provider"}
         </span>
         <span
           className={cn(
-            "m flex-none text-[10.5px]",
-            settings?.credentialConfigured ? "text-[var(--ink-4)]" : "text-[var(--time)]",
+            "m flex-none text-[11px] font-semibold",
+            settings?.credentialConfigured ? "text-[var(--sage)]" : "text-[var(--time)]",
           )}
         >
           {settings ? (settings.credentialConfigured ? "in use" : "needs key") : "loading"}
         </span>
       </div>
-      <div className="row min-h-0 px-1 py-3">
-        <p className="bd text-[12px] text-[var(--ink-6)]">
-          Applies to photo analysis, meal-intent parsing, and match explanations for everyone in this
-          household.
-        </p>
-      </div>
+      <p className="bd px-1 text-[12.5px] text-[var(--ink-5)]">
+        Applies to photo analysis, meal-intent parsing, and match explanations for everyone in this
+        household.
+      </p>
 
       {loading ? (
         <p className="m px-1 py-4 text-[11px] text-[var(--ink-4)]" role="status">
           loading provider settings…
         </p>
       ) : error && !draft ? (
-        <div className="px-1 py-4">
+        <div className="py-2">
           <StateNotice title="Provider settings unavailable" tone="error">
             {error}
           </StateNotice>
         </div>
       ) : settings && draft ? (
-        <form className="flex flex-col gap-6 px-1 py-6" onSubmit={save}>
+        <form className="flex flex-col gap-6 py-2" onSubmit={save}>
           {!settings.canEdit ? (
             <StateNotice title="Owner-managed setting" tone="neutral">
               Only the household owner can change the provider, models, or
@@ -461,9 +459,9 @@ export function AiProviderSettings({
               </div>
 
               {settings.canEdit ? (
-                <div className="border-t border-[var(--hairline)] pt-4">
+                <div className="rounded-[20px] bg-[var(--ground)] p-4">
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <p className="bd text-[12px] text-[var(--ink-6)]" role="status">
+                    <p className="bd text-[12px] text-[var(--ink-5)]" role="status">
                       {modelsLoading
                         ? "Loading compatible models from OpenRouter…"
                         : modelsError
@@ -537,7 +535,7 @@ export function AiProviderSettings({
             </div>
           )}
 
-          <p className="bd text-[12px] text-[var(--ink-6)]">
+          <p className="bd px-1 text-[12.5px] text-[var(--ink-5)]">
             OpenRouter routes requests to the selected model&apos;s underlying
             provider. An owner may change this household route later; members
             should review the current route before a first photo scan.

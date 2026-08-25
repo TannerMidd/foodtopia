@@ -18,6 +18,14 @@ const dateLabelNames: Record<DateLabelType, string> = {
   unknown: "printed date",
 };
 
+/** The shortest true reading of a label type — what fits on a disc. */
+export function dateKindShort(type: DateLabelType | null | undefined) {
+  if (type === "best_before") return "best by";
+  if (type === "sell_by") return "sell by";
+  if (type === "use_by") return "use by";
+  return "date";
+}
+
 /** Whole days from today until a printed date, negative once it has passed. */
 export function daysUntil(date: string) {
   const target = new Date(`${date}T12:00:00`);

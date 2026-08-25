@@ -36,9 +36,9 @@ export function RecipeDetail({ slug }: { slug: string }) {
   if (assessment === undefined) {
     return (
       <Page className="max-w-[44rem]">
-        <div className="skeleton h-4 w-40" />
-        <div className="skeleton mt-6 h-9 w-80" />
-        <div className="skeleton mt-8 h-48" />
+        <div className="skeleton h-4 w-40 rounded-full" />
+        <div className="skeleton mt-6 h-9 w-80 rounded-[16px]" />
+        <div className="skeleton mt-8 h-48 rounded-[24px]" />
       </Page>
     );
   }
@@ -46,15 +46,15 @@ export function RecipeDetail({ slug }: { slug: string }) {
   if (!assessment) {
     return (
       <Page className="max-w-[44rem]">
-        <p className="ml">cook</p>
-        <h1 className="hd mt-3 text-[26px]">Open this recipe from the suggestions.</h1>
-        <p className="bd mt-2.5 max-w-md">
+        <p className="ml !text-[var(--accent)]">cook</p>
+        <h1 className="hd mt-3 text-[clamp(1.9rem,7vw,2.1rem)]">Open this recipe from the suggestions.</h1>
+        <p className="bd mt-3 max-w-md">
           Recipe details are kept only for this browsing session. Search again to restore the
           ingredient evidence.
         </p>
         <Link
           href="/recipes"
-          className="glow mt-7 inline-flex min-h-11 items-center rounded-[3px] px-[18px] text-[15px] font-light"
+          className="glow mt-7 inline-flex min-h-12 items-center rounded-full px-6 text-[15px]"
         >
           Find something to cook
         </Link>
@@ -89,12 +89,12 @@ export function RecipeDetail({ slug }: { slug: string }) {
           {recipe.title.toLowerCase()}
           {preview ? " · editorial preview" : ""}
         </p>
-        <h1 className="hd mt-3 text-[clamp(1.5rem,6vw,1.65rem)]">{recipe.description}</h1>
-        <div className="mt-3.5 flex flex-wrap gap-x-6 gap-y-1.5">
-          <span className="m text-[10.5px] text-[var(--ink-4)]">{recipe.totalMinutes} minutes</span>
-          <span className="m text-[10.5px] text-[var(--ink-4)]">{recipe.servings} servings</span>
+        <h1 className="hd mt-3 text-[clamp(1.9rem,7vw,2.2rem)]">{recipe.description}</h1>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <span className="chip !py-[7px] !text-[12px]">{recipe.totalMinutes} minutes</span>
+          <span className="chip !py-[7px] !text-[12px]">{recipe.servings} servings</span>
           {recipe.dietaryTags.map((tag) => (
-            <span key={tag} className="m text-[10.5px] text-[var(--ink-4)]">
+            <span key={tag} className="chip !py-[7px] !text-[12px]">
               {tag}
             </span>
           ))}
@@ -105,43 +105,48 @@ export function RecipeDetail({ slug }: { slug: string }) {
 
       <div className="mt-10 flex flex-col gap-9">
         <Section label="you have" labelWidth="66px">
-          {recipe.ingredients.map((ingredient) => {
-            const item = evidence.find((entry) => entry.ingredientId === ingredient.id);
-            const copy = item ? evidenceCopy[item.status] : evidenceCopy.missing;
-            const short = item?.status === "missing" || item?.status === "insufficient";
-            return (
-              // The evidence sentence can be long, so it wraps under the
-              // ingredient on narrow screens instead of crowding it.
-              <div
-                key={ingredient.id}
-                className="row min-h-[42px] flex-col items-start gap-1 px-1 py-3 sm:flex-row sm:items-baseline sm:gap-5"
-              >
-                <span
-                  className={cn(
-                    "bd min-w-0 sm:flex-1",
-                    copy.dim ? "text-[var(--ink-4)]" : short ? "text-[var(--ink-3)]" : "text-[var(--ink-2)]",
-                  )}
+          <div className="flex flex-col gap-2">
+            {recipe.ingredients.map((ingredient) => {
+              const item = evidence.find((entry) => entry.ingredientId === ingredient.id);
+              const copy = item ? evidenceCopy[item.status] : evidenceCopy.missing;
+              const short = item?.status === "missing" || item?.status === "insufficient";
+              return (
+                // The evidence sentence can be long, so it wraps under the
+                // ingredient on narrow screens instead of crowding it.
+                <div
+                  key={ingredient.id}
+                  className="row min-h-0 flex-col items-start gap-1 py-3.5 sm:flex-row sm:items-baseline sm:gap-5"
                 >
-                  {ingredient.display}
-                </span>
-                <span
-                  className={cn(
-                    "m text-[10.5px] leading-relaxed sm:max-w-[55%] sm:text-right",
-                    short ? "text-[var(--time)]" : copy.dim ? "text-[var(--ink-6)]" : "text-[var(--ink-4)]",
-                  )}
-                >
-                  {item?.detail ?? copy.label}
-                </span>
-              </div>
-            );
-          })}
+                  <span
+                    className={cn(
+                      "bd min-w-0 sm:flex-1",
+                      copy.dim ? "text-[var(--ink-4)]" : short ? "text-[var(--ink-3)]" : "text-[var(--ink-2)]",
+                    )}
+                  >
+                    {ingredient.display}
+                  </span>
+                  <span
+                    className={cn(
+                      "m text-[10.5px] leading-relaxed sm:max-w-[55%] sm:text-right",
+                      short ? "text-[var(--accent)]" : copy.dim ? "text-[var(--ink-6)]" : "text-[var(--ink-4)]",
+                    )}
+                  >
+                    {item?.detail ?? copy.label}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
         </Section>
 
         <Section label="method" labelWidth="66px">
-          <ol className="flex flex-col gap-3.5 pt-3.5">
+          <ol className="flex flex-col gap-3">
             {recipe.steps.map((step, index) => (
-              <li key={`${index}-${step}`} className="bd text-[var(--ink-2)]">
-                {step}
+              <li key={`${index}-${step}`} className="flex items-start gap-3.5">
+                <span className="disc mt-0.5 !size-8 flex-none">
+                  <span className="disc-num !text-[13px]">{index + 1}</span>
+                </span>
+                <span className="bd pt-1 text-[var(--ink-2)]">{step}</span>
               </li>
             ))}
           </ol>
@@ -163,7 +168,7 @@ export function RecipeDetail({ slug }: { slug: string }) {
 
       <div className="mt-7 flex flex-wrap items-center justify-between gap-5">
         <Button busy={starting} onClick={() => void startCooking()}>
-          <ChefHat className="size-4 text-[var(--accent-ink)]" aria-hidden="true" /> Cook this
+          <ChefHat className="size-4" aria-hidden="true" /> Cook this
         </Button>
         <p className="m text-[10.5px] text-[var(--ink-6)]">
           recipe by {recipe.rights.author}
