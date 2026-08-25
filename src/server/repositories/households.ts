@@ -39,12 +39,23 @@ const deletionManifestSchema = z.object({
   replayed: z.boolean(),
 });
 
+const HOUSEHOLD_DELETE_NOT_OWNER = new ApiFault(
+  "HOUSEHOLD_DELETE_NOT_OWNER",
+  "Only the household owner can complete the household deletion.",
+  403,
+);
+
 export async function deleteCurrentHousehold(
   client: UserClient,
   expectedHouseholdId: string | null,
 ) {
   const { data, error } = await client.rpc("request_household_deletion");
-  if (error) throw error;
+  if (error) {
+    if ((error as { code?: unknown }).code === "42501") {
+      throw HOUSEHOLD_DELETE_NOT_OWNER;
+    }
+    throw error;
+  }
   const manifest = deletionManifestSchema.parse(data);
   if (expectedHouseholdId && manifest.householdId !== expectedHouseholdId) {
     throw new ApiFault(
@@ -93,12 +104,19 @@ export async function deleteCurrentHousehold(
     { p_household_id: manifest.householdId },
   );
   if (finalizeError) {
-    if ((finalizeError as { code?: string }).code === "55000") {
+    const finalizeCode = (finalizeError as { code?: string }).code;
+    if (finalizeCode === "55000") {
       return {
         householdId: manifest.householdId,
         status: "deletion_pending" as const,
         finalizeAfter,
       };
+    }
+    // The finalizer refuses when deletion was not owner-requested (e.g. a
+    // member raced an idempotent retry after quarantine). Surface that as an
+    // actionable owner-required fault instead of a retryable failure.
+    if (finalizeCode === "42501") {
+      throw HOUSEHOLD_DELETE_NOT_OWNER;
     }
     throw finalizeError;
   }
@@ -120,6 +138,37 @@ export async function deleteCurrentHousehold(
   return { householdId: result.householdId, deleted: true as const };
 }
 
+/**
+ * Enumerates every Storage object under a household's raw-images prefix using
+ * the typed Storage list API (the generated Database type only exposes the
+ * public schema). Mirrors the storage.objects prefix scan performed by
+ * finalize_household_deletion so orphaned uploads cannot stall erasure.
+ */
+async function listHouseholdStorageObjects(
+  admin: ReturnType<typeof createAdminSupabaseClient>,
+  householdId: string,
+): Promise<string[]> {
+  const pageSize = 1000;
+  const paths: string[] = [];
+  for (;;) {
+    const { data, error } = await admin.storage
+      .from("raw-images")
+      .list(householdId, {
+        limit: pageSize,
+        offset: paths.length,
+        sortBy: { column: "name", order: "asc" },
+      });
+    if (error) throw error;
+    if (!data || data.length === 0) break;
+    for (const entry of data) {
+      // Folder pseudo-entries carry no storage id and cannot be removed.
+      if (entry.id !== null) paths.push(`${householdId}/${entry.name}`);
+    }
+    if (data.length < pageSize) break;
+  }
+  return paths;
+}
+
 /** Scheduled worker continuation for households quarantined past token expiry. */
 export async function finalizePendingHouseholdDeletions(limit = 25) {
   const admin = createAdminSupabaseClient();
@@ -138,12 +187,23 @@ export async function finalizePendingHouseholdDeletions(limit = 25) {
       .select("object_path")
       .eq("household_id", household.id);
     if (assetError) throw assetError;
-    if (assets && assets.length > 0) {
+
+    // Mirror the request_household_deletion manifest union: relational paths
+    // plus every remaining object under the household prefix. Without the
+    // prefix scan, one orphaned upload makes finalize_household_deletion raise
+    // forever and the quarantined tenant is never erased.
+    const objectPaths = [
+      ...new Set([
+        ...(assets ?? []).map(
+          (asset: { object_path: string }) => asset.object_path,
+        ),
+        ...(await listHouseholdStorageObjects(admin, household.id)),
+      ]),
+    ];
+    if (objectPaths.length > 0) {
       const { error: removeError } = await admin.storage
         .from("raw-images")
-        .remove(
-          assets.map((asset: { object_path: string }) => asset.object_path),
-        );
+        .remove(objectPaths);
       if (removeError) continue;
     }
     const { data: result, error: finalizeError } = await admin.rpc(
