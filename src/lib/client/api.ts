@@ -2,6 +2,7 @@ import {
   aiSettingsResponseSchema,
   accountStatusResponseSchema,
   analysisCreateResponseSchema,
+  barcodeLookupResponseSchema,
   analysisResponseSchema,
   apiErrorSchema,
   betaAccountMutationResponseSchema,
@@ -30,6 +31,7 @@ import {
   type OpenRouterModelDiscoveryRequest,
   type OpenRouterModelsResponse,
   type RecipeSuggestionResponse,
+  type BarcodeLookupResponse,
 } from "@/contracts/api";
 import type {
   Analysis,
@@ -128,6 +130,12 @@ export async function sendInventoryCommand(command: InventoryCommand): Promise<I
     }),
   );
   return parsed.lot;
+}
+
+export async function lookupBarcode(barcode: string): Promise<BarcodeLookupResponse> {
+  return barcodeLookupResponseSchema.parse(
+    await request(`/api/v1/products/lookup?barcode=${encodeURIComponent(barcode)}`),
+  );
 }
 
 export async function createHouseholdInvite(email: string) {
