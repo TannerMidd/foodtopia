@@ -281,7 +281,7 @@ export function SettingsScreen({ isAdmin = false }: { isAdmin?: boolean }) {
                   <input
                     id="new-staple"
                     autoFocus
-                    className="m w-40 rounded-[16px] bg-[var(--ground-hi)] px-3.5 py-2 text-[13px] text-[var(--ink)] ring-[var(--accent)]/60 focus:bg-[var(--ground-tint)] focus:outline-none focus:ring-2"
+                    className="m w-40 rounded-[16px] bg-[var(--ground-hi)] px-3.5 py-2 text-[16px] text-[var(--ink)] ring-[var(--accent)]/60 focus:bg-[var(--ground-tint)] focus:outline-none focus:ring-2"
                     maxLength={80}
                     value={newStaple}
                     onChange={(event) => setNewStaple(event.target.value)}

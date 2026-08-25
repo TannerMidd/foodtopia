@@ -194,7 +194,7 @@ export function RecipeSuggestions() {
             rows={2}
             maxLength={500}
             disabled={!hydrated}
-            className="w-full resize-none bg-transparent text-[15px] leading-relaxed text-[var(--ink)] focus:outline-none disabled:cursor-wait disabled:opacity-60"
+            className="w-full resize-none bg-transparent text-[16px] leading-relaxed text-[var(--ink)] focus:outline-none disabled:cursor-wait disabled:opacity-60"
             placeholder="something cozy, vegetarian, under 30 minutes"
             value={prompt}
             onChange={(event) => setPrompt(event.target.value)}
