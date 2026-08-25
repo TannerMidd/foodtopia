@@ -55,8 +55,10 @@ describe("stale analysis recovery events", () => {
     );
   });
 
-  it("fails stale processing immediately and queued work at the terminal cutoff", () => {
+  it("leaves processing work inside the terminal window untouched", () => {
     const observedAt = Date.parse("2026-08-13T13:00:00.000Z");
+    // 30 minutes stale: past the 15-minute scan cutoff, but well inside the
+    // 60-minute terminal window, so the job is neither redispatched nor failed.
     const processing = {
       analysisId: "11111111-1111-4111-8111-111111111111",
       householdId: "22222222-2222-4222-8222-222222222222",
@@ -64,9 +66,37 @@ describe("stale analysis recovery events", () => {
       status: "processing" as const,
       staleSince: "2026-08-13T12:30:00.001Z",
     };
+
+    expect(planAnalysisRecovery([processing], observedAt)).toEqual({
+      redispatch: [],
+      fail: [],
+    });
+  });
+
+  it("fails processing work only once the terminal window has elapsed", () => {
+    const observedAt = Date.parse("2026-08-13T13:01:00.000Z");
+    const terminalProcessing = {
+      analysisId: "11111111-1111-4111-8111-111111111111",
+      householdId: "22222222-2222-4222-8222-222222222222",
+      createdBy: "33333333-3333-4333-8333-333333333333",
+      status: "processing" as const,
+      staleSince: "2026-08-13T12:00:00.000Z",
+    };
+
+    expect(planAnalysisRecovery([terminalProcessing], observedAt)).toEqual({
+      redispatch: [],
+      fail: [terminalProcessing],
+    });
+  });
+
+  it("redispatches queued work until the terminal cutoff, then fails it", () => {
+    const observedAt = Date.parse("2026-08-13T13:00:00.000Z");
     const recentQueued = {
-      ...processing,
+      analysisId: "11111111-1111-4111-8111-111111111111",
+      householdId: "22222222-2222-4222-8222-222222222222",
+      createdBy: "33333333-3333-4333-8333-333333333333",
       status: "queued" as const,
+      staleSince: "2026-08-13T12:30:00.001Z",
     };
     const terminalQueued = {
       ...recentQueued,
@@ -75,13 +105,26 @@ describe("stale analysis recovery events", () => {
     };
 
     expect(
-      planAnalysisRecovery(
-        [processing, recentQueued, terminalQueued],
-        observedAt,
-      ),
+      planAnalysisRecovery([recentQueued, terminalQueued], observedAt),
     ).toEqual({
       redispatch: [recentQueued],
-      fail: [processing, terminalQueued],
+      fail: [terminalQueued],
+    });
+  });
+
+  it("never acts on processing jobs with an unparseable staleness timestamp", () => {
+    const observedAt = Date.parse("2026-08-13T13:00:00.000Z");
+    const malformedProcessing = {
+      analysisId: "11111111-1111-4111-8111-111111111111",
+      householdId: "22222222-2222-4222-8222-222222222222",
+      createdBy: "33333333-3333-4333-8333-333333333333",
+      status: "processing" as const,
+      staleSince: "not-a-timestamp",
+    };
+
+    expect(planAnalysisRecovery([malformedProcessing], observedAt)).toEqual({
+      redispatch: [],
+      fail: [],
     });
   });
 });
