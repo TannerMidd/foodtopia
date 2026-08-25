@@ -467,8 +467,8 @@ export function AnalysisReview({ analysisId }: { analysisId: string }) {
 
   return (
     <Page className="max-w-[44rem]">
-      <header className="flex items-start justify-between gap-6">
-        <div>
+      <header className="flex flex-col items-start gap-5 sm:flex-row sm:justify-between sm:gap-6">
+        <div className="min-w-0">
           <p className="ml !text-[var(--accent)]">add food · second of two</p>
           <h1 className="hd mt-3 text-[clamp(1.9rem,7vw,2.2rem)]">Keep what&rsquo;s right.</h1>
           <p className="bd mt-3 max-w-[30rem] text-[15px]">
@@ -478,7 +478,7 @@ export function AnalysisReview({ analysisId }: { analysisId: string }) {
         </div>
         <button
           type="button"
-          className="m flex-none rounded-full px-4 py-2 text-[10.5px] text-[var(--ink-5)] transition hover:text-[var(--ink)] disabled:opacity-40"
+          className="m inline-flex min-h-11 flex-none items-center rounded-full px-4 text-[11px] text-[var(--ink-5)] transition hover:text-[var(--ink)] disabled:opacity-40"
           disabled={cancelling}
           onClick={() => void cancelBatch()}
         >

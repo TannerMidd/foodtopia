@@ -225,7 +225,7 @@ export function SettingsScreen({ isAdmin = false }: { isAdmin?: boolean }) {
                   aria-checked={selected}
                   key={option.value}
                   className={cn(
-                    "inline-flex min-h-9 items-center gap-2 rounded-[20px] px-4 text-[13px] transition",
+                    "inline-flex min-h-11 items-center gap-2 rounded-[20px] px-4 text-[13px] transition",
                     selected
                       ? "chip-sage"
                       : "chip font-medium text-[var(--ink-3)] hover:bg-[var(--ground-tint)] hover:text-[var(--ink-2)]",
@@ -265,7 +265,7 @@ export function SettingsScreen({ isAdmin = false }: { isAdmin?: boolean }) {
                   {stapleLabel(staple)}
                   <button
                     type="button"
-                    className="flex size-7 items-center justify-center rounded-full bg-[var(--ground-tint)] text-[var(--ink-5)] transition hover:text-[var(--accent)]"
+                    className="flex size-11 items-center justify-center rounded-full bg-[var(--ground-tint)] text-[var(--ink-5)] transition hover:text-[var(--accent)]"
                     onClick={() => persist(preferences, staples.filter((item) => item !== staple))}
                     aria-label={`Remove ${stapleLabel(staple)}`}
                   >
@@ -291,7 +291,7 @@ export function SettingsScreen({ isAdmin = false }: { isAdmin?: boolean }) {
                   />
                   <button
                     type="submit"
-                    className="m text-[12px] font-semibold text-[var(--ink-4)] transition hover:text-[var(--ink)]"
+                    className="m inline-flex min-h-11 items-center px-2 text-[12px] font-semibold text-[var(--ink-4)] transition hover:text-[var(--ink)]"
                   >
                     add
                   </button>

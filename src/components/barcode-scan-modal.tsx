@@ -163,7 +163,7 @@ export function BarcodeScanModal({
           <div className="flex items-center justify-end gap-6 pt-2">
             <button
               type="button"
-              className="m text-[11px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+              className="m inline-flex min-h-11 items-center px-3 text-[12px] text-[var(--ink-4)] hover:text-[var(--ink)]"
               onClick={reset}
             >
               scan another
