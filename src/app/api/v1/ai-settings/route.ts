@@ -26,6 +26,63 @@ import { presentHouseholdAiSettings } from "@/server/services/household-ai-setti
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
+type DatabaseErrorLike = {
+  code?: unknown;
+  message?: unknown;
+};
+
+/**
+ * Settings writes have a small, app-owned set of database invariants. Map
+ * those known failures to actionable owner-facing errors instead of the
+ * repository-wide generic INVALID_OPERATION message. No provider key or
+ * encrypted envelope is included in these database messages.
+ */
+function aiSettingsWriteError(error: unknown) {
+  const candidate =
+    typeof error === "object" && error !== null
+      ? (error as DatabaseErrorLike)
+      : null;
+  const code = typeof candidate?.code === "string" ? candidate.code : "";
+  const message =
+    typeof candidate?.message === "string" ? candidate.message : "";
+
+  if (
+    code === "22023" &&
+    (message === "vision model ID is invalid" ||
+      message === "recipe model ID is invalid")
+  ) {
+    return new ApiFault(
+      "AI_MODEL_ID_INVALID",
+      "One of the selected model IDs is not accepted. Choose another model or enter a valid provider model ID.",
+      422,
+    );
+  }
+  if (
+    code === "22023" &&
+    message === "retaining a household key requires keeping its provider"
+  ) {
+    return new ApiFault(
+      "AI_SETTINGS_PROVIDER_CHANGED",
+      "The saved provider changed while this form was open. Reload the latest settings before saving.",
+      409,
+    );
+  }
+  if (code === "23514") {
+    return new ApiFault(
+      "AI_SETTINGS_CREDENTIAL_STATE_CONFLICT",
+      "The saved provider and API key are out of sync. Remove the saved key and enter it again.",
+      409,
+    );
+  }
+
+  return asApiError(error, {
+    code: "AI_SETTINGS_WRITE_FAILED",
+    message: "The household AI settings could not be saved.",
+    status: 503,
+    retryable: true,
+  });
+}
+
 function demoSettings() {
   return aiSettingsResponseSchema.parse({
     provider: "openai",
@@ -116,14 +173,6 @@ export async function PUT(request: Request) {
       aiSettingsResponseSchema.parse(presentHouseholdAiSettings(stored, true)),
     );
   } catch (error) {
-    return errorResponse(
-      asApiError(error, {
-        code: "AI_SETTINGS_WRITE_FAILED",
-        message: "The household AI settings could not be saved.",
-        status: 503,
-        retryable: true,
-      }),
-      id,
-    );
+    return errorResponse(aiSettingsWriteError(error), id);
   }
 }

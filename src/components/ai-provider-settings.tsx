@@ -15,6 +15,7 @@ import type {
   OpenRouterModelChoice,
 } from "@/contracts/api";
 import {
+  ApiClientError,
   discoverOpenRouterModelChoices,
   getAiSettings,
   updateAiSettings,
@@ -54,6 +55,32 @@ function discoveryInput(
   return savedHouseholdKey ? {} : null;
 }
 
+const MODEL_RESULT_LIMIT = 20;
+
+function searchableModelText(model: OpenRouterModelChoice) {
+  return `${model.name} ${model.id}`.toLocaleLowerCase("en-US");
+}
+
+function modelMatches(model: OpenRouterModelChoice, query: string) {
+  const terms = query
+    .trim()
+    .toLocaleLowerCase("en-US")
+    .split(/\s+/)
+    .filter(Boolean);
+  if (!terms.length) return true;
+  const searchable = searchableModelText(model);
+  return terms.every((term) => searchable.includes(term));
+}
+
+function contextLabel(contextLength: number | null) {
+  if (!contextLength) return null;
+  if (contextLength >= 1_000_000) {
+    return `${(contextLength / 1_000_000).toFixed(contextLength % 1_000_000 ? 1 : 0)}m context`;
+  }
+  if (contextLength >= 1_000) return `${Math.round(contextLength / 1_000)}k context`;
+  return `${contextLength} context`;
+}
+
 function OpenRouterModelField({
   id,
   label,
@@ -69,50 +96,131 @@ function OpenRouterModelField({
   disabled: boolean;
   onChange: (value: string) => void;
 }) {
-  const selectedChoice = models.some((model) => model.id === value)
-    ? value
-    : "";
+  const [query, setQuery] = useState("");
+  const selected = models.find((model) => model.id === value) ?? null;
+  const matchingModels = useMemo(
+    () => models.filter((model) => modelMatches(model, query)),
+    [models, query],
+  );
+  const visibleModels = matchingModels.slice(0, MODEL_RESULT_LIMIT);
+  const searchLabel = `Search ${label.toLocaleLowerCase("en-US")}s`;
 
   return (
     <Field
       label={label}
-      htmlFor={id}
-      hint="Choose a loaded model or enter a custom OpenRouter model ID."
+      htmlFor={models.length ? `${id}-search` : id}
+      hint="Search loaded models by provider, name, or ID. Custom OpenRouter IDs remain available below."
     >
       <div className="flex flex-col gap-3">
-        {models.length > 0 ? (
-          <select
-            id={`${id}-choice`}
-            className={selectClass}
-            aria-label={`${label} choices`}
-            value={selectedChoice}
-            disabled={disabled}
-            onChange={(event) => {
-              if (event.target.value) onChange(event.target.value);
-            }}
-          >
-            <option value="">Choose from {models.length} loaded models</option>
-            {models.map((model) => (
-              <option key={model.id} value={model.id}>
-                {model.name} — {model.id}
-              </option>
-            ))}
-          </select>
+        {selected ? (
+          <div className="rounded-[18px] bg-[var(--ground-tint)] px-4 py-3">
+            <p className="ml !text-[var(--sage)]">selected</p>
+            <p className="nm mt-1.5 text-[14px]">{selected.name}</p>
+            <p className="m mt-1 break-all text-[10.5px] text-[var(--ink-5)]">
+              {selected.id}
+            </p>
+          </div>
+        ) : value ? (
+          <div className="rounded-[18px] bg-[var(--ground-tint)] px-4 py-3">
+            <p className="ml !text-[var(--sage)]">custom selection</p>
+            <p className="m mt-1.5 break-all text-[11px] text-[var(--ink-2)]">{value}</p>
+          </div>
         ) : null}
-        <input
-          id={id}
-          className={inputClass}
-          autoComplete="off"
-          maxLength={160}
-          placeholder={
-            models.length > 0 ? "Or enter a custom model ID" : "Model ID"
-          }
-          required
-          spellCheck={false}
-          value={value}
-          disabled={disabled}
-          onChange={(event) => onChange(event.target.value)}
-        />
+
+        {models.length > 0 ? (
+          <>
+            <input
+              id={`${id}-search`}
+              type="search"
+              className={inputClass}
+              aria-label={searchLabel}
+              autoComplete="off"
+              placeholder={`Search ${models.length} models`}
+              value={query}
+              disabled={disabled}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+            <div
+              className="max-h-[17rem] overflow-y-auto rounded-[18px] bg-[var(--ground)] p-1.5"
+              aria-label={`${label} search results`}
+            >
+              {visibleModels.length ? (
+                visibleModels.map((model) => {
+                  const active = model.id === value;
+                  const metadata = [
+                    contextLabel(model.contextLength),
+                    model.supportsVision ? "accepts photos" : null,
+                  ].filter(Boolean);
+                  return (
+                    <button
+                      key={model.id}
+                      type="button"
+                      aria-pressed={active}
+                      disabled={disabled}
+                      className={cn(
+                        "flex min-h-[58px] w-full items-center gap-3 rounded-[14px] px-3 py-2.5 text-left transition disabled:opacity-45",
+                        active
+                          ? "bg-[var(--ground-tint)]"
+                          : "hover:bg-[var(--ground-hi)]",
+                      )}
+                      onClick={() => onChange(model.id)}
+                    >
+                      <span
+                        className={cn(
+                          "size-2 shrink-0 rounded-full",
+                          active ? "bg-[var(--accent)]" : "bg-[var(--edge-strong)]",
+                        )}
+                        aria-hidden="true"
+                      />
+                      <span className="min-w-0 flex-1">
+                        <span className="nm block truncate text-[13px]">{model.name}</span>
+                        <span className="m mt-0.5 block truncate text-[10px] text-[var(--ink-5)]">
+                          {model.id}
+                        </span>
+                      </span>
+                      {metadata.length ? (
+                        <span className="m shrink-0 text-right text-[9px] leading-4 text-[var(--ink-5)]">
+                          {metadata.map((item) => <span className="block" key={item}>{item}</span>)}
+                        </span>
+                      ) : null}
+                    </button>
+                  );
+                })
+              ) : (
+                <p className="bd px-4 py-6 text-center text-[12.5px] text-[var(--ink-5)]">
+                  No loaded model matches “{query.trim()}”.
+                </p>
+              )}
+            </div>
+            <p className="m px-1 text-[10px] text-[var(--ink-6)]" role="status">
+              {matchingModels.length > MODEL_RESULT_LIMIT
+                ? `Showing ${MODEL_RESULT_LIMIT} of ${matchingModels.length} matches · type more to narrow`
+                : `${matchingModels.length} matching model${matchingModels.length === 1 ? "" : "s"}`}
+            </p>
+          </>
+        ) : null}
+
+        <details
+          open={models.length === 0 || (!selected && Boolean(value))}
+          className="rounded-[16px] bg-[var(--ground)] px-4 py-3"
+        >
+          <summary className="m cursor-pointer text-[11px] text-[var(--ink-4)]">
+            Enter a custom model ID
+          </summary>
+          <input
+            id={id}
+            aria-label={`Custom ${label.toLocaleLowerCase("en-US")} ID`}
+            className={`${inputClass} mt-3`}
+            autoComplete="off"
+            maxLength={160}
+            placeholder="provider/model or provider/model~alias"
+            required
+            spellCheck={false}
+            value={value}
+            disabled={disabled}
+            onChange={(event) => onChange(event.target.value)}
+          />
+        </details>
       </div>
     </Field>
   );
@@ -280,11 +388,32 @@ export function AiProviderSettings({
       setDraft(toDraft(next));
       setSaved(true);
     } catch (caught) {
-      setError(
-        caught instanceof Error
-          ? caught.message
-          : "AI provider settings could not be saved.",
-      );
+      if (
+        caught instanceof ApiClientError &&
+        (caught.code === "VERSION_CONFLICT" ||
+          caught.code === "AI_SETTINGS_PROVIDER_CHANGED")
+      ) {
+        try {
+          const latest = await getAiSettings();
+          setSettings(latest);
+          setDraft(
+            latest.provider === draft.provider ? draft : toDraft(latest),
+          );
+          setError(
+            latest.provider === draft.provider
+              ? "Settings changed while this form was open. The latest version is loaded and your model choices are still here; save again."
+              : "The saved provider changed while this form was open. The latest provider and model choices are now loaded.",
+          );
+        } catch {
+          setError(caught.message);
+        }
+      } else {
+        setError(
+          caught instanceof Error
+            ? caught.message
+            : "AI provider settings could not be saved.",
+        );
+      }
     } finally {
       // The credential lives only in component memory for this one request.
       setApiKey("");
