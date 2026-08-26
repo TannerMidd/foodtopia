@@ -149,7 +149,7 @@ export async function failTerminallyStaleAnalyses(
             p_candidates: [],
             p_provider: null,
             p_model: null,
-            p_prompt_version: "food-batch-v1",
+            p_prompt_version: "food-batch-v2",
             p_error_code: null,
             p_error_detail: null,
           },
@@ -165,7 +165,7 @@ export async function failTerminallyStaleAnalyses(
           p_candidates: [],
           p_provider: null,
           p_model: null,
-          p_prompt_version: "food-batch-v1",
+          p_prompt_version: "food-batch-v2",
           p_error_code: "VISION_PROCESSING_TIMEOUT",
           p_error_detail:
             "Vision processing did not complete within the recovery window.",

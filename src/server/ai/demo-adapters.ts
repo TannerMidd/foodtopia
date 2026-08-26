@@ -9,14 +9,14 @@ import type {
 import { demoGeneratedDraft } from "@/server/services/generated-recipes";
 
 const foodWords = [
-  ["tomato", "Tomatoes", "Produce"],
-  ["egg", "Eggs", "Dairy & eggs"],
-  ["milk", "Milk", "Dairy & eggs"],
-  ["chicken", "Chicken", "Meat"],
-  ["rice", "Rice", "Pantry"],
-  ["bean", "Black beans", "Pantry"],
-  ["broccoli", "Broccoli", "Produce"],
-  ["onion", "Onions", "Produce"],
+  ["tomato", "Tomatoes", "Produce", "fridge"],
+  ["egg", "Eggs", "Dairy & eggs", "fridge"],
+  ["milk", "Milk", "Dairy & eggs", "fridge"],
+  ["chicken", "Chicken", "Meat", "fridge"],
+  ["rice", "Rice", "Pantry", "pantry"],
+  ["bean", "Black beans", "Pantry", "pantry"],
+  ["broccoli", "Broccoli", "Produce", "fridge"],
+  ["onion", "Onions", "Produce", "pantry"],
 ] as const;
 
 export class DemoVisionAnalyzer implements VisionAnalyzer {
@@ -31,7 +31,7 @@ export class DemoVisionAnalyzer implements VisionAnalyzer {
       ? detected
       : [foodWords[0], foodWords[1], foodWords[6]];
     return {
-      proposals: suggestions.map(([, name, category], index) => ({
+      proposals: suggestions.map(([, name, category, location], index) => ({
         rawLabel: name,
         suggestedName: name,
         category,
@@ -39,7 +39,7 @@ export class DemoVisionAnalyzer implements VisionAnalyzer {
         quantity: null,
         unit: null,
         form: "fresh" as const,
-        location: "fridge" as const,
+        location,
         imageIndexes: [Math.min(index, input.images.length - 1)],
         uncertaintyReason:
           "Demo suggestion—confirm the item before it changes inventory.",
@@ -54,7 +54,7 @@ const cuisines = ["italian", "mexican", "mediterranean", "asian", "american"];
 const mealTypes = ["breakfast", "lunch", "dinner", "snack"];
 const dietaryTags = ["vegetarian", "vegan", "gluten-free", "dairy-free"];
 
-export class HeuristicRecipeAssistant implements RecipeAssistant {
+export class DemoRecipeAssistant implements RecipeAssistant {
   async generate(context: RecipeGenerationContext): Promise<GeneratedRecipeDraft> {
     return demoGeneratedDraft(context);
   }

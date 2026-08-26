@@ -111,7 +111,7 @@ async function processCloudAnalysis(
           p_candidates: [],
           p_provider: null,
           p_model: null,
-          p_prompt_version: "food-batch-v1",
+          p_prompt_version: "food-batch-v2",
           p_error_code: null,
           p_error_detail: null,
         },
@@ -127,7 +127,7 @@ async function processCloudAnalysis(
         p_candidates: [],
         p_provider: null,
         p_model: null,
-        p_prompt_version: "food-batch-v1",
+        p_prompt_version: "food-batch-v2",
         p_error_code: "AI_PROVIDER_NOT_CONFIGURED",
         p_error_detail:
           "The household AI provider or credential is unavailable.",
@@ -150,7 +150,7 @@ async function processCloudAnalysis(
       p_candidates: [],
       p_provider: aiRuntime.provider,
       p_model: aiRuntime.visionModelId,
-      p_prompt_version: "food-batch-v1",
+      p_prompt_version: "food-batch-v2",
       p_error_code: null,
       p_error_detail: null,
     });
@@ -236,7 +236,7 @@ async function processCloudAnalysis(
           p_candidates: candidates,
           p_provider: aiRuntime.provider,
           p_model: aiRuntime.visionModelId,
-          p_prompt_version: "food-batch-v1",
+          p_prompt_version: "food-batch-v2",
           p_error_code: null,
           p_error_detail: null,
         },
@@ -273,7 +273,7 @@ async function processCloudAnalysis(
       p_candidates: [],
       p_provider: aiRuntime.provider,
       p_model: aiRuntime.visionModelId,
-      p_prompt_version: "food-batch-v1",
+      p_prompt_version: "food-batch-v2",
       p_error_code: refusal ? "VISION_NO_REVIEWABLE_ITEMS" : "VISION_ANALYSIS_FAILED",
       p_error_detail: refusal
         ? "No reviewable food proposals were returned."

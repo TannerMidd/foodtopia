@@ -33,8 +33,11 @@ const visionInstructions = `You propose visible food items for a human review sc
 Inspect all images as one batch. Merge the same physical item across duplicate views.
 Prefer precision over recall: omit uncertain non-food objects. Never infer hidden food.
 Use ordinary US-English names and conservative quantities. Mark quantity unknown when it
-cannot be credibly counted or read. Do not infer freshness, safety, expiration, brand,
-nutrition, allergens, or edibility. Return only the requested structured data.`;
+cannot be credibly counted or read. Assign the most likely storage location: pantry for
+shelf-stable, canned, dried, baking, and spice items; fridge for chilled or perishable food;
+and freezer for visibly frozen food. Prefer pantry, fridge, or freezer over unknown whenever
+reasonable; use unknown only when genuinely ambiguous. Do not infer freshness, safety,
+expiration, brand, nutrition, allergens, or edibility. Return only the requested structured data.`;
 
 export class OpenAIVisionAnalyzer implements VisionAnalyzer {
   private readonly client: OpenAI;

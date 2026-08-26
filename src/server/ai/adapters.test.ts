@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { visionBatchResultSchema } from "./contracts";
-import { HeuristicRecipeAssistant } from "./local-adapters";
+import { DemoRecipeAssistant, DemoVisionAnalyzer } from "./demo-adapters";
 
 describe("vision response validation", () => {
   const baseProposal = {
@@ -43,11 +43,24 @@ describe("vision response validation", () => {
       }),
     ).toThrow();
   });
+
+  it("places demo suggestions in likely storage", async () => {
+    const result = await new DemoVisionAnalyzer().analyze({
+      analysisId: "analysis-1",
+      images: [{ index: 0 }],
+      fileNames: ["rice-milk.jpg"],
+    });
+
+    expect(result.proposals.map(({ suggestedName, location }) => [suggestedName, location])).toEqual([
+      ["Milk", "fridge"],
+      ["Rice", "pantry"],
+    ]);
+  });
 });
 
 describe("local recipe intent parser", () => {
   it("builds one deterministic demo draft only from supplied concepts", async () => {
-    const draft = await new HeuristicRecipeAssistant().generate({
+    const draft = await new DemoRecipeAssistant().generate({
       intent: {
         query: "dinner",
         maxMinutes: 30,
@@ -72,7 +85,7 @@ describe("local recipe intent parser", () => {
   });
 
   it("extracts bounded, deterministic filters without inventing food", async () => {
-    const intent = await new HeuristicRecipeAssistant().parseIntent(
+    const intent = await new DemoRecipeAssistant().parseIntent(
       "spicy vegetarian Mexican dinner under 30 minutes for 4",
     );
 
