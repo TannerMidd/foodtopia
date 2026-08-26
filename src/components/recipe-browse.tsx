@@ -212,7 +212,7 @@ export function RecipeBrowse() {
       </div>
 
       {/* Soft controls: one quiet search bar plus shelf-style filter chips. */}
-      <div className="rounded-[24px] bg-[var(--ground-hi)] px-5 py-3.5">
+      <div className="rounded-xl bg-[var(--ground-hi)] px-5 py-3.5">
         <label htmlFor="recipe-browse-query" className="sr-only">
           Filter the recipe library
         </label>
@@ -255,7 +255,7 @@ export function RecipeBrowse() {
       )}
 
       {recipes && recipes.length === 0 && (
-        <p className="bd rounded-[20px] bg-[var(--ground)] px-5 py-8 text-[var(--ink-4)]">
+        <p className="bd rounded-xl bg-[var(--ground)] px-5 py-8 text-[var(--ink-4)]">
           The recipe catalog has not been downloaded yet. Connect to fetch it once; browsing then
           works offline.
         </p>
@@ -282,7 +282,7 @@ export function RecipeBrowse() {
               disabled={!online || favoriteBusy === assessment.recipe.id}
               onClick={() => void toggleFavorite(assessment)}
               className={cn(
-                "flex w-12 flex-none items-center justify-center rounded-[24px] transition",
+                "flex w-12 flex-none items-center justify-center rounded-xl transition",
                 favorites.has(assessment.recipe.id)
                   ? "bg-[var(--ground-tint)] text-[var(--accent)]"
                   : "bg-transparent text-[var(--ink-6)] hover:text-[var(--ink-3)] disabled:opacity-35",
@@ -299,7 +299,7 @@ export function RecipeBrowse() {
         {recipes && visible.length > visibleLimit && (
           <button
             type="button"
-            className="m mt-1 min-h-10 self-start rounded-full bg-[var(--ground-hi)] px-4 text-[11px] text-[var(--ink-4)] transition hover:bg-[var(--ground-tint)] hover:text-[var(--ink)]"
+            className="m mt-1 min-h-10 self-start rounded-lg bg-[var(--ground-hi)] px-4 text-[11px] text-[var(--ink-4)] transition hover:bg-[var(--ground-tint)] hover:text-[var(--ink)]"
             onClick={() => setVisibleLimit((current) => current + 60)}
           >
             show more recipes · {visible.length - visibleLimit} remaining

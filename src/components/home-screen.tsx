@@ -211,7 +211,7 @@ export function HomeScreen() {
                     key={location}
                     href={`/inventory#shelf-${location}`}
                     className={cn(
-                      "row-link flex min-w-0 flex-1 flex-col items-center rounded-[20px] px-3 py-[18px] text-center transition",
+                      "row-link flex min-w-0 flex-1 flex-col items-center rounded-xl px-3 py-[18px] text-center transition",
                       empty ? "bg-[var(--ground)]" : "bg-[var(--ground-hi)]",
                     )}
                   >
@@ -250,7 +250,7 @@ export function HomeScreen() {
               {recent.map((lot) => (
                 <div
                   key={lot.id}
-                  className="flex items-center gap-3.5 rounded-[16px] bg-[var(--ground)] px-[18px] py-3"
+                  className="flex items-center gap-3.5 rounded-lg bg-[var(--ground)] px-[18px] py-3"
                 >
                   <span className="m w-[38px] flex-none text-[11px] font-semibold text-[var(--sage)]">
                     {clockTime(lot.updatedAt)}
@@ -270,7 +270,7 @@ export function HomeScreen() {
                 const inner = (
                   <div
                     key={session.id}
-                    className="flex items-center gap-3.5 rounded-[16px] bg-[var(--ground)] px-[18px] py-3"
+                    className="flex items-center gap-3.5 rounded-lg bg-[var(--ground)] px-[18px] py-3"
                   >
                     <span className="m w-[38px] flex-none text-[11px] font-semibold text-[var(--sage)]">
                       {clockTime(session.completedAt)}
@@ -297,7 +297,7 @@ export function HomeScreen() {
 
         {/* The right margin holds what to do next, never more facts. */}
         <aside className="flex w-full flex-col gap-9 lg:w-[280px] lg:flex-none">
-          <div className="rounded-[26px] bg-[var(--accent)] p-6 text-[var(--accent-ink)]">
+          <div className="rounded-xl bg-[var(--accent)] p-6 text-[var(--accent-ink)]">
             <p className="ml !text-[var(--accent-deep)]">when you get home</p>
             <p className="hd mt-2.5 text-[24px] !text-[var(--accent-ink)]">
               Put the bags down. Shoot the counter.
@@ -307,7 +307,7 @@ export function HomeScreen() {
             </p>
             <Link
               href="/capture"
-              className="mt-4 inline-flex min-h-[52px] w-full items-center justify-center gap-2.5 rounded-full bg-[var(--page)] px-5 text-[15px] font-semibold text-[var(--ink)] transition hover:bg-black"
+              className="mt-4 inline-flex min-h-[52px] w-full items-center justify-center gap-2.5 rounded-lg bg-[var(--page)] px-5 text-[15px] font-semibold text-[var(--ink)] transition hover:bg-black"
             >
               <Camera className="size-[18px] text-[var(--accent)]" aria-hidden="true" />
               Photograph a batch
@@ -322,7 +322,7 @@ export function HomeScreen() {
             </p>
             <Link
               href="/recipes"
-              className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--ground-hi)] px-5 text-[14.5px] font-semibold text-[var(--ink)] transition hover:bg-[var(--ground-tint)]"
+              className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-lg bg-[var(--ground-hi)] px-5 text-[14.5px] font-semibold text-[var(--ink)] transition hover:bg-[var(--ground-tint)]"
             >
               <Utensils className="size-4 text-[var(--sage)]" aria-hidden="true" />
               Find something to cook
@@ -330,7 +330,7 @@ export function HomeScreen() {
           </div>
 
           {outbox.length > 0 && (
-            <p className="m rounded-[16px] bg-[var(--ground)] px-4 py-3 text-[10.5px] leading-relaxed text-[var(--ink-5)]">
+            <p className="m rounded-lg bg-[var(--ground)] px-4 py-3 text-[10.5px] leading-relaxed text-[var(--ink-5)]">
               {outbox.length} change{outbox.length === 1 ? "" : "s"} queued on this device
             </p>
           )}

@@ -61,8 +61,8 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 /*
- * Primary is the only solid terracotta control on a screen — the one action,
- * fully rounded. Everything else steps back to a soft tile or to plain text.
+ * Primary is the only solid terracotta control on a screen — the one action.
+ * Everything else steps back to a quiet surface or to plain text.
  */
 export function Button({
   className,
@@ -81,8 +81,8 @@ export function Button({
     danger: "text-[var(--ink-3)] font-medium hover:text-[var(--accent)]",
   };
   const sizes = {
-    default: "min-h-12 rounded-full px-6 text-[15px]",
-    small: "min-h-12 rounded-full px-5 text-[13.5px]",
+    default: "min-h-12 rounded-lg px-6 text-[15px]",
+    small: "min-h-12 rounded-lg px-5 text-[13.5px]",
     icon: "size-12 shrink-0 rounded-full",
   };
   return (
@@ -219,7 +219,7 @@ export function StateNotice({
   return (
     <div
       className={cn(
-        "flex flex-col items-start gap-4 rounded-[20px] py-4 pl-6 pr-5 sm:flex-row sm:justify-between sm:gap-5",
+        "flex flex-col items-start gap-4 rounded-xl py-4 pl-6 pr-5 sm:flex-row sm:justify-between sm:gap-5",
         rules[tone],
       )}
       role={tone === "error" ? "alert" : "status"}
@@ -245,7 +245,7 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="rounded-[20px] bg-[var(--ground)] px-6 py-10">
+    <div className="rounded-xl bg-[var(--ground)] px-6 py-10">
       <span className="flex text-[var(--ink-5)]" aria-hidden="true">
         {icon}
       </span>
@@ -256,12 +256,9 @@ export function EmptyState({
   );
 }
 
-/*
- * Inputs are soft tiles — a quiet field that lights up in terracotta on
- * focus, never a drawn box or an underline.
- */
+/* Inputs are quiet fields that light up in terracotta on focus. */
 export const inputClass =
-  "min-h-12 w-full rounded-[16px] bg-[var(--ground)] px-4 py-3 text-[16px] text-[var(--ink)] transition focus:bg-[var(--ground-tint)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/60 disabled:opacity-45 placeholder:text-[var(--ink-5)]";
+  "min-h-12 w-full rounded-lg bg-[var(--ground)] px-4 py-3 text-[16px] text-[var(--ink)] transition focus:bg-[var(--ground-tint)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/60 disabled:opacity-45 placeholder:text-[var(--ink-5)]";
 
 export const selectClass = `${inputClass} m appearance-none pr-7`;
 
@@ -426,7 +423,7 @@ export function Modal({
     >
       <section
         ref={dialogRef}
-        className="frame flex max-h-full w-full max-w-xl flex-col overflow-hidden rounded-b-none sm:max-h-[calc(100dvh-3rem)] sm:rounded-[28px]"
+        className="frame flex max-h-full w-full max-w-xl flex-col overflow-hidden rounded-b-none sm:max-h-[calc(100dvh-3rem)] sm:rounded-xl"
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

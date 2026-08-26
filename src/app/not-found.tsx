@@ -9,7 +9,7 @@ export default function NotFound() {
         <p className="bd mt-2.5">This page may have moved or expired.</p>
         <Link
           href="/"
-          className="glow mt-7 inline-flex min-h-12 items-center rounded-full px-6 text-[15px] font-semibold"
+          className="glow mt-7 inline-flex min-h-12 items-center rounded-lg px-6 text-[15px] font-semibold"
         >
           Back to today
         </Link>

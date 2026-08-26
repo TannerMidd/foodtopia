@@ -184,7 +184,7 @@ export function ShoppingList() {
           maxLength={120}
           value={name}
           onChange={(event) => setName(event.target.value)}
-          className="bd min-h-[52px] w-full rounded-[26px] bg-[var(--ground-hi)] px-5 text-[16px] text-[var(--ink)] placeholder:text-[var(--ink-5)] focus:outline-none disabled:opacity-60"
+          className="bd min-h-[52px] w-full rounded-xl bg-[var(--ground-hi)] px-5 text-[16px] text-[var(--ink)] placeholder:text-[var(--ink-5)] focus:outline-none disabled:opacity-60"
         />
         <button
           type="submit"
@@ -201,7 +201,7 @@ export function ShoppingList() {
           <div
             key={item.id}
             className={cn(
-              "row min-h-[52px] justify-between rounded-[20px] px-4 py-2",
+              "row min-h-[52px] justify-between rounded-xl px-4 py-2",
               item.done ? "bg-[var(--ground)] opacity-70" : "bg-[var(--ground-hi)]",
             )}
           >
@@ -244,7 +244,7 @@ export function ShoppingList() {
           </div>
         ))}
         {hydrated && items.length === 0 && (
-          <p className="bd rounded-[20px] bg-[var(--ground)] px-5 py-6 text-[var(--ink-4)]">
+          <p className="bd rounded-xl bg-[var(--ground)] px-5 py-6 text-[var(--ink-4)]">
             Empty for now. Missing ingredients from any recipe can land here in one tap.
           </p>
         )}

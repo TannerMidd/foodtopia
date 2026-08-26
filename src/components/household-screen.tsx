@@ -168,7 +168,7 @@ export function HouseholdScreen() {
 
           {apiMode === "demo" ? (
             demoMembers.map((member) => (
-              <div key={member.name} className="row !rounded-[18px]">
+              <div key={member.name} className="row !rounded-lg">
                 <Avatar name={member.name} you={member.you} />
                 <span className="nm min-w-0 flex-1 truncate text-[16.5px]">
                   {member.name}{" "}
@@ -189,7 +189,7 @@ export function HouseholdScreen() {
               </div>
             ))
           ) : memberError ? (
-            <p className="bd rounded-[18px] bg-[var(--ground-hi)] px-[18px] py-4 text-[var(--accent)]" role="alert">
+            <p className="bd rounded-lg bg-[var(--ground-hi)] px-[18px] py-4 text-[var(--accent)]" role="alert">
               {memberError}
             </p>
           ) : members ? (
@@ -198,7 +198,7 @@ export function HouseholdScreen() {
               const canRemove =
                 viewerRole === "owner" && member.role === "member" && member.userId !== currentUserId;
               return (
-                <div key={member.userId} className="row !rounded-[18px]">
+                <div key={member.userId} className="row !rounded-lg">
                   <Avatar name={label} you={member.userId === currentUserId} />
                   <span className="nm min-w-0 flex-1 truncate text-[16.5px]">
                     {label}{" "}
@@ -231,12 +231,12 @@ export function HouseholdScreen() {
               );
             })
           ) : (
-            <div className="skeleton my-3 h-10 rounded-[18px]" />
+            <div className="skeleton my-3 h-10 rounded-lg" />
           )}
 
           {/* Inviting is a row, not a form panel — same weight as a member. */}
           <form
-            className="flex min-h-[56px] items-center gap-3.5 rounded-[18px] bg-[var(--ground)] px-[18px] py-3"
+            className="flex min-h-[56px] items-center gap-3.5 rounded-lg bg-[var(--ground)] px-[18px] py-3"
             onSubmit={(event) => void sendInvite(event)}
           >
             <span className="flex size-10 flex-none items-center justify-center rounded-full bg-[var(--ground-tint)]">
@@ -256,7 +256,7 @@ export function HouseholdScreen() {
             />
             <button
               type="submit"
-              className="m flex-none rounded-[16px] bg-[var(--ground-tint)] px-3 py-1.5 text-[11.5px] font-semibold text-[var(--sage)] transition hover:text-[var(--ink)] disabled:opacity-40"
+              className="m flex-none rounded-lg bg-[var(--ground-tint)] px-3 py-1.5 text-[11.5px] font-semibold text-[var(--sage)] transition hover:text-[var(--ink)] disabled:opacity-40"
               disabled={inviting}
             >
               {inviting ? "sending…" : "send"}
@@ -287,25 +287,25 @@ export function HouseholdScreen() {
 
         <section className="flex flex-col gap-3">
           <p className="ml">good to know</p>
-          <div className="row !rounded-[18px]">
+          <div className="row !rounded-lg">
             <span className="bd flex-1 !text-[var(--ink-2)]">Sync runs while the app is open</span>
             <span className="m flex-none text-[11.5px] font-semibold text-[var(--ink-5)]">every 15 s</span>
           </div>
-          <div className="row !rounded-[18px]">
+          <div className="row !rounded-lg">
             <span className="bd flex-1 !text-[var(--ink-2)]">Access is limited to this household</span>
             <span className="m flex-none text-[11.5px] font-semibold text-[var(--ink-5)]">by membership</span>
           </div>
-          <div className="row !rounded-[18px]">
+          <div className="row !rounded-lg">
             <span className="bd flex-1 !text-[var(--ink-2)]">Household settings and preferences</span>
             <Link href="/settings" className="m flex-none text-[11.5px] font-semibold text-[var(--sage)] hover:text-[var(--ink)]">
               settings
             </Link>
           </div>
-          <div className="row !rounded-[18px]">
+          <div className="row !rounded-lg">
             <span className="bd flex-1 !text-[var(--ink-3)]">Household reference, for beta support</span>
             <button
               type="button"
-              className="m flex-none rounded-[14px] bg-[var(--ground-tint)] px-3 py-1 text-[10.5px] font-semibold text-[var(--sage)] transition hover:text-[var(--ink)]"
+              className="m flex-none rounded-md bg-[var(--ground-tint)] px-3 py-1 text-[10.5px] font-semibold text-[var(--sage)] transition hover:text-[var(--ink)]"
               onClick={() => {
                 void navigator.clipboard?.writeText(activeHouseholdId);
                 setCopied(true);
@@ -315,7 +315,7 @@ export function HouseholdScreen() {
             </button>
           </div>
           {apiMode === "connected" && viewerRole === "owner" && (
-            <div className="row !rounded-[18px]">
+            <div className="row !rounded-lg">
               <span className="bd flex-1 !text-[var(--ink-3)]">
                 Deleting quarantines the kitchen for everyone
               </span>
@@ -331,7 +331,7 @@ export function HouseholdScreen() {
         </section>
 
         {showDelete && apiMode === "connected" && viewerRole === "owner" && (
-          <div className="rounded-[20px] bg-[var(--ground-hi)] py-5 pl-6 pr-5 shadow-[inset_5px_0_0_0_var(--accent)]">
+          <div className="rounded-xl bg-[var(--ground-hi)] py-5 pl-6 pr-5 shadow-[inset_5px_0_0_0_var(--accent)]">
             <h2 className="nm text-[var(--accent)]">Delete this household</h2>
             <p className="bd mt-2 max-w-[32rem]">
               This immediately quarantines the household and schedules permanent deletion after

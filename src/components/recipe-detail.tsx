@@ -188,8 +188,8 @@ export function RecipeDetail({ slug }: { slug: string }) {
     return (
       <Page className="max-w-[44rem]">
         <div className="skeleton h-4 w-40 rounded-full" />
-        <div className="skeleton mt-6 h-9 w-80 rounded-[16px]" />
-        <div className="skeleton mt-8 h-48 rounded-[24px]" />
+        <div className="skeleton mt-6 h-9 w-80 rounded-lg" />
+        <div className="skeleton mt-8 h-48 rounded-xl" />
       </Page>
     );
   }
@@ -205,7 +205,7 @@ export function RecipeDetail({ slug }: { slug: string }) {
         </p>
         <Link
           href="/recipes"
-          className="glow mt-7 inline-flex min-h-12 items-center rounded-full px-6 text-[15px]"
+          className="glow mt-7 inline-flex min-h-12 items-center rounded-lg px-6 text-[15px]"
         >
           Open the library
         </Link>
@@ -438,7 +438,7 @@ export function RecipeDetail({ slug }: { slug: string }) {
         cross-contact yourself.
       </p>
 
-      <section className="mt-7 rounded-[20px] bg-[var(--ground)] p-5" aria-labelledby="recipe-feedback-title">
+      <section className="mt-7 rounded-xl bg-[var(--ground)] p-5" aria-labelledby="recipe-feedback-title">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 id="recipe-feedback-title" className="m text-[11px] text-[var(--ink-4)]">
@@ -484,7 +484,7 @@ export function RecipeDetail({ slug }: { slug: string }) {
                 ref={flagReasonRef}
                 value={flagReason}
                 onChange={(event) => setFlagReason(event.target.value as RecipeFlagReason)}
-                className="min-h-12 rounded-[16px] bg-[var(--ground-hi)] px-4 text-[14px] text-[var(--ink)]"
+                className="min-h-12 rounded-lg bg-[var(--ground-hi)] px-4 text-[14px] text-[var(--ink)]"
               >
                 <option value="inaccurate">Ingredients or quantities seem inaccurate</option>
                 <option value="unsafe">Method may be unsafe</option>
@@ -515,7 +515,7 @@ export function RecipeDetail({ slug }: { slug: string }) {
 
       {substitutions.length > 0 && (
         <section
-          className="mt-7 rounded-[20px] bg-[var(--ground-hi)] p-5"
+          className="mt-7 rounded-xl bg-[var(--ground-hi)] p-5"
           aria-labelledby="substitution-confirmation-title"
         >
           <h2 id="substitution-confirmation-title" className="m text-[11px] text-[var(--accent)]">
@@ -554,7 +554,7 @@ export function RecipeDetail({ slug }: { slug: string }) {
       )}
 
       {listNotice && (
-        <p role="status" className="bd mt-6 rounded-[20px] bg-[var(--ground)] px-5 py-4 text-[var(--sage)]">
+        <p role="status" className="bd mt-6 rounded-xl bg-[var(--ground)] px-5 py-4 text-[var(--sage)]">
           {listNotice}
         </p>
       )}
@@ -593,7 +593,7 @@ export function RecipeDetail({ slug }: { slug: string }) {
 
       {missingIngredients.length > 0 && (
         <section
-          className="mt-6 rounded-[20px] bg-[var(--ground)] p-5"
+          className="mt-6 rounded-xl bg-[var(--ground)] p-5"
           aria-labelledby="missing-ingredients-title"
         >
           <h2 id="missing-ingredients-title" className="m text-[11px] text-[var(--ink-4)]">

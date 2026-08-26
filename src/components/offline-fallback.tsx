@@ -13,7 +13,7 @@ export function OfflineFallback() {
           this device&rsquo;s own snapshot; edits join the ordered outbox.{" "}
           <Link
             href="/"
-            className="rounded-full bg-[var(--ground-hi)] px-3 py-1 text-[var(--ink-2)] transition hover:bg-[var(--ground-tint)] hover:text-[var(--ink)]"
+            className="rounded-lg bg-[var(--ground-hi)] px-3 py-1 text-[var(--ink-2)] transition hover:bg-[var(--ground-tint)] hover:text-[var(--ink)]"
           >
             try the app again
           </Link>

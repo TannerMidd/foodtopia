@@ -406,14 +406,14 @@ export function AdminBetaScreen() {
                         size="small"
                         busy={working === "disable"}
                         disabled={refreshing}
-                        className="!min-h-9 rounded-full bg-[var(--accent)] px-4 text-[12px] font-semibold !text-[var(--accent-ink)] hover:!text-[var(--accent-ink)]"
+                        className="!min-h-9 rounded-lg bg-[var(--accent)] px-4 text-[12px] font-semibold !text-[var(--accent-ink)] hover:!text-[var(--accent-ink)]"
                         onClick={() => void disable([account.userId])}
                       >
                         confirm
                       </Button>
                       <button
                         type="button"
-                        className="m min-h-9 rounded-full px-3 text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
+                        className="m min-h-9 rounded-lg px-3 text-[10.5px] text-[var(--ink-4)] hover:text-[var(--ink)]"
                         onClick={() => setConfirmingDisable(null)}
                       >
                         cancel
@@ -423,7 +423,7 @@ export function AdminBetaScreen() {
                     <button
                       type="button"
                       className={cn(
-                        "m flex-none min-h-9 rounded-full bg-[var(--ground-hi)] px-4 text-[10.5px] transition hover:bg-[var(--ground-tint)]",
+                        "m flex-none min-h-9 rounded-lg bg-[var(--ground-hi)] px-4 text-[10.5px] transition hover:bg-[var(--ground-tint)]",
                         controlsDisabled ? "text-[var(--ink-6)]" : "text-[var(--ink-2)] hover:text-[var(--accent)]",
                       )}
                       disabled={controlsDisabled}
@@ -445,7 +445,7 @@ export function AdminBetaScreen() {
                   <AccountRow key={account.userId} account={account}>
                     <button
                       type="button"
-                      className="m flex-none min-h-9 rounded-full bg-[var(--ground-hi)] px-4 text-[10.5px] text-[var(--ink-2)] transition hover:bg-[var(--sage)] hover:text-[var(--sage-ink)] disabled:text-[var(--ink-6)] disabled:hover:bg-[var(--ground-hi)] disabled:hover:text-[var(--ink-2)]"
+                      className="m flex-none min-h-9 rounded-lg bg-[var(--ground-hi)] px-4 text-[10.5px] text-[var(--ink-2)] transition hover:bg-[var(--sage)] hover:text-[var(--sage-ink)] disabled:text-[var(--ink-6)] disabled:hover:bg-[var(--ground-hi)] disabled:hover:text-[var(--ink-2)]"
                       disabled={controlsDisabled}
                       onClick={() => void enable([account.userId])}
                     >
