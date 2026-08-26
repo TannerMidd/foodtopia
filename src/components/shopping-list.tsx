@@ -154,10 +154,10 @@ export function ShoppingList() {
   const open = items.filter((item) => !item.done);
 
   return (
-    <section aria-labelledby="shopping-list-title" className="mt-10 flex flex-col gap-4">
+    <section aria-labelledby="shopping-list-title" className="flex flex-col gap-4">
       <div className="flex items-baseline justify-between">
         <p id="shopping-list-title" className="ml !text-[var(--accent)]">
-          shopping list
+          to fetch
         </p>
         <span className="m text-[11px] text-[var(--ink-5)]">
           {open.length === 0 ? "nothing to fetch" : `${open.length} to fetch`}

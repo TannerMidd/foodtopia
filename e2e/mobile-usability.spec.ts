@@ -13,7 +13,7 @@ async function expectNoHorizontalOverflow(page: Page) {
 }
 
 test("major app routes remain inside narrow mobile viewports", async ({ page }) => {
-  const routes = ["/", "/inventory", "/capture", "/recipes", "/household", "/settings"];
+  const routes = ["/", "/inventory", "/shopping", "/capture", "/recipes", "/household", "/settings"];
   for (const width of [320, 375, 430]) {
     await page.setViewportSize({ width, height: 640 });
     for (const route of routes) {
