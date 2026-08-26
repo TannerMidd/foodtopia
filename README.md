@@ -49,40 +49,33 @@ The interface follows the **"Larder"** identity — warm, rounded, dark, and bui
 
 The full spec lives in [`docs/Design identity expansion.zip`](<docs/Design identity expansion.zip>).
 
-## Quick start (local demo)
+## Local development
 
 Requirements: Node.js 22+ and pnpm 11.19.0.
 
 ```bash
+cp .env.example .env.local
 pnpm install --frozen-lockfile
-pnpm dev -p 3100
+pnpm dev
 ```
 
-Open `http://localhost:3100`. With no cloud variables, development automatically runs the in-memory demo with local vision/recipe assistants — no accounts, no cloud, no retained image bytes.
+Configure the Supabase and Inngest values in `.env.local`, then open `http://localhost:3000`.
 
-## Docker
+## Docker deployment
 
-Requirements: Docker with Compose.
+Requirements: Docker with Compose and configured Supabase and Inngest projects.
 
-### Try the demo
-
-```bash
-docker compose up --build
-```
-
-Open `http://localhost:3000`. No environment file or cloud account is needed; the container defaults to the in-memory demo. Use another host port with `APP_PORT=8080 docker compose up --build`.
-
-### Deploy production
-
-1. Copy `.env.example` to `.env`.
-2. Set the production URLs, Supabase credentials, credential keyring, and Inngest keys. Keep `FOODTOPIA_DEMO_MODE=false`.
-3. Start the container:
+1. Copy `.env.example` to `.env` and fill in every required production value.
+2. Complete the Supabase and Inngest setup below.
+3. Start Foodtopia:
 
 ```bash
 docker compose up --build -d
 ```
 
-Compose reads `.env` automatically, and `.dockerignore` prevents it from entering the image. `NEXT_PUBLIC_*` values are embedded during the image build, so rebuild after changing them. The container listens on port `3000`, runs as a non-root user, and stores application data in Supabase rather than a local volume.
+Open `http://localhost:3000`, or set another host port with `APP_PORT=8080 docker compose up --build -d`.
+
+The Compose stack runs **Foodtopia only**. It does not provision Supabase or Inngest; those remain external services. Compose reads `.env` automatically, and `.dockerignore` prevents it from entering the image. `NEXT_PUBLIC_*` values are embedded during the image build, so rebuild after changing them. The container runs as a non-root user and stores application data in Supabase rather than a local volume.
 
 For an internet-facing deployment, terminate TLS and enforce request limits at a reverse proxy or container platform. Platforms that build the `Dockerfile` directly must provide `NEXT_PUBLIC_*` as both build arguments and runtime variables; provide server-only credentials only at runtime. See [`docs/operations.md`](docs/operations.md) for container operations.
 
@@ -96,7 +89,7 @@ For an internet-facing deployment, terminate TLS and enforce request limits at a
 6. Create an Inngest application pointed at `/api/inngest` and set its event/signing keys.
 7. Configure the deployment-wide default model IDs (optional pre-fill hints). Direct OpenAI uses synchronous Responses requests with `store: false`; OpenRouter uses its OpenAI-compatible Chat Completions endpoint with structured outputs, zero-data-retention routing, and provider data collection denied. Owners select the provider and both model IDs in Settings.
 8. Configure the AES-GCM keyring — it is required. Foodtopia is BYO-only: household owners supply their own provider key in Settings, encrypted before storage and never returned after saving. The deployment never holds a provider key, so AI stays unconfigured until each household adds one.
-9. Deploy with Docker (above) or Vercel and set the environment variables below. Do not set demo mode in production.
+9. Deploy with Docker (above) or Vercel and set the environment variables below.
 10. Share the open-beta invite link `https://your-foodtopia.example/sign-up`. New accounts start **pending** and see an "Account not enabled" screen until admitted. Review and enable accounts in batches at `/admin/beta` (sign in as the configured administrator), where you can also close the signup window entirely. Personal beta-invite rows created through a controlled operator process remain an instant-access fast lane: share `/onboarding/{raw-token}` only with that email owner. Raw tokens are stored only as hashes in Postgres.
 11. Run the security, retention, device, and content gates in [`docs/beta-runbook.md`](docs/beta-runbook.md) before admitting a household.
 
@@ -165,7 +158,7 @@ pnpm eval:vision path/to/manifest.json path/to/vision-results.json
 | `src/components` | Product screens and accessible UI primitives |
 | `src/contracts` | Shared Zod HTTP and domain contracts |
 | `src/domain` | Inventory reduction, normalization, unit families, deterministic recipe assessment/ranking |
-| `src/server` | AI adapters, request authorization, repositories/services, local demo state |
+| `src/server` | AI adapters, request authorization, repositories, and services |
 | `src/inngest` | Durable analysis and purge functions |
 | `src/lib/offline` | Dexie snapshot, cursor, ordered outbox, conflict handling, cleanup |
 | `src/sw.ts` | Static-only caching and the `/~offline` navigation fallback |

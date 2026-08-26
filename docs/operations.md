@@ -2,7 +2,7 @@
 
 ## Docker deployment
 
-Production configuration lives in the host's `.env` file; it is not copied into the image. Keep `FOODTOPIA_DEMO_MODE=false`. The four `NEXT_PUBLIC_*` values are build inputs, while server credentials are runtime environment variables, so rebuild whenever a public value changes.
+Production configuration lives in the host's `.env` file; it is not copied into the image. The Compose stack is production-only. The four `NEXT_PUBLIC_*` values are build inputs, while server credentials are runtime environment variables, so rebuild whenever a public value changes.
 
 ```bash
 # Start or update the checked-out revision
