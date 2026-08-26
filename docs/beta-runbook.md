@@ -10,7 +10,8 @@
 - [ ] Build the consented 100-batch image benchmark and meet at least 90% proposal precision and 80% recall.
 - [ ] Verify immediate apply/cancel deletion and the one-hour/24-hour purge deadlines against the real private bucket.
 - [ ] Run `pnpm check`, `pnpm build`, `docker compose build`, and both Playwright mobile projects.
-- [ ] Start the production-configured container, verify `/~offline` and `/api/v1/recipes`, confirm it runs as a non-root user, and rehearse rebuild, logs, graceful stop, and rollback commands from `docs/operations.md`.
+- [ ] Reset and start the full local Compose stack; verify Supabase migrations, seed/catalog import, email Auth, Storage, Inngest registration, `/~offline`, and `/api/v1/recipes`.
+- [ ] Build the production `Dockerfile` separately, confirm it runs as a non-root user, and rehearse graceful stop and rollback.
 - [ ] Manually install and exercise camera/offline/reconnect behavior on current iOS Safari and Android Chrome.
 - [ ] Configure the operational alerts in `docs/operations.md` and rehearse household deletion.
 - [ ] Exercise OpenAI and OpenRouter with encrypted household credentials; verify a missing/invalid selected key never falls back to another provider or any deployment key.

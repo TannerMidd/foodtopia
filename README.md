@@ -49,35 +49,34 @@ The interface follows the **"Larder"** identity — warm, rounded, dark, and bui
 
 The full spec lives in [`docs/Design identity expansion.zip`](<docs/Design identity expansion.zip>).
 
-## Local development
+## Fully local Docker setup
 
-Requirements: Node.js 22+ and pnpm 11.19.0.
-
-```bash
-cp .env.example .env.local
-pnpm install --frozen-lockfile
-pnpm dev
-```
-
-Configure the Supabase and Inngest values in `.env.local`, then open `http://localhost:3000`.
-
-## Docker deployment
-
-Requirements: Docker with Compose and configured Supabase and Inngest projects.
-
-1. Copy `.env.example` to `.env` and fill in every required production value.
-2. Complete the Supabase and Inngest setup below.
-3. Start Foodtopia:
+Requirements: Docker and Docker Compose 2.20+.
 
 ```bash
 docker compose up --build -d
 ```
 
-Open `http://localhost:3000`, or set another host port with `APP_PORT=8080 docker compose up --build -d`.
+That one command starts the complete local stack and initializes the database migrations, seed data, recipe catalog, Auth hook, storage bucket, and signup settings.
 
-The Compose stack runs **Foodtopia only**. It does not provision Supabase or Inngest; those remain external services. Compose reads `.env` automatically, and `.dockerignore` prevents it from entering the image. `NEXT_PUBLIC_*` values are embedded during the image build, so rebuild after changing them. The container runs as a non-root user and stores application data in Supabase rather than a local volume.
+| Service | URL |
+|---|---|
+| Foodtopia | `http://localhost:3000` |
+| Supabase Studio/API | `http://supabase.localhost:8000` |
+| Local email inbox | `http://localhost:9000` |
+| Inngest dashboard | `http://localhost:8288` |
+| PostgreSQL | `localhost:54322` |
 
-For an internet-facing deployment, terminate TLS and enforce request limits at a reverse proxy or container platform. Platforms that build the `Dockerfile` directly must provide `NEXT_PUBLIC_*` as both build arguments and runtime variables; provide server-only credentials only at runtime. See [`docs/operations.md`](docs/operations.md) for container operations.
+Supabase Studio uses username `supabase` and password `foodtopia`. To create the local administrator, sign up as `admin@foodtopia.local`, open its message in the local email inbox, follow the sign-in link, then enable the account at `/admin/beta`.
+
+Data persists in Docker volumes. Reset the entire local installation with:
+
+```bash
+docker compose down -v
+docker compose up --build -d
+```
+
+The checked-in credentials are deliberately local-only. Do not expose this Compose stack publicly. AI requests still use the household's OpenAI or OpenRouter key entered in Settings; no deployment-level AI key is included. See [`docs/operations.md`](docs/operations.md) for logs and lifecycle commands.
 
 ## Production setup
 
@@ -89,7 +88,7 @@ For an internet-facing deployment, terminate TLS and enforce request limits at a
 6. Create an Inngest application pointed at `/api/inngest` and set its event/signing keys.
 7. Configure the deployment-wide default model IDs (optional pre-fill hints). Direct OpenAI uses synchronous Responses requests with `store: false`; OpenRouter uses its OpenAI-compatible Chat Completions endpoint with structured outputs, zero-data-retention routing, and provider data collection denied. Owners select the provider and both model IDs in Settings.
 8. Configure the AES-GCM keyring — it is required. Foodtopia is BYO-only: household owners supply their own provider key in Settings, encrypted before storage and never returned after saving. The deployment never holds a provider key, so AI stays unconfigured until each household adds one.
-9. Deploy with Docker (above) or Vercel and set the environment variables below.
+9. Deploy to Vercel or build the `Dockerfile` on your container platform with the environment variables below. The root Compose stack is local-only.
 10. Share the open-beta invite link `https://your-foodtopia.example/sign-up`. New accounts start **pending** and see an "Account not enabled" screen until admitted. Review and enable accounts in batches at `/admin/beta` (sign in as the configured administrator), where you can also close the signup window entirely. Personal beta-invite rows created through a controlled operator process remain an instant-access fast lane: share `/onboarding/{raw-token}` only with that email owner. Raw tokens are stored only as hashes in Postgres.
 11. Run the security, retention, device, and content gates in [`docs/beta-runbook.md`](docs/beta-runbook.md) before admitting a household.
 

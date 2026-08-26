@@ -1,25 +1,34 @@
 # Foodtopia beta operations
 
-## Docker deployment
+## Local Docker stack
 
-Production configuration lives in the host's `.env` file; it is not copied into the image. The Compose stack is production-only. The four `NEXT_PUBLIC_*` values are build inputs, while server credentials are runtime environment variables, so rebuild whenever a public value changes.
+The root Compose file runs Foodtopia, Supabase Auth/Postgres/Storage/Studio, Inbucket email, and the Inngest dev server. Its checked-in credentials are local-only.
 
 ```bash
-# Start or update the checked-out revision
+# Start or rebuild everything
 docker compose up --build -d
 
 # Verify and inspect
 docker compose ps
-curl --fail https://your-foodtopia.example/~offline
-docker compose logs -f foodtopia
+docker compose logs -f foodtopia db auth storage inngest
+curl --fail http://localhost:3000/~offline
+curl --fail --location --user supabase:foodtopia http://supabase.localhost:8000/
 
-# Stop the application
+# Stop but retain data
 docker compose down
+
+# Delete every local database/storage volume and reinitialize
+docker compose down -v
+docker compose up --build -d
 ```
 
-The container is stateless and requires no application-data volume; durable data remains in Supabase. `docker compose down` does not remove Supabase data. Before exposing port 3000, place a TLS-terminating reverse proxy or managed load balancer in front of it and configure request-size limits, rate limits, streaming, and a 10–30 second graceful-shutdown window.
+Database migrations and `supabase/seed.sql`, `supabase/local-recipes.sql`, and `supabase/local-bootstrap.sql` run only when the Postgres volume is first created. Regenerate the checked-in local catalog after recipe changes:
 
-Deploy one container unless shared Next.js cache and multi-instance coordination have been configured. To roll back, check out the last known-good revision and rerun `docker compose up --build -d`; database migration compatibility must be assessed separately.
+```bash
+pnpm generate:recipe-import -- --output supabase/local-recipes.sql
+```
+
+Do not expose this stack publicly. Production deployments should build the `Dockerfile`, inject unique credentials, and use managed or separately secured Supabase and Inngest services.
 
 ## Open-beta admissions
 

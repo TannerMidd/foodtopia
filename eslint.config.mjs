@@ -15,6 +15,7 @@ const eslintConfig = defineConfig([
     "public/sw.js",
     "public/swe-worker-*.js",
     "next-env.d.ts",
+    "docker/**",
     // Gitignored local tool caches that CI never checks out. ESLint's flat
     // config does not read .gitignore, and linting these exhausts the heap.
     ".npm-cache/**",

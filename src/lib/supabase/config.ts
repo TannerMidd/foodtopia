@@ -19,7 +19,9 @@ function validateUrl(value: string | undefined): string {
     );
   }
 
-  const isLocal = parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1";
+  const isLocal = parsed.hostname === "localhost" ||
+    parsed.hostname.endsWith(".localhost") ||
+    parsed.hostname === "127.0.0.1";
   if (parsed.protocol !== "https:" && !(isLocal && parsed.protocol === "http:")) {
     throw new Error(
       "Supabase is not configured: use HTTPS except for a local Supabase instance.",

@@ -10,3 +10,5 @@ test-results
 *.tsbuildinfo
 public/sw.js
 public/swe-worker-*.js
+/docker
+/supabase
