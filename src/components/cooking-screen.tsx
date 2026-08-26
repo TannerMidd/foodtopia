@@ -10,7 +10,11 @@ import {
   type CookLotAllocation,
 } from "@/domain/cook-allocation";
 import { ApiClientError, reconcileCookSession, type ReconciliationChange } from "@/lib/client/api";
-import { loadCookSession, loadRecipeAssessment } from "@/lib/client/recipe-cache";
+import {
+  clearCookingContext,
+  loadCookSession,
+  loadRecipeAssessment,
+} from "@/lib/client/recipe-cache";
 import { amountText, locationNames, numberWord } from "./format";
 import { useOfflineInventory } from "./offline-provider";
 import { Button, Field, Page, Section, StateNotice, cn, inputClass } from "./ui";
@@ -48,11 +52,23 @@ export function CookingScreen({ slug }: { slug: string }) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
     const timeout = window.setTimeout(() => {
-      setAssessment(loadRecipeAssessment(slug));
-      setSessionId(loadCookSession(slug) ?? "");
+      // Both reads are async now: the context lives in Dexie and survives tab
+      // closes, so a kitchen tablet can resume mid-recipe after a restart.
+      void Promise.all([
+        loadRecipeAssessment(slug),
+        loadCookSession(slug),
+      ]).then(([loadedAssessment, loadedSessionId]) => {
+        if (cancelled) return;
+        setAssessment(loadedAssessment);
+        setSessionId(loadedSessionId ?? "");
+      });
     }, 0);
-    return () => window.clearTimeout(timeout);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timeout);
+    };
   }, [slug]);
 
   const reconcilable = useMemo(
@@ -244,6 +260,9 @@ export function CookingScreen({ slug }: { slug: string }) {
     try {
       await reconcileCookSession(sessionId, changes);
       await refresh(true);
+      // The session is settled server-side; drop the durable context so a
+      // later visit cannot replay a finished comparison.
+      await clearCookingContext(slug);
       setUndoCommands(inverses);
       setDone(true);
     } catch (caught) {

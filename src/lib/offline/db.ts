@@ -1,5 +1,5 @@
 import Dexie, { type EntityTable } from "dexie";
-import type { InventoryCommand, InventoryLot } from "@/contracts/domain";
+import type { InventoryCommand, InventoryLot, Recipe, RecipeAssessment } from "@/contracts/domain";
 
 export const DEMO_HOUSEHOLD_ID = "00000000-0000-4000-8000-000000000001";
 
@@ -27,11 +27,25 @@ export type MetaRecord = {
   value: string | number | null;
 };
 
+/**
+ * Durable per-recipe cooking context. Survives tab close and device restarts,
+ * unlike the sessionStorage it replaces: a kitchen tablet must not lose the
+ * ingredient comparison or server session id mid-cook.
+ */
+export type CookSessionRecord = {
+  slug: string;
+  assessment: RecipeAssessment;
+  sessionId: string | null;
+  savedAt: string;
+};
+
 class FoodtopiaDatabase extends Dexie {
   lots!: EntityTable<InventoryLot, "id">;
   outbox!: EntityTable<OutboxRecord, "commandId">;
   snapshots!: EntityTable<SnapshotRecord, "householdId">;
   meta!: EntityTable<MetaRecord, "key">;
+  catalogRecipes!: EntityTable<Recipe, "slug">;
+  cookSessions!: EntityTable<CookSessionRecord, "slug">;
 
   constructor() {
     super("foodtopia-offline-v1");
@@ -40,6 +54,17 @@ class FoodtopiaDatabase extends Dexie {
       outbox: "commandId, householdId, [householdId+sequence], status, sequence",
       snapshots: "householdId, refreshedAt",
       meta: "key",
+    });
+    // Version 2 adds the browsable recipe cache and durable cooking sessions.
+    // Neither is household-keyed because every row already belongs to the one
+    // bound household and both are cleared together in resetAndBind.
+    this.version(2).stores({
+      lots: "id, householdId, [householdId+status], updatedAt",
+      outbox: "commandId, householdId, [householdId+sequence], status, sequence",
+      snapshots: "householdId, refreshedAt",
+      meta: "key",
+      catalogRecipes: "slug",
+      cookSessions: "slug",
     });
   }
 }
@@ -68,26 +93,38 @@ export async function setActiveHouseholdId(householdId: string) {
 
 export async function clearOfflineData() {
   const db = getOfflineDb();
-  await db.transaction("rw", db.lots, db.outbox, db.snapshots, db.meta, async () => {
-    await Promise.all([
-      db.lots.clear(),
-      db.outbox.clear(),
-      db.snapshots.clear(),
-      db.meta.clear(),
-    ]);
-  });
+  await db.transaction(
+    "rw",
+    [db.lots, db.outbox, db.snapshots, db.meta, db.catalogRecipes, db.cookSessions],
+    async () => {
+      await Promise.all([
+        db.lots.clear(),
+        db.outbox.clear(),
+        db.snapshots.clear(),
+        db.meta.clear(),
+        db.catalogRecipes.clear(),
+        db.cookSessions.clear(),
+      ]);
+    },
+  );
 }
 
 /** Atomically removes every prior tenant row and installs the new binding. */
 export async function resetAndBindOfflineHousehold(householdId: string) {
   const db = getOfflineDb();
-  await db.transaction("rw", db.lots, db.outbox, db.snapshots, db.meta, async () => {
-    await Promise.all([
-      db.lots.clear(),
-      db.outbox.clear(),
-      db.snapshots.clear(),
-      db.meta.clear(),
-    ]);
-    await db.meta.put({ key: "activeHouseholdId", value: householdId });
-  });
+  await db.transaction(
+    "rw",
+    [db.lots, db.outbox, db.snapshots, db.meta, db.catalogRecipes, db.cookSessions],
+    async () => {
+      await Promise.all([
+        db.lots.clear(),
+        db.outbox.clear(),
+        db.snapshots.clear(),
+        db.meta.clear(),
+        db.catalogRecipes.clear(),
+        db.cookSessions.clear(),
+      ]);
+      await db.meta.put({ key: "activeHouseholdId", value: householdId });
+    },
+  );
 }

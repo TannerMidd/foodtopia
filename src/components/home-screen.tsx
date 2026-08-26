@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Camera, Utensils } from "lucide-react";
-import { getCurrentHousehold, getUnfinishedAnalyses } from "@/lib/client/api";
+import {
+  getCurrentHousehold,
+  getCookHistory,
+  getUnfinishedAnalyses,
+} from "@/lib/client/api";
+import type { CookHistoryEntry } from "@/contracts/api";
 import { ApiClientError } from "@/lib/client/api";
 import type { FoodLocation } from "@/contracts/domain";
 import {
@@ -56,6 +61,7 @@ export function HomeScreen() {
   const [unfinished, setUnfinished] = useState<
     Awaited<ReturnType<typeof getUnfinishedAnalyses>>["analyses"]
   >([]);
+  const [cookHistory, setCookHistory] = useState<CookHistoryEntry[]>([]);
   const [householdName, setHouseholdName] = useState<string | null>(null);
   const [needsHousehold, setNeedsHousehold] = useState(false);
 
@@ -71,8 +77,8 @@ export function HomeScreen() {
   useEffect(() => {
     if (!online) return;
     let cancelled = false;
-    void Promise.allSettled([getUnfinishedAnalyses(), getCurrentHousehold()]).then(
-      ([analysesResult, householdResult]) => {
+    void Promise.allSettled([getUnfinishedAnalyses(), getCurrentHousehold(), getCookHistory()]).then(
+      ([analysesResult, householdResult, historyResult]) => {
         if (cancelled) return;
         if (analysesResult.status === "fulfilled") setUnfinished(analysesResult.value.analyses);
         if (householdResult.status === "fulfilled") setHouseholdName(householdResult.value.name);
@@ -82,6 +88,9 @@ export function HomeScreen() {
         ) {
           // Authenticated and enabled, but no household membership yet.
           setNeedsHousehold(true);
+        }
+        if (historyResult.status === "fulfilled") {
+          setCookHistory(historyResult.value.sessions.slice(0, 3));
         }
       },
     );
@@ -252,6 +261,36 @@ export function HomeScreen() {
                   </span>
                 </div>
               ))}
+            </section>
+          )}
+          {cookHistory.length > 0 && (
+            <section className="flex flex-col gap-3">
+              <p className="ml !text-[var(--sage)]">cooked lately</p>
+              {cookHistory.map((session) => {
+                const inner = (
+                  <div
+                    key={session.id}
+                    className="flex items-center gap-3.5 rounded-[16px] bg-[var(--ground)] px-[18px] py-3"
+                  >
+                    <span className="m w-[38px] flex-none text-[11px] font-semibold text-[var(--sage)]">
+                      {clockTime(session.completedAt)}
+                    </span>
+                    <span className="min-w-0 flex-1 truncate text-[14px] text-[var(--ink-2)]">
+                      {session.title}
+                      <span className="m ml-2 text-[10.5px] uppercase tracking-[0.1em] text-[var(--ink-5)]">
+                        cooked again?
+                      </span>
+                    </span>
+                  </div>
+                );
+                return session.slug ? (
+                  <Link key={session.id} href={`/recipes/${session.slug}`} className="row-link block">
+                    {inner}
+                  </Link>
+                ) : (
+                  inner
+                );
+              })}
             </section>
           )}
         </div>

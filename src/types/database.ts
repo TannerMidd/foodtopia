@@ -380,6 +380,25 @@ export type Database = {
         flagged_by: string;
         created_at: string;
       }>;
+      shopping_list_items: Table<{
+        id: string;
+        household_id: string;
+        name: string;
+        category: string;
+        food_concept_id: string | null;
+        quantity_text: string | null;
+        done: boolean;
+        added_by: string;
+        created_at: string;
+        updated_at: string;
+        version: number;
+      }>;
+      household_recipe_favorites: Table<{
+        household_id: string;
+        recipe_id: string;
+        created_by: string;
+        created_at: string;
+      }>;
       recipe_proposals: Table<{
         id: string;
         household_id: string;

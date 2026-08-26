@@ -13,6 +13,7 @@ import type {
 } from "@/contracts/domain";
 import { BarcodeScanModal } from "./barcode-scan-modal";
 import { normalizeFoodLabel, resolveFoodIdentity } from "@/domain/normalization";
+import { ShoppingList } from "./shopping-list";
 import type { OutboxRecord } from "@/lib/offline/db";
 import {
   amountText,
@@ -791,6 +792,8 @@ export function InventoryScreen() {
           )}
         </div>
       )}
+
+      <ShoppingList />
 
       {removed.length > 0 && (
         <div className="mt-11">
