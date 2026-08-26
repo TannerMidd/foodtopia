@@ -54,7 +54,7 @@ const cuisines = ["italian", "mexican", "mediterranean", "asian", "american"];
 const mealTypes = ["breakfast", "lunch", "dinner", "snack"];
 const dietaryTags = ["vegetarian", "vegan", "gluten-free", "dairy-free"];
 
-export class HeuristicRecipeAssistant implements RecipeAssistant {
+export class DemoRecipeAssistant implements RecipeAssistant {
   async generate(context: RecipeGenerationContext): Promise<GeneratedRecipeDraft> {
     return demoGeneratedDraft(context);
   }

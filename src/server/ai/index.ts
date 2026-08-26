@@ -1,8 +1,8 @@
 import { isDemoMode, serverEnv } from "@/lib/env";
 import {
+  DemoRecipeAssistant,
   DemoVisionAnalyzer,
-  HeuristicRecipeAssistant,
-} from "@/server/ai/local-adapters";
+} from "@/server/ai/demo-adapters";
 import {
   OpenAIRecipeAssistant,
   OpenAIVisionAnalyzer,
@@ -47,7 +47,7 @@ export const createVisionAnalyzer = (
 export const createRecipeAssistant = (
   config?: HouseholdAiRuntimeConfig,
 ): RecipeAssistant => {
-  if (isDemoMode) return new HeuristicRecipeAssistant();
+  if (isDemoMode) return new DemoRecipeAssistant();
   const runtime = requireRuntimeConfig(config);
   return runtime.provider === "openrouter"
     ? new OpenRouterRecipeAssistant({
