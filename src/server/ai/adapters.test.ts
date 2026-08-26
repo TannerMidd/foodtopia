@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { visionBatchResultSchema } from "./contracts";
-import { HeuristicRecipeAssistant } from "./local-adapters";
+import { DemoVisionAnalyzer, HeuristicRecipeAssistant } from "./local-adapters";
 
 describe("vision response validation", () => {
   const baseProposal = {
@@ -42,6 +42,19 @@ describe("vision response validation", () => {
         batchNotes: null,
       }),
     ).toThrow();
+  });
+
+  it("places demo suggestions in likely storage", async () => {
+    const result = await new DemoVisionAnalyzer().analyze({
+      analysisId: "analysis-1",
+      images: [{ index: 0 }],
+      fileNames: ["rice-milk.jpg"],
+    });
+
+    expect(result.proposals.map(({ suggestedName, location }) => [suggestedName, location])).toEqual([
+      ["Milk", "fridge"],
+      ["Rice", "pantry"],
+    ]);
   });
 });
 

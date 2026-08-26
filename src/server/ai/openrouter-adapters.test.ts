@@ -102,6 +102,9 @@ describe("OpenRouter adapters", () => {
       body: { model: "gpt-vision-private", store: false },
       options: { idempotencyKey: "analysis-1" },
     });
+    expect(JSON.stringify(state.responsesCalls[0]?.body)).toContain(
+      "Prefer pantry, fridge, or freezer over unknown",
+    );
   });
 
   it("uses chat structured output, private routing, and inline high-detail images", async () => {
@@ -144,6 +147,9 @@ describe("OpenRouter adapters", () => {
     expect(call?.body).not.toHaveProperty("store");
     expect(JSON.stringify(call?.body)).toContain("data:image/jpeg;base64,AQI=");
     expect(JSON.stringify(call?.body)).toContain('"detail":"high"');
+    expect(JSON.stringify(call?.body)).toContain(
+      "Prefer pantry, fridge, or freezer over unknown",
+    );
     expect(call?.options).toEqual({ headers: { "Idempotency-Key": "analysis-1" } });
   });
 
