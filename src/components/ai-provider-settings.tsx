@@ -113,7 +113,7 @@ function OpenRouterModelField({
     >
       <div className="flex flex-col gap-3">
         {selected ? (
-          <div className="rounded-[18px] bg-[var(--ground-tint)] px-4 py-3">
+          <div className="rounded-lg bg-[var(--ground-tint)] px-4 py-3">
             <p className="ml !text-[var(--sage)]">selected</p>
             <p className="nm mt-1.5 text-[14px]">{selected.name}</p>
             <p className="m mt-1 break-all text-[10.5px] text-[var(--ink-5)]">
@@ -121,7 +121,7 @@ function OpenRouterModelField({
             </p>
           </div>
         ) : value ? (
-          <div className="rounded-[18px] bg-[var(--ground-tint)] px-4 py-3">
+          <div className="rounded-lg bg-[var(--ground-tint)] px-4 py-3">
             <p className="ml !text-[var(--sage)]">custom selection</p>
             <p className="m mt-1.5 break-all text-[11px] text-[var(--ink-2)]">{value}</p>
           </div>
@@ -141,7 +141,7 @@ function OpenRouterModelField({
               onChange={(event) => setQuery(event.target.value)}
             />
             <div
-              className="max-h-[17rem] overflow-y-auto rounded-[18px] bg-[var(--ground)] p-1.5"
+              className="max-h-[17rem] overflow-y-auto rounded-lg bg-[var(--ground)] p-1.5"
               aria-label={`${label} search results`}
             >
               {visibleModels.length ? (
@@ -158,7 +158,7 @@ function OpenRouterModelField({
                       aria-pressed={active}
                       disabled={disabled}
                       className={cn(
-                        "flex min-h-[58px] w-full items-center gap-3 rounded-[14px] px-3 py-2.5 text-left transition disabled:opacity-45",
+                        "flex min-h-[58px] w-full items-center gap-3 rounded-md px-3 py-2.5 text-left transition disabled:opacity-45",
                         active
                           ? "bg-[var(--ground-tint)]"
                           : "hover:bg-[var(--ground-hi)]",
@@ -202,7 +202,7 @@ function OpenRouterModelField({
 
         <details
           open={models.length === 0 || (!selected && Boolean(value))}
-          className="rounded-[16px] bg-[var(--ground)] px-4 py-3"
+          className="rounded-lg bg-[var(--ground)] px-4 py-3"
         >
           <summary className="m cursor-pointer text-[11px] text-[var(--ink-4)]">
             Enter a custom model ID
@@ -588,7 +588,7 @@ export function AiProviderSettings({
               </div>
 
               {settings.canEdit ? (
-                <div className="rounded-[20px] bg-[var(--ground)] p-4">
+                <div className="rounded-xl bg-[var(--ground)] p-4">
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <p className="bd text-[12px] text-[var(--ink-5)]" role="status">
                       {modelsLoading

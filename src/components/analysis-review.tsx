@@ -99,7 +99,7 @@ function KeptCandidate({
   const name = candidate.suggestedName.trim();
 
   return (
-    <div className="rounded-[18px] bg-[var(--ground-hi)] px-[18px] py-[15px]">
+    <div className="rounded-lg bg-[var(--ground-hi)] px-[18px] py-[15px]">
       <div className="flex items-center gap-3.5">
         <Tick
           checked
@@ -116,7 +116,7 @@ function KeptCandidate({
         </button>
         <span
           className={cn(
-            "m flex-none rounded-[14px] bg-[var(--ground-tint)] px-[11px] py-[5px] text-[11px] font-semibold",
+            "m flex-none rounded-md bg-[var(--ground-tint)] px-[11px] py-[5px] text-[11px] font-semibold",
             candidate.quantityStatus === "unknown" ? "text-[var(--ink-5)]" : "text-[var(--ink-2)]",
           )}
         >
@@ -429,7 +429,7 @@ export function AnalysisReview({ analysisId }: { analysisId: string }) {
         <div className="mt-7 flex items-center gap-6">
           <Link
             href="/capture"
-            className="glow inline-flex min-h-12 items-center rounded-full px-6 text-[15px]"
+            className="glow inline-flex min-h-12 items-center rounded-lg px-6 text-[15px]"
           >
             Try another photo
           </Link>
@@ -454,7 +454,7 @@ export function AnalysisReview({ analysisId }: { analysisId: string }) {
         </p>
         <Link
           href="/inventory"
-          className="glow mt-7 inline-flex min-h-12 items-center rounded-full px-6 text-[15px]"
+          className="glow mt-7 inline-flex min-h-12 items-center rounded-lg px-6 text-[15px]"
         >
           Open the kitchen
         </Link>
@@ -478,7 +478,7 @@ export function AnalysisReview({ analysisId }: { analysisId: string }) {
         </div>
         <button
           type="button"
-          className="m inline-flex min-h-11 flex-none items-center rounded-full px-4 text-[11px] text-[var(--ink-5)] transition hover:text-[var(--ink)] disabled:opacity-40"
+          className="m inline-flex min-h-11 flex-none items-center rounded-lg px-4 text-[11px] text-[var(--ink-5)] transition hover:text-[var(--ink)] disabled:opacity-40"
           disabled={cancelling}
           onClick={() => void cancelBatch()}
         >
@@ -518,7 +518,7 @@ export function AnalysisReview({ analysisId }: { analysisId: string }) {
             )}
             <button
               type="button"
-              className="flex min-h-[52px] w-full items-center gap-3.5 rounded-[18px] bg-[var(--ground)] px-[18px] py-[15px] text-left transition hover:bg-[var(--ground-hi)]"
+              className="flex min-h-[52px] w-full items-center gap-3.5 rounded-lg bg-[var(--ground)] px-[18px] py-[15px] text-left transition hover:bg-[var(--ground-hi)]"
               onClick={addMissed}
             >
               <span className="flex size-6 flex-none items-center justify-center rounded-full bg-[var(--ground-tint)]">
@@ -541,7 +541,7 @@ export function AnalysisReview({ analysisId }: { analysisId: string }) {
               {dropped.map((candidate) => (
                 <div
                   key={candidate.id}
-                  className="flex items-center gap-3.5 rounded-[18px] bg-[var(--ground)] px-[18px] py-[15px]"
+                  className="flex items-center gap-3.5 rounded-lg bg-[var(--ground)] px-[18px] py-[15px]"
                 >
                   <Tick
                     checked={false}
@@ -553,7 +553,7 @@ export function AnalysisReview({ analysisId }: { analysisId: string }) {
                   </span>
                   <button
                     type="button"
-                    className="m flex-none rounded-[16px] bg-[var(--ground-tint)] px-[13px] py-[6px] text-[11.5px] font-semibold text-[var(--sage)] transition hover:bg-[var(--ground-hi)]"
+                    className="m flex-none rounded-lg bg-[var(--ground-tint)] px-[13px] py-[6px] text-[11.5px] font-semibold text-[var(--sage)] transition hover:bg-[var(--ground-hi)]"
                     onClick={() => updateCandidate(candidate.id, { ...candidate, accepted: true })}
                   >
                     keep it after all
@@ -565,7 +565,7 @@ export function AnalysisReview({ analysisId }: { analysisId: string }) {
         )}
       </div>
 
-      <div className="mt-9 flex flex-col gap-5 rounded-[26px] bg-[var(--ground-hi)] p-[22px] sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-9 flex flex-col gap-5 rounded-xl bg-[var(--ground-hi)] p-[22px] sm:flex-row sm:items-center sm:justify-between">
         <p className="bd max-w-[19rem] text-[13px]">
           Saving adds {numberWord(kept.length)} item{kept.length === 1 ? "" : "s"} and deletes the photos.
           Every item stays editable afterwards.

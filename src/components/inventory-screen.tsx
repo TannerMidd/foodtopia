@@ -65,7 +65,7 @@ function ConflictRow({ record }: { record: OutboxRecord }) {
   }
 
   return (
-    <div className="row min-h-0 flex-col items-start gap-4 !rounded-[20px] py-5 sm:flex-row sm:items-center">
+    <div className="row min-h-0 flex-col items-start gap-4 !rounded-xl py-5 sm:flex-row sm:items-center">
       <div className="min-w-0 flex-1">
         <p className="nm">
           {record.status === "conflict" ? "Household update collided" : "Queued change was rejected"}
@@ -498,7 +498,7 @@ function LotRow({
   return (
     <article
       id={`lot-${lot.id}`}
-      className="row row-link grid min-h-0 grid-cols-[minmax(0,1fr)_auto] gap-x-3.5 gap-y-2 !rounded-[18px] !px-[18px] !py-[15px] sm:flex sm:flex-nowrap"
+      className="row row-link grid min-h-0 grid-cols-[minmax(0,1fr)_auto] gap-x-3.5 gap-y-2 !rounded-lg !px-[18px] !py-[15px] sm:flex sm:flex-nowrap"
     >
       <span className="col-span-2 min-w-0 sm:flex-1">
         <h3 className="truncate font-[family-name:var(--font-familjen)] text-[16.5px] font-semibold">
@@ -509,7 +509,7 @@ function LotRow({
       <span className="col-span-2 flex min-w-0 items-center justify-between gap-3 sm:contents">
         {pressing ? (
           // Running out: the date becomes a small terracotta pill.
-          <span className="m min-w-0 truncate rounded-[14px] bg-[var(--accent)] px-[11px] py-[5px] text-[10.5px] font-semibold text-[var(--accent-ink)]">
+          <span className="m min-w-0 truncate rounded-md bg-[var(--accent)] px-[11px] py-[5px] text-[10.5px] font-semibold text-[var(--accent-ink)]">
             {relativeDate(lot.dateLabel!)}
           </span>
         ) : printed ? (
@@ -665,7 +665,7 @@ export function InventoryScreen() {
           </button>
           <Link
             href="/capture"
-            className="glow inline-flex min-h-12 items-center gap-2.5 rounded-full px-6 text-[14.5px]"
+            className="glow inline-flex min-h-12 items-center gap-2.5 rounded-lg px-6 text-[14.5px]"
           >
             <Plus className="size-4" aria-hidden="true" />
             Photograph a batch
@@ -676,7 +676,7 @@ export function InventoryScreen() {
       {/* Search is a soft bar; shelf filters are chips. The selected shelf is
           the one cream chip on the screen. */}
       <div className="mt-7 flex flex-col gap-3">
-        <div className="flex min-h-[52px] items-center gap-3 rounded-[26px] bg-[var(--ground-hi)] px-5">
+        <div className="flex min-h-[52px] items-center gap-3 rounded-xl bg-[var(--ground-hi)] px-5">
           <Search className="size-[17px] flex-none text-[var(--ink-5)]" aria-hidden="true" />
           <input
             type="search"
@@ -704,7 +704,7 @@ export function InventoryScreen() {
               type="button"
               aria-pressed={filter === value}
               className={cn(
-                "m inline-flex min-h-11 items-center rounded-[20px] px-4 py-[9px] text-[13px] transition",
+                "m inline-flex min-h-11 items-center rounded-xl px-4 py-[9px] text-[13px] transition",
                 filter === value
                   ? "bg-[var(--ink)] font-semibold text-[var(--page)]"
                   : "bg-[var(--ground-hi)] font-medium text-[var(--ink-3)] hover:bg-[var(--ground-tint)] hover:text-[var(--ink-2)]",
@@ -740,9 +740,9 @@ export function InventoryScreen() {
 
       {!hydrated ? (
         <div className="mt-9 space-y-2.5">
-          <div className="skeleton h-14 rounded-[18px]" />
-          <div className="skeleton h-14 rounded-[18px]" />
-          <div className="skeleton h-14 rounded-[18px]" />
+          <div className="skeleton h-14 rounded-lg" />
+          <div className="skeleton h-14 rounded-lg" />
+          <div className="skeleton h-14 rounded-lg" />
         </div>
       ) : shelves.length ? (
         <div className="mt-9 flex flex-col gap-9">
@@ -772,7 +772,7 @@ export function InventoryScreen() {
           })}
         </div>
       ) : (
-        <div className="mt-9 rounded-[20px] bg-[var(--ground)] px-6 py-10">
+        <div className="mt-9 rounded-xl bg-[var(--ground)] px-6 py-10">
           <h2 className="hd text-[20px]">
             {query || filter !== "all" ? "Nothing matches." : "The kitchen is empty."}
           </h2>
@@ -784,7 +784,7 @@ export function InventoryScreen() {
           {!query && filter === "all" && (
             <Link
               href="/capture"
-              className="glow mt-6 inline-flex min-h-12 items-center gap-2.5 rounded-full px-6 text-[15px]"
+              className="glow mt-6 inline-flex min-h-12 items-center gap-2.5 rounded-lg px-6 text-[15px]"
             >
               Photograph a batch
             </Link>

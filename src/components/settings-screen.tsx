@@ -225,7 +225,7 @@ export function SettingsScreen({ isAdmin = false }: { isAdmin?: boolean }) {
                   aria-checked={selected}
                   key={option.value}
                   className={cn(
-                    "inline-flex min-h-11 items-center gap-2 rounded-[20px] px-4 text-[13px] transition",
+                    "inline-flex min-h-11 items-center gap-2 rounded-xl px-4 text-[13px] transition",
                     selected
                       ? "chip-sage"
                       : "chip font-medium text-[var(--ink-3)] hover:bg-[var(--ground-tint)] hover:text-[var(--ink-2)]",
@@ -238,7 +238,7 @@ export function SettingsScreen({ isAdmin = false }: { isAdmin?: boolean }) {
               );
             })}
           </div>
-          <div className="mt-3 rounded-[18px] bg-[var(--ground-tint)] px-[18px] py-4">
+          <div className="mt-3 rounded-lg bg-[var(--ground-tint)] px-[18px] py-4">
             <p className="bd text-[12.5px] !text-[var(--accent)]">
               Preferences only rank suggestions. They are not allergy controls — verify packages,
               preparation and cross-contact yourself.
@@ -260,7 +260,7 @@ export function SettingsScreen({ isAdmin = false }: { isAdmin?: boolean }) {
               {staples.map((staple) => (
                 <span
                   key={staple}
-                  className="m inline-flex items-center gap-1 rounded-[20px] bg-[var(--ground-hi)] py-1.5 pl-4 pr-1.5 text-[13px] text-[var(--ink-2)]"
+                  className="m inline-flex items-center gap-1 rounded-xl bg-[var(--ground-hi)] py-1.5 pl-4 pr-1.5 text-[13px] text-[var(--ink-2)]"
                 >
                   {stapleLabel(staple)}
                   <button
@@ -281,7 +281,7 @@ export function SettingsScreen({ isAdmin = false }: { isAdmin?: boolean }) {
                   <input
                     id="new-staple"
                     autoFocus
-                    className="m w-40 rounded-[16px] bg-[var(--ground-hi)] px-3.5 py-2 text-[16px] text-[var(--ink)] ring-[var(--accent)]/60 focus:bg-[var(--ground-tint)] focus:outline-none focus:ring-2"
+                    className="m w-40 rounded-lg bg-[var(--ground-hi)] px-3.5 py-2 text-[16px] text-[var(--ink)] ring-[var(--accent)]/60 focus:bg-[var(--ground-tint)] focus:outline-none focus:ring-2"
                     maxLength={80}
                     value={newStaple}
                     onChange={(event) => setNewStaple(event.target.value)}
@@ -330,7 +330,7 @@ export function SettingsScreen({ isAdmin = false }: { isAdmin?: boolean }) {
             ) : installPrompt ? (
               <button
                 type="button"
-                className="m inline-flex min-h-9 items-center rounded-[16px] bg-[var(--ground-tint)] px-3.5 text-[11.5px] font-semibold text-[var(--sage)] transition hover:bg-[var(--page)]"
+                className="m inline-flex min-h-9 items-center rounded-lg bg-[var(--ground-tint)] px-3.5 text-[11.5px] font-semibold text-[var(--sage)] transition hover:bg-[var(--page)]"
                 onClick={() => void install()}
               >
                 install

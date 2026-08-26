@@ -93,7 +93,7 @@ export function RecipeRow({
       aria-label={`Open ${recipe.title}`}
       aria-describedby={notes.length > 0 ? `${reasonId} ${notesId}` : reasonId}
       className={cn(
-        "block w-full rounded-[24px] bg-[var(--ground-hi)] p-5 text-left transition hover:bg-[var(--ground-tint)]",
+        "block w-full rounded-xl bg-[var(--ground-hi)] p-5 text-left transition hover:bg-[var(--ground-tint)]",
         lit && "shadow-[inset_5px_0_0_0_var(--sage)]",
       )}
     >
@@ -106,7 +106,7 @@ export function RecipeRow({
         >
           {recipe.title}
         </span>
-        <span className="m flex-none rounded-[14px] bg-[var(--ground-tint)] px-3 py-1 text-[11px] font-semibold text-[var(--ink-2)]">
+        <span className="m flex-none rounded-md bg-[var(--ground-tint)] px-3 py-1 text-[11px] font-semibold text-[var(--ink-2)]">
           {recipe.totalMinutes} min · {recipe.servings}
         </span>
       </div>
@@ -146,7 +146,7 @@ export function RecipeProposalPreview({
   const recipe = proposal.recipe;
   return (
     <section
-      className="rounded-[24px] bg-[var(--ground-hi)] p-5"
+      className="rounded-xl bg-[var(--ground-hi)] p-5"
       aria-labelledby={`proposal-${proposal.id}-title`}
     >
       <p className="ml !text-[var(--accent)]">AI draft · review required</p>
@@ -334,7 +334,7 @@ export function RecipeSuggestions() {
           void searchRecipes(typeof value === "string" ? value : "");
         }}
       >
-        <div className="rounded-[24px] bg-[var(--ground-hi)] p-5">
+        <div className="rounded-xl bg-[var(--ground-hi)] p-5">
           <label htmlFor="recipe-prompt" className="sr-only">
             What sounds good?
           </label>
@@ -397,8 +397,8 @@ export function RecipeSuggestions() {
 
       {loading && (
         <div className="mt-9 space-y-3" aria-label="Finding recipes">
-          <div className="skeleton h-20 rounded-[24px]" />
-          <div className="skeleton h-20 rounded-[24px]" />
+          <div className="skeleton h-20 rounded-xl" />
+          <div className="skeleton h-20 rounded-xl" />
         </div>
       )}
 
@@ -420,7 +420,7 @@ export function RecipeSuggestions() {
           </section>
 
           {response.fallbackNotice && (
-            <p className="bd rounded-[20px] bg-[var(--ground)] px-5 py-4 text-[var(--ink-4)]" role="status">
+            <p className="bd rounded-xl bg-[var(--ground)] px-5 py-4 text-[var(--ink-4)]" role="status">
               {response.fallbackNotice}
             </p>
           )}
@@ -476,7 +476,7 @@ export function RecipeSuggestions() {
           ))}
 
           {!groups.length && !response.proposal && (
-            <p className="bd rounded-[20px] bg-[var(--ground)] px-5 py-8 text-[var(--ink-4)]">
+            <p className="bd rounded-xl bg-[var(--ground)] px-5 py-8 text-[var(--ink-4)]">
               No feasible catalog recipe or safe AI draft was available this time. Try a broader request or update the kitchen.
             </p>
           )}
@@ -494,7 +494,7 @@ export function RecipeSuggestions() {
       {response && !loading && (
         <button
           type="button"
-          className="m mt-10 inline-flex min-h-10 items-center rounded-full bg-[var(--ground-hi)] px-4 text-[11px] text-[var(--ink-4)] transition hover:bg-[var(--ground-tint)] hover:text-[var(--ink)]"
+          className="m mt-10 inline-flex min-h-10 items-center rounded-lg bg-[var(--ground-hi)] px-4 text-[11px] text-[var(--ink-4)] transition hover:bg-[var(--ground-tint)] hover:text-[var(--ink)]"
           onClick={() => {
             operationSequenceRef.current += 1;
             setResponse(null);

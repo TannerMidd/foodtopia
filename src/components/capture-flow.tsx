@@ -341,7 +341,7 @@ export function CaptureFlow() {
           </div>
           <Link
             href="/privacy"
-            className="m mt-4 inline-flex min-h-10 items-center rounded-full bg-[var(--ground)] px-4 text-[11px] text-[var(--ink-2)] transition hover:bg-[var(--ground-tint)] hover:text-[var(--ink)]"
+            className="m mt-4 inline-flex min-h-10 items-center rounded-lg bg-[var(--ground)] px-4 text-[11px] text-[var(--ink-2)] transition hover:bg-[var(--ground-tint)] hover:text-[var(--ink)]"
           >
             read the full beta privacy notice
           </Link>
@@ -367,7 +367,7 @@ export function CaptureFlow() {
       {/* Photos sit as plain tiles, no frame — the food is the subject. */}
       <div className="mt-8 grid grid-cols-2 gap-3.5">
         {photos.map((photo, index) => (
-          <figure key={photo.url} className="relative flex aspect-[4/3] items-end justify-between overflow-hidden rounded-[20px] bg-[var(--ground-tint)] p-3">
+          <figure key={photo.url} className="relative flex aspect-[4/3] items-end justify-between overflow-hidden rounded-xl bg-[var(--ground-tint)] p-3">
             {/* Prepared images are local blob URLs and cannot use the Next image optimizer. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={photo.url} alt={`Batch photo ${index + 1}`} className="absolute inset-0 size-full object-cover" />
@@ -390,7 +390,7 @@ export function CaptureFlow() {
           <button
             type="button"
             className={cn(
-              "flex items-center justify-center gap-2.5 rounded-[20px] bg-[var(--ground)] text-[var(--ink-3)] transition hover:bg-[var(--ground-hi)] hover:text-[var(--ink-2)] disabled:opacity-40",
+              "flex items-center justify-center gap-2.5 rounded-xl bg-[var(--ground)] text-[var(--ink-3)] transition hover:bg-[var(--ground-hi)] hover:text-[var(--ink-2)] disabled:opacity-40",
               photos.length === 0 ? "aspect-[4/3] flex-col" : "col-span-2 min-h-[76px]",
             )}
             onClick={() => inputRef.current?.click()}
@@ -426,15 +426,15 @@ export function CaptureFlow() {
         <Section label="how it works" labelWidth="78px">
           <div className="row min-h-[46px] gap-3">
             <span className="bd flex-1 !text-[14px] !text-[var(--ink-2)]">Photos are re-encoded here, on your device.</span>
-            <span className="m flex-none rounded-[14px] bg-[var(--ground-tint)] px-3 py-1.5 text-[10.5px] font-semibold text-[var(--sage)]">1600 px · 5 mb</span>
+            <span className="m flex-none rounded-md bg-[var(--ground-tint)] px-3 py-1.5 text-[10.5px] font-semibold text-[var(--sage)]">1600 px · 5 mb</span>
           </div>
           <div className="row min-h-[46px] gap-3">
             <span className="bd flex-1 !text-[14px] !text-[var(--ink-2)]">Location data is stripped before anything is sent.</span>
-            <span className="m flex-none rounded-[14px] bg-[var(--ground-tint)] px-3 py-1.5 text-[10.5px] font-semibold text-[var(--sage)]">exif removed</span>
+            <span className="m flex-none rounded-md bg-[var(--ground-tint)] px-3 py-1.5 text-[10.5px] font-semibold text-[var(--sage)]">exif removed</span>
           </div>
           <div className="row min-h-[46px] gap-3">
             <span className="bd flex-1 !text-[14px] !text-[var(--ink-2)]">Raw photos are deleted once you confirm.</span>
-            <span className="m flex-none rounded-[14px] bg-[var(--ground-tint)] px-3 py-1.5 text-[10.5px] font-semibold text-[var(--sage)]">≤ 24 h</span>
+            <span className="m flex-none rounded-md bg-[var(--ground-tint)] px-3 py-1.5 text-[10.5px] font-semibold text-[var(--sage)]">≤ 24 h</span>
           </div>
         </Section>
       </div>

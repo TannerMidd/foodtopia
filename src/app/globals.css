@@ -1,13 +1,12 @@
 @import "tailwindcss";
 
 /*
- * Foodtopia — "Larder": warm, rounded, dark.
+ * Foodtopia — "Larder": warm, flat, dark.
  *
- * Terracotta on warm black. The whole interface is built from the shape of a
- * bowl: round, full, domestic. There are no hairlines — surfaces separate by
- * being soft tiles, and the disc is the only shape that carries a number.
- * Terracotta is the one action and anything running out; sage is fine,
- * present, kept.
+ * Terracotta on warm black. Surfaces use restrained corners and separate by
+ * tone rather than shadow. Circles are reserved for the bowl mark, icon
+ * controls, and numeric discs. Terracotta is the one action and anything
+ * running out; sage is fine, present, kept.
  *
  * The shared classes below live in the `components` layer so ordinary Tailwind
  * utilities still win against them — `.row min-h-0` has to mean what it says.
@@ -109,7 +108,7 @@
   [tabindex]:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 3px;
-    border-radius: 12px;
+    border-radius: 8px;
   }
 
   ::selection {
@@ -173,7 +172,7 @@
 
   /* A self-contained panel: a sign-in sheet, a modal, a staged surface. */
   .frame {
-    border-radius: 24px;
+    border-radius: 12px;
     overflow: hidden;
     background: var(--ground-hi);
   }
@@ -197,7 +196,7 @@
     min-height: 56px;
     padding: 14px 18px;
     background: var(--ground-hi);
-    border-radius: 20px;
+    border-radius: 8px;
   }
 
   .row-link {
@@ -261,13 +260,13 @@
 
   /* ------------------------------------------------------------- chips --- */
 
-  /* A small rounded fact: a suggestion, a preference, a duration. */
+  /* A compact fact: a suggestion, a preference, a duration. */
   .chip {
     display: inline-flex;
     min-height: 44px;
     align-items: center;
     padding: 9px 15px;
-    border-radius: 20px;
+    border-radius: 8px;
     background: var(--ground-hi);
     color: var(--ink-3);
     font-size: 12.5px;
@@ -282,24 +281,15 @@
 
   /* ------------------------------------------------------------ action --- */
 
-  /*
-   * The one action that matters on a screen. Solid terracotta, fully rounded —
-   * a bowl, not a rectangle.
-   */
+  /* The one action that matters on a screen: solid, flat terracotta. */
   .glow {
     background: var(--accent);
     color: var(--accent-ink);
     font-weight: 600;
-    box-shadow: 0 0 0 5px var(--accent-halo);
   }
 
   .glow:hover:not(:disabled) {
     background: color-mix(in oklab, var(--accent) 88%, #231007);
-    box-shadow: 0 0 0 6px color-mix(in oklab, var(--accent) 22%, transparent);
-  }
-
-  .glow:disabled {
-    box-shadow: none;
   }
 
   /* The lit mark: nav dots, small indicators — a bead of terracotta. */

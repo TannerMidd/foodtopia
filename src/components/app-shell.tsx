@@ -130,8 +130,8 @@ function ShellChrome({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-dvh md:flex">
-      {/* Desktop: a warm rail of pills. The active destination is the one
-          solid terracotta pill on the screen. */}
+      {/* Desktop: a quiet navigation rail. The active destination is the one
+          solid terracotta item on the screen. */}
       <aside className="sticky top-0 hidden h-dvh w-56 flex-none flex-col px-[18px] py-[26px] md:flex">
         <Link href="/" className="px-2" aria-label="Foodtopia home">
           <Wordmark mark={32} text={20} />
@@ -145,7 +145,7 @@ function ShellChrome({ children }: { children: ReactNode }) {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex h-12 items-center gap-3 rounded-3xl px-[18px] text-[15px] transition",
+                  "flex h-12 items-center gap-3 rounded-lg px-[18px] text-[15px] transition",
                   active
                     ? "bg-[var(--accent)] font-semibold text-[var(--accent-ink)]"
                     : "font-medium text-[var(--ink-3)] hover:bg-[var(--ground-hi)] hover:text-[var(--ink)]",
@@ -162,7 +162,7 @@ function ShellChrome({ children }: { children: ReactNode }) {
           <Link href="/settings" className="m text-[12px] text-[var(--ink-4)] hover:text-[var(--ink-2)]">
             settings
           </Link>
-          <div className="rounded-[20px] bg-[var(--ground-hi)] px-[18px] py-4" role="status">
+          <div className="rounded-xl bg-[var(--ground-hi)] px-[18px] py-4" role="status">
             <p className="m text-[12.5px] font-semibold text-[var(--ink-2)]">{status.head}</p>
             {status.sub && <p className="m mt-1 text-[12px] text-[var(--ink-5)]">{status.sub}</p>}
           </div>
@@ -199,7 +199,7 @@ function ShellChrome({ children }: { children: ReactNode }) {
         {conflicts.length > 0 && (
           <Link
             href="/inventory#sync-conflicts"
-            className="m mx-auto flex w-full max-w-3xl rounded-[16px] bg-[var(--ground-hi)] px-4 py-3 text-[10.5px] leading-relaxed text-[var(--accent)] sm:px-8"
+            className="m mx-auto flex w-full max-w-3xl rounded-lg bg-[var(--ground-hi)] px-4 py-3 text-[10.5px] leading-relaxed text-[var(--accent)] sm:px-8"
           >
             a household member changed an item · review {conflicts.length} conflict
             {conflicts.length === 1 ? "" : "s"}

@@ -26,7 +26,7 @@ import { Button, Field, StateNotice, cn, inputClass } from "./ui";
  * The sign-in surfaces are the one place the app shows a frame. On phones it
  * stays a single centred sheet with the bowl wordmark on top. From `lg` up
  * the page becomes a two-panel spread: a brand rail that gives the page real
- * desktop presence, and the form sheet as a soft rounded panel.
+ * desktop presence, and the form sheet as a restrained panel.
  */
 
 /* The bowl wordmark: terracotta, with something in it. */
@@ -98,7 +98,7 @@ function AuthFrame({ children }: { children: React.ReactNode }) {
         />
         <div className="relative w-full max-w-[26rem]">
           <Mark className="lg:hidden" />
-          <div className="frame mt-6 rounded-[28px] p-7 sm:p-9 lg:mt-0">{children}</div>
+          <div className="frame mt-6 rounded-xl p-7 sm:p-9 lg:mt-0">{children}</div>
         </div>
       </div>
     </main>
@@ -172,7 +172,7 @@ function MagicLinkForm({
         )}
         <button
           type="button"
-          className="m mt-6 inline-flex min-h-9 items-center rounded-full px-3 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[var(--ink-4)] transition hover:bg-[var(--ground-hi)] hover:text-[var(--ink)]"
+          className="m mt-6 inline-flex min-h-9 items-center rounded-lg px-3 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[var(--ink-4)] transition hover:bg-[var(--ground-hi)] hover:text-[var(--ink)]"
           onClick={() => setState("idle")}
         >
           use another email
@@ -229,7 +229,7 @@ function MagicLinkForm({
       {state === "demo" && (
         <Link
           href="/"
-          className="m mt-5 flex min-h-9 items-center justify-center rounded-full text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[var(--ink-4)] transition hover:text-[var(--ink)]"
+          className="m mt-5 flex min-h-9 items-center justify-center rounded-lg text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[var(--ink-4)] transition hover:text-[var(--ink)]"
         >
           explore the demo household
         </Link>
@@ -320,7 +320,7 @@ function PasswordSignInForm({ nextPath }: { nextPath: string }) {
       {state === "demo" ? (
         <Link
           href="/"
-          className="m mt-5 flex min-h-9 items-center justify-center rounded-full text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[var(--ink-4)] transition hover:text-[var(--ink)]"
+          className="m mt-5 flex min-h-9 items-center justify-center rounded-lg text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[var(--ink-4)] transition hover:text-[var(--ink)]"
         >
           explore the demo household
         </Link>
@@ -381,7 +381,7 @@ function PasswordSignUpForm() {
         </p>
         <Link
           href="/sign-in"
-          className="m mt-6 inline-flex min-h-9 items-center gap-2 rounded-full px-3 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[var(--ink-4)] transition hover:bg-[var(--ground-hi)] hover:text-[var(--ink)]"
+          className="m mt-6 inline-flex min-h-9 items-center gap-2 rounded-lg px-3 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[var(--ink-4)] transition hover:bg-[var(--ground-hi)] hover:text-[var(--ink)]"
         >
           go to sign in
           <ArrowRight className="size-3.5" aria-hidden="true" />
@@ -402,7 +402,7 @@ function PasswordSignUpForm() {
         </p>
         <Link
           href="/sign-in"
-          className="m mt-6 inline-flex min-h-9 items-center gap-2 rounded-full px-3 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[var(--ink-4)] transition hover:bg-[var(--ground-hi)] hover:text-[var(--ink)]"
+          className="m mt-6 inline-flex min-h-9 items-center gap-2 rounded-lg px-3 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[var(--ink-4)] transition hover:bg-[var(--ground-hi)] hover:text-[var(--ink)]"
         >
           go to sign in
           <ArrowRight className="size-3.5" aria-hidden="true" />
@@ -775,7 +775,7 @@ export function PendingAccountScreen({ nextPath = "/" }: { nextPath?: string }) 
         </p>
         <button
           type="button"
-          className="m mt-6 inline-flex min-h-9 items-center rounded-full px-3 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[var(--ink-4)] transition hover:bg-[var(--ground-hi)] hover:text-[var(--ink)]"
+          className="m mt-6 inline-flex min-h-9 items-center rounded-lg px-3 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[var(--ink-4)] transition hover:bg-[var(--ground-hi)] hover:text-[var(--ink)]"
           onClick={() => void signOut().then(() => window.location.replace("/sign-in"))}
         >
           sign out

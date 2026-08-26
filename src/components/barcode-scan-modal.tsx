@@ -153,7 +153,7 @@ export function BarcodeScanModal({
 
       <div className="mt-6">
         {busy ? (
-          <div className="flex min-h-[132px] flex-col items-center justify-center gap-3 rounded-[20px] bg-[var(--ground)] px-6 py-8">
+          <div className="flex min-h-[132px] flex-col items-center justify-center gap-3 rounded-xl bg-[var(--ground)] px-6 py-8">
             <LoaderCircle className="size-7 animate-spin text-[var(--accent)]" aria-hidden="true" />
             <span className="m text-[12px] text-[var(--ink-2)]">
               {phase === "decoding" ? "reading the barcode on-device…" : "looking up the product…"}
@@ -173,7 +173,7 @@ export function BarcodeScanModal({
         ) : (
           <button
             type="button"
-            className="flex w-full flex-col items-center justify-center gap-2.5 rounded-[20px] bg-[var(--ground)] px-6 py-9 text-[var(--ink-3)] transition hover:bg-[var(--ground-hi)] hover:text-[var(--ink-2)]"
+            className="flex w-full flex-col items-center justify-center gap-2.5 rounded-xl bg-[var(--ground)] px-6 py-9 text-[var(--ink-3)] transition hover:bg-[var(--ground-hi)] hover:text-[var(--ink-2)]"
             onClick={() => inputRef.current?.click()}
           >
             <ScanLine className="size-7 text-[var(--sage)]" aria-hidden="true" />

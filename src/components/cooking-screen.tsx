@@ -101,8 +101,8 @@ export function CookingScreen({ slug }: { slug: string }) {
     return (
       <Page className="max-w-[42rem]">
         <div className="skeleton h-4 w-40 rounded-full" />
-        <div className="skeleton mt-6 h-9 w-72 rounded-[16px]" />
-        <div className="skeleton mt-8 h-40 rounded-[24px]" />
+        <div className="skeleton mt-6 h-9 w-72 rounded-lg" />
+        <div className="skeleton mt-8 h-40 rounded-xl" />
       </Page>
     );
   }
@@ -118,7 +118,7 @@ export function CookingScreen({ slug }: { slug: string }) {
         </p>
         <Link
           href="/recipes"
-          className="glow mt-7 inline-flex min-h-12 items-center rounded-full px-6 text-[15px]"
+          className="glow mt-7 inline-flex min-h-12 items-center rounded-lg px-6 text-[15px]"
         >
           Find a recipe
         </Link>
@@ -169,14 +169,14 @@ export function CookingScreen({ slug }: { slug: string }) {
         <div className="mt-7 flex flex-wrap items-center gap-6">
           <Link
             href="/inventory"
-            className="glow inline-flex min-h-12 items-center rounded-full px-6 text-[15px]"
+            className="glow inline-flex min-h-12 items-center rounded-lg px-6 text-[15px]"
           >
             Open the kitchen
           </Link>
           {!undone && undoCommands.length > 0 && (
             <button
               type="button"
-              className="m inline-flex min-h-10 items-center rounded-full bg-[var(--ground-hi)] px-4 text-[11px] text-[var(--ink-4)] transition hover:bg-[var(--ground-tint)] hover:text-[var(--ink)] disabled:opacity-40"
+              className="m inline-flex min-h-10 items-center rounded-lg bg-[var(--ground-hi)] px-4 text-[11px] text-[var(--ink-4)] transition hover:bg-[var(--ground-tint)] hover:text-[var(--ink)] disabled:opacity-40"
               disabled={!online || undoing}
               onClick={() => void undoReconciliation()}
             >
@@ -322,7 +322,7 @@ export function CookingScreen({ slug }: { slug: string }) {
 
                 if (!lot) {
                   return (
-                    <p key={choiceKey} className="bd rounded-[16px] bg-[var(--ground)] px-4 py-3 text-[var(--accent)]">
+                    <p key={choiceKey} className="bd rounded-lg bg-[var(--ground)] px-4 py-3 text-[var(--accent)]">
                       This inventory lot changed or is no longer available.
                     </p>
                   );
@@ -338,7 +338,7 @@ export function CookingScreen({ slug }: { slug: string }) {
                         : "A partial amount is unavailable, because this amount is unknown or incompatible with the recipe unit.";
 
                 return (
-                  <div key={choiceKey} className="rounded-[18px] bg-[var(--ground-hi)] px-[18px] py-4">
+                  <div key={choiceKey} className="rounded-lg bg-[var(--ground-hi)] px-[18px] py-4">
                     <div className="flex items-baseline justify-between gap-4">
                       <h2 className="nm">
                         {lot.name}{" "}
@@ -373,7 +373,7 @@ export function CookingScreen({ slug }: { slug: string }) {
                             disabled={action === "used_some" && !allocation?.canUseSome}
                             onClick={() => setChoice(choiceKey, { action }, fallback)}
                             className={cn(
-                              "m inline-flex min-h-9 items-center rounded-full px-4 text-[11px] font-semibold transition disabled:cursor-not-allowed disabled:opacity-35",
+                              "m inline-flex min-h-9 items-center rounded-lg px-4 text-[11px] font-semibold transition disabled:cursor-not-allowed disabled:opacity-35",
                               selected
                                 ? "bg-[var(--ink)] text-[var(--page)]"
                                 : "text-[var(--ink-5)] hover:bg-[var(--ground-hi)] hover:text-[var(--ink-2)]",
@@ -457,7 +457,7 @@ export function CookingScreen({ slug }: { slug: string }) {
               <button
                 type="button"
                 className={cn(
-                  "flex w-full items-start gap-4 rounded-[18px] px-[18px] py-4 text-left transition",
+                  "flex w-full items-start gap-4 rounded-lg px-[18px] py-4 text-left transition",
                   complete ? "bg-[var(--ground)]" : "bg-[var(--ground-hi)] hover:bg-[var(--ground-tint)]",
                 )}
                 aria-pressed={complete}
