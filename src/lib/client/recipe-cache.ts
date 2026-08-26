@@ -1,41 +1,61 @@
 import type { RecipeAssessment } from "@/contracts/domain";
+import {
+  getOfflineDb,
+  type CookSessionRecord,
+} from "@/lib/offline/db";
 
-const PREFIX = "foodtopia:recipe:";
-const COOK_PREFIX = "foodtopia:cook:";
+/**
+ * Durable replacement for the former sessionStorage cache. The assessment and
+ * the server cook session id survive tab closes and restarts, so a cooking
+ * tablet can pick the recipe back up where it left off. Rows are cleared with
+ * every household rebind in lib/offline/db.ts, keeping tenants isolated.
+ */
 
-export function saveRecipeAssessment(assessment: RecipeAssessment) {
-  if (typeof window === "undefined") return;
+export async function saveRecipeAssessment(assessment: RecipeAssessment) {
   try {
-    sessionStorage.setItem(`${PREFIX}${assessment.recipe.slug}`, JSON.stringify(assessment));
+    const db = getOfflineDb();
+    const existing = await db.cookSessions.get(assessment.recipe.slug);
+    const record: CookSessionRecord = {
+      slug: assessment.recipe.slug,
+      assessment,
+      sessionId: existing?.sessionId ?? null,
+      savedAt: new Date().toISOString(),
+    };
+    await db.cookSessions.put(record);
   } catch {
-    // A full or disabled session store should not block recipe navigation.
+    // A blocked or unavailable store should not block recipe navigation; the
+    // detail screen still renders and only offline durability is lost.
   }
 }
 
-export function loadRecipeAssessment(slug: string): RecipeAssessment | null {
-  if (typeof window === "undefined") return null;
+export async function loadRecipeAssessment(slug: string): Promise<RecipeAssessment | null> {
   try {
-    const raw = sessionStorage.getItem(`${PREFIX}${slug}`);
-    return raw ? (JSON.parse(raw) as RecipeAssessment) : null;
+    return (await getOfflineDb().cookSessions.get(slug))?.assessment ?? null;
   } catch {
     return null;
   }
 }
 
-export function saveCookSession(slug: string, sessionId: string) {
-  if (typeof window === "undefined") return;
+export async function saveCookSession(slug: string, sessionId: string) {
+  const db = getOfflineDb();
+  const existing = await db.cookSessions.get(slug);
+  if (!existing) return;
+  await db.cookSessions.put({ ...existing, sessionId, savedAt: new Date().toISOString() });
+}
+
+export async function loadCookSession(slug: string): Promise<string | null> {
   try {
-    sessionStorage.setItem(`${COOK_PREFIX}${slug}`, sessionId);
+    return (await getOfflineDb().cookSessions.get(slug))?.sessionId ?? null;
   } catch {
-    // A blocked session store is handled by creating a new local session in the cooking UI.
+    return null;
   }
 }
 
-export function loadCookSession(slug: string) {
-  if (typeof window === "undefined") return null;
+/** Called once reconciliation settles so a finished session cannot be replayed. */
+export async function clearCookingContext(slug: string) {
   try {
-    return sessionStorage.getItem(`${COOK_PREFIX}${slug}`);
+    await getOfflineDb().cookSessions.delete(slug);
   } catch {
-    return null;
+    // Best-effort cleanup only.
   }
 }

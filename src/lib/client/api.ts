@@ -7,6 +7,7 @@ import {
   apiErrorSchema,
   betaAccountMutationResponseSchema,
   betaAccountsResponseSchema,
+  cookHistoryResponseSchema,
   cookSessionCreateResponseSchema,
   cookSessionSubstitutionConflictSchema,
   householdBootstrapResponseSchema,
@@ -19,9 +20,19 @@ import {
   inventorySyncResponseSchema,
   inviteCreateResponseSchema,
   openRouterModelsResponseSchema,
+  recipeCatalogResponseSchema,
+  recipeDetailResponseSchema,
+  recipeFavoritesResponseSchema,
+  recipeFavoriteMutationRequestSchema,
+  recipeFavoriteMutationResponseSchema,
   recipeSuggestionResponseSchema,
   recipeProposalDecisionResponseSchema,
   recipeFlagResponseSchema,
+  shoppingListAddRequestSchema,
+  shoppingListAddResponseSchema,
+  shoppingListItemResponseSchema,
+  shoppingListResponseSchema,
+  shoppingListUpdateRequestSchema,
   signupWindowResponseSchema,
   unfinishedAnalysesResponseSchema,
   visionConsentResponseSchema,
@@ -37,6 +48,9 @@ import {
   type RecipeProposalDecisionResponse,
   type RecipeFlagReason,
   type RecipeFlagResponse,
+  type ShoppingListAddRequest,
+  type ShoppingListAddResponse,
+  type ShoppingListItem,
   type BarcodeLookupResponse,
 } from "@/contracts/api";
 import { confirmedSubstitutionsForAssessment } from "@/domain/assessment";
@@ -323,6 +337,75 @@ export async function getRecipeSuggestions(prompt: string): Promise<RecipeSugges
       }),
     }),
   );
+}
+
+export async function getRecipeCatalog() {
+  return recipeCatalogResponseSchema.parse(
+    await request("/api/v1/recipes"),
+  );
+}
+
+export async function getRecipeBySlug(slug: string) {
+  return recipeDetailResponseSchema.parse(
+    await request(`/api/v1/recipes/${encodeURIComponent(slug)}`),
+  );
+}
+
+export async function getCookHistory() {
+  return cookHistoryResponseSchema.parse(await request("/api/v1/cook-history"));
+}
+
+export async function getRecipeFavorites() {
+  return recipeFavoritesResponseSchema.parse(
+    await request("/api/v1/recipe-favorites"),
+  );
+}
+
+export async function addRecipeFavorite(recipeId: string) {
+  return recipeFavoriteMutationResponseSchema.parse(
+    await request("/api/v1/recipe-favorites", {
+      method: "POST",
+      body: JSON.stringify(recipeFavoriteMutationRequestSchema.parse({ recipeId })),
+    }),
+  );
+}
+
+export async function removeRecipeFavorite(recipeId: string) {
+  return recipeFavoriteMutationResponseSchema.parse(
+    await request(
+      `/api/v1/recipe-favorites/${encodeURIComponent(recipeId)}`,
+      { method: "DELETE" },
+    ),
+  );
+}
+
+export async function getShoppingList() {
+  return shoppingListResponseSchema.parse(await request("/api/v1/shopping-list"));
+}
+
+export async function addShoppingListItems(input: ShoppingListAddRequest): Promise<ShoppingListAddResponse> {
+  return shoppingListAddResponseSchema.parse(
+    await request("/api/v1/shopping-list", {
+      method: "POST",
+      body: JSON.stringify(shoppingListAddRequestSchema.parse(input)),
+    }),
+  );
+}
+
+export async function setShoppingListItemDone(itemId: string, done: boolean): Promise<ShoppingListItem> {
+  const parsed = shoppingListItemResponseSchema.parse(
+    await request(`/api/v1/shopping-list/${encodeURIComponent(itemId)}`, {
+      method: "PATCH",
+      body: JSON.stringify(shoppingListUpdateRequestSchema.parse({ done })),
+    }),
+  );
+  return parsed.item;
+}
+
+export async function deleteShoppingListItem(itemId: string): Promise<void> {
+  await request(`/api/v1/shopping-list/${encodeURIComponent(itemId)}`, {
+    method: "DELETE",
+  });
 }
 
 export async function decideRecipeProposal(

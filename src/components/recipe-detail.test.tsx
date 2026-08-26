@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { RecipeAssessment } from "@/contracts/domain";
@@ -7,19 +7,33 @@ import { RecipeDetail } from "./recipe-detail";
 const mocks = vi.hoisted(() => ({
   push: vi.fn(),
   loadAssessment: vi.fn(),
+  loadCookSession: vi.fn<() => Promise<string | null>>(async () => null),
   flagRecipe: vi.fn(),
   recordRecipeOpened: vi.fn(),
   createCookSession: vi.fn(),
-  saveRecipeAssessment: vi.fn(),
-  saveCookSession: vi.fn(),
+  saveRecipeAssessment: vi.fn(async () => undefined),
+  saveCookSession: vi.fn(async () => undefined),
+  getRecipeFavorites: vi.fn(async () => ({ favorites: [] })),
+  addRecipeFavorite: vi.fn(async () => ({ status: "added", replayed: false })),
+  removeRecipeFavorite: vi.fn(async () => ({ status: "removed", replayed: false })),
+  addShoppingListItems: vi.fn(async () => ({ items: [], added: 0, replayedNames: [] })),
   online: true,
 }));
 
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push: mocks.push }) }));
 vi.mock("@/lib/client/recipe-cache", () => ({
+  loadCookSession: mocks.loadCookSession,
   loadRecipeAssessment: mocks.loadAssessment,
   saveRecipeAssessment: mocks.saveRecipeAssessment,
   saveCookSession: mocks.saveCookSession,
+  clearCookingContext: vi.fn(async () => undefined),
+}));
+vi.mock("@/lib/client/recipe-catalog", () => ({
+  loadCachedRecipe: vi.fn(async () => null),
+  fetchAndCacheRecipe: vi.fn(async () => null),
+  loadCachedPreferences: vi.fn(async () => null),
+  loadCachedFavoriteIds: vi.fn(async () => []),
+  cacheFavoriteIds: vi.fn(async () => undefined),
 }));
 vi.mock("@/lib/client/api", () => ({
   ApiClientError: class ApiClientError extends Error {
@@ -39,9 +53,13 @@ vi.mock("@/lib/client/api", () => ({
   flagRecipe: mocks.flagRecipe,
   recordRecipeOpened: mocks.recordRecipeOpened,
   createCookSession: mocks.createCookSession,
+  getRecipeFavorites: mocks.getRecipeFavorites,
+  addRecipeFavorite: mocks.addRecipeFavorite,
+  removeRecipeFavorite: mocks.removeRecipeFavorite,
+  addShoppingListItems: mocks.addShoppingListItems,
 }));
 vi.mock("./offline-provider", () => ({
-  useOfflineInventory: () => ({ online: mocks.online }),
+  useOfflineInventory: () => ({ online: mocks.online, lots: [] }),
 }));
 
 const assessment: RecipeAssessment = {
@@ -116,7 +134,8 @@ describe("RecipeDetail seed provenance and flags", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.online = true;
-    mocks.loadAssessment.mockReturnValue(assessment);
+    mocks.loadAssessment.mockResolvedValue(assessment);
+    mocks.loadCookSession.mockResolvedValue(null);
     mocks.flagRecipe.mockResolvedValue({ flagged: true, simulated: false });
     mocks.recordRecipeOpened.mockResolvedValue(undefined);
     mocks.createCookSession.mockResolvedValue({
@@ -133,6 +152,14 @@ describe("RecipeDetail seed provenance and flags", () => {
     expect(await screen.findByText(/initial recipe/i)).toBeVisible();
     expect(screen.getByText(/initial catalog seed/i)).toBeVisible();
     expect(screen.queryByText(/reviewed by/i)).toBeNull();
+  });
+
+  it("reassesses a browse-only cached recipe and records the opened view once", async () => {
+    mocks.loadCookSession.mockResolvedValue(null);
+    render(<RecipeDetail slug={assessment.recipe.slug} />);
+
+    expect(await screen.findByText(/2 required ingredients missing or insufficient/i)).toBeVisible();
+    await waitFor(() => expect(mocks.recordRecipeOpened).toHaveBeenCalledOnce());
   });
 
   it("submits bounded categorical feedback and confirms it", async () => {
@@ -180,7 +207,8 @@ describe("RecipeDetail seed provenance and flags", () => {
         assessment.evidence[1],
       ],
     };
-    mocks.loadAssessment.mockReturnValue(substituted);
+    mocks.loadAssessment.mockResolvedValue(substituted);
+    mocks.loadCookSession.mockResolvedValue("7b3e50ec-2757-44ad-a94d-941828980981");
     const authoritative = {
       ...substituted,
       recipe: {
@@ -212,6 +240,15 @@ describe("RecipeDetail seed provenance and flags", () => {
     expect(mocks.createCookSession).toHaveBeenCalledWith(substituted);
     expect(mocks.saveRecipeAssessment).toHaveBeenCalledWith(authoritative);
     expect(mocks.saveCookSession).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(mocks.push).toHaveBeenCalledWith(`/recipes/${substituted.recipe.slug}/cook`);
+    });
+    expect(mocks.saveRecipeAssessment.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.saveCookSession.mock.invocationCallOrder[0],
+    );
+    expect(mocks.saveCookSession.mock.invocationCallOrder[0]).toBeLessThan(
+      mocks.push.mock.invocationCallOrder[0],
+    );
   });
 
   it("refreshes stale substitution evidence and requires confirmation again", async () => {
@@ -235,7 +272,8 @@ describe("RecipeDetail seed provenance and flags", () => {
       ),
     };
     const latest = { ...assessment, explanation: "The exact rice is now present." };
-    mocks.loadAssessment.mockReturnValue(substituted);
+    mocks.loadAssessment.mockResolvedValue(substituted);
+    mocks.loadCookSession.mockResolvedValue("7b3e50ec-2757-44ad-a94d-941828980981");
     const { ApiClientError } = await import("@/lib/client/api");
     mocks.createCookSession.mockRejectedValue(
       new ApiClientError({

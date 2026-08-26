@@ -34,17 +34,34 @@ type DemoRecipeProposalRecord = {
   recipe: Recipe | null;
 };
 
+type DemoCookSessionRecord = {
+  recipeId: string;
+  createdAt: string;
+  reconciled: boolean;
+  completedAt: string | null;
+};
+
+type DemoShoppingListItem = {
+  id: string;
+  name: string;
+  category: string;
+  foodConceptId: string | null;
+  quantityText: string | null;
+  done: boolean;
+  addedBy: string;
+  createdAt: string;
+};
+
 type DemoState = {
   lots: Map<string, InventoryLot>;
   events: DemoEvent[];
   commands: Map<string, InventoryLot>;
   analyses: Map<string, DemoAnalysis>;
-  cookSessions: Map<
-    string,
-    { recipeId: string; createdAt: string; reconciled: boolean }
-  >;
+  cookSessions: Map<string, DemoCookSessionRecord>;
   recipeProposals: Map<string, DemoRecipeProposalRecord>;
   approvedRecipes: Map<string, Recipe>;
+  favorites: Map<string, { recipeId: string; createdAt: string }>;
+  shoppingItems: Map<string, DemoShoppingListItem>;
 };
 
 const now = () => new Date().toISOString();
@@ -180,6 +197,8 @@ function initialState(): DemoState {
     cookSessions: new Map(),
     recipeProposals: new Map(),
     approvedRecipes: new Map(),
+    favorites: new Map(),
+    shoppingItems: new Map(),
   };
 }
 
@@ -544,7 +563,12 @@ export function applyDemoAnalysis(
 export function createDemoCookSession(recipeId: string) {
   const id = crypto.randomUUID();
   const createdAt = now();
-  state().cookSessions.set(id, { recipeId, createdAt, reconciled: false });
+  state().cookSessions.set(id, {
+    recipeId,
+    createdAt,
+    reconciled: false,
+    completedAt: null,
+  });
   return { cookSessionId: id, recipeId, createdAt };
 }
 
@@ -558,4 +582,142 @@ export function requireDemoCookSession(id: string) {
     );
   }
   return session;
+}
+
+export function markDemoCookSessionReconciled(id: string) {
+  const session = requireDemoCookSession(id);
+  session.reconciled = true;
+  session.completedAt = now();
+}
+
+export function listDemoCompletedCookSessions() {
+  return [...state().cookSessions.entries()]
+    .filter(([, session]) => session.reconciled)
+    .map(([id, session]) => ({
+      id,
+      recipeId: session.recipeId,
+      startedAt: session.createdAt,
+      completedAt: session.completedAt ?? session.createdAt,
+    }))
+    .sort((left, right) => right.completedAt.localeCompare(left.completedAt));
+}
+
+const DEMO_DISPLAY_NAME = "Demo owner";
+
+export function listDemoRecipeFavorites(recipes: readonly Recipe[] = []) {
+  const recipesById = new Map(
+    [...recipes, ...state().approvedRecipes.values()].map((recipe) => [recipe.id, recipe]),
+  );
+  return [...state().favorites.values()]
+    .sort((left, right) => right.createdAt.localeCompare(left.createdAt))
+    .slice(0, 200)
+    .map((favorite) => {
+      const recipe = recipesById.get(favorite.recipeId);
+      return {
+        recipeId: favorite.recipeId,
+        slug: recipe?.slug ?? null,
+        title: recipe?.title ?? "Saved recipe",
+        createdAt: favorite.createdAt,
+      };
+    });
+}
+
+export function addDemoRecipeFavorite(recipeId: string) {
+  const existing = state().favorites.get(recipeId);
+  if (existing) return { replayed: true } as const;
+  if (state().favorites.size >= 200) {
+    throw new ApiFault(
+      "RECIPE_FAVORITES_FULL",
+      "Remove a saved recipe before adding another.",
+      409,
+    );
+  }
+  state().favorites.set(recipeId, { recipeId, createdAt: now() });
+  return { replayed: false } as const;
+}
+
+export function removeDemoRecipeFavorite(recipeId: string) {
+  state().favorites.delete(recipeId);
+}
+
+export function listDemoShoppingListItems() {
+  return [...state().shoppingItems.values()]
+    .sort((left, right) =>
+      left.done === right.done
+        ? left.createdAt.localeCompare(right.createdAt)
+        : left.done
+          ? 1
+          : -1,
+    )
+    .map((item) => ({ ...item, addedByName: DEMO_DISPLAY_NAME }));
+}
+
+/** Idempotent against open entries by case-insensitive name, like Postgres. */
+export function addDemoShoppingListItems(
+  items: {
+    name: string;
+    category: string;
+    foodConceptId: string | null;
+    quantityText: string | null;
+  }[],
+) {
+  const openNames = new Set(
+    [...state().shoppingItems.values()]
+      .filter((item) => !item.done)
+      .map((item) => item.name.trim().toLowerCase()),
+  );
+  const replayedNames: string[] = [];
+  const fresh = items.filter((item) => {
+    const key = item.name.trim().toLowerCase();
+    if (openNames.has(key)) {
+      replayedNames.push(item.name);
+      return false;
+    }
+    openNames.add(key);
+    return true;
+  });
+  if (state().shoppingItems.size + fresh.length > 100) {
+    throw new ApiFault(
+      "SHOPPING_LIST_FULL",
+      "Remove completed shopping items before adding more.",
+      409,
+    );
+  }
+  for (const item of fresh) {
+    const id = crypto.randomUUID();
+    state().shoppingItems.set(id, {
+      id,
+      name: item.name,
+      category: item.category,
+      foodConceptId: item.foodConceptId,
+      quantityText: item.quantityText,
+      done: false,
+      addedBy: DEMO_USER_ID,
+      createdAt: now(),
+    });
+  }
+  return { added: fresh.length, replayedNames };
+}
+
+export function updateDemoShoppingListItem(id: string, done: boolean) {
+  const item = state().shoppingItems.get(id);
+  if (!item) {
+    throw new ApiFault(
+      "SHOPPING_ITEM_NOT_FOUND",
+      "That shopping item is no longer on the shared list.",
+      404,
+    );
+  }
+  item.done = done;
+  return item;
+}
+
+export function removeDemoShoppingListItem(id: string) {
+  if (!state().shoppingItems.delete(id)) {
+    throw new ApiFault(
+      "SHOPPING_ITEM_NOT_FOUND",
+      "That shopping item is no longer on the shared list.",
+      404,
+    );
+  }
 }

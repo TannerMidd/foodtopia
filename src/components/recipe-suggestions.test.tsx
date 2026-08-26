@@ -6,13 +6,18 @@ import type { RecipeAssessment } from "@/contracts/domain";
 const mocks = vi.hoisted(() => ({
   getSuggestions: vi.fn(),
   decideProposal: vi.fn(),
-  saveAssessment: vi.fn(),
+  saveAssessment: vi.fn(async () => undefined),
   push: vi.fn(),
+  getFavorites: vi.fn(async () => ({ favorites: [] })),
 }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push: mocks.push }) }));
 vi.mock("@/lib/client/api", () => ({
   getRecipeSuggestions: mocks.getSuggestions,
   decideRecipeProposal: mocks.decideProposal,
+  getRecipeFavorites: mocks.getFavorites,
+  ApiClientError: class ApiClientError extends Error {
+    status = 0;
+  },
 }));
 vi.mock("@/lib/client/recipe-cache", () => ({ saveRecipeAssessment: mocks.saveAssessment }));
 vi.mock("./offline-provider", () => ({

@@ -6,6 +6,7 @@ import type { IngredientEvidenceStatus, RecipeAssessment, RecipeTier } from "@/c
 import type { RecipeProposal, RecipeSuggestionResponse } from "@/contracts/api";
 import { decideRecipeProposal, getRecipeSuggestions } from "@/lib/client/api";
 import { saveRecipeAssessment } from "@/lib/client/recipe-cache";
+import { RecipeBrowse } from "./recipe-browse";
 import { useOfflineInventory } from "./offline-provider";
 import { Button, Page, StateNotice, cn } from "./ui";
 
@@ -261,8 +262,10 @@ export function RecipeSuggestions() {
   }
 
   function openRecipe(assessment: RecipeAssessment) {
-    saveRecipeAssessment(assessment);
-    router.push(`/recipes/${assessment.recipe.slug}`);
+    // Durable: the detail screen reads this back even after a tab close.
+    void saveRecipeAssessment(assessment).then(() => {
+      router.push(`/recipes/${assessment.recipe.slug}`);
+    });
   }
 
   async function decideProposal(decision: "approve" | "deny") {
@@ -279,7 +282,7 @@ export function RecipeSuggestions() {
       );
       if (operation !== operationSequenceRef.current) return;
       if (decided.status === "approved") {
-        saveRecipeAssessment(decided.assessment);
+        await saveRecipeAssessment(decided.assessment);
         router.push(`/recipes/${decided.assessment.recipe.slug}`);
       } else {
         setTerminalDecision(decided.status);
@@ -483,6 +486,24 @@ export function RecipeSuggestions() {
             check every package label, ingredient and cross-contact risk yourself.
           </p>
         </div>
+      )}
+
+      {/* Search results take over while active; the full library shows when idle. */}
+      {!loading && !response && <RecipeBrowse />}
+
+      {response && !loading && (
+        <button
+          type="button"
+          className="m mt-10 inline-flex min-h-10 items-center rounded-full bg-[var(--ground-hi)] px-4 text-[11px] text-[var(--ink-4)] transition hover:bg-[var(--ground-tint)] hover:text-[var(--ink)]"
+          onClick={() => {
+            operationSequenceRef.current += 1;
+            setResponse(null);
+            setTerminalDecision(null);
+            setDecisionError(null);
+          }}
+        >
+          back to the whole larder
+        </button>
       )}
     </Page>
   );

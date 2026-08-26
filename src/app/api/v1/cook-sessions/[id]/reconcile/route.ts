@@ -5,6 +5,7 @@ import { requireHouseholdSession } from "@/server/auth/session";
 import {
   applyDemoCommand,
   listDemoInventory,
+  markDemoCookSessionReconciled,
   requireDemoCookSession,
 } from "@/server/demo/store";
 import {
@@ -54,6 +55,8 @@ export async function POST(request: Request, { params }: Context) {
       );
       return command ? [applyDemoCommand(command)] : [];
     });
+    // Mirror the production status model so demo history shows this session.
+    markDemoCookSessionReconciled(id);
     return json({ cookSessionId: id, applied: results.map((item) => item.lot) });
   } catch (error) {
     return errorResponse(

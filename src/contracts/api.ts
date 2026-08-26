@@ -485,6 +485,112 @@ export const barcodeLookupResponseSchema = z.object({
   imageUrl: z.url().nullable(),
 });
 
+// Browsable recipe catalog: every recipe the household can cook or see, in
+// full, so the client can cache them for offline browsing/detail pages and
+// compute readiness tiers locally against its inventory snapshot.
+export const recipeCatalogResponseSchema = z.object({
+  recipes: z.array(recipeSchema),
+  syncedAt: z.iso.datetime(),
+});
+
+export const recipeDetailResponseSchema = z.object({
+  recipe: recipeSchema,
+});
+
+// Cook history surfaces completed (reconciled) sessions only; active and
+// cancelled sessions never appear as history.
+export const cookHistoryEntrySchema = z.object({
+  id: z.uuid(),
+  recipeId: z.string().nullable(),
+  slug: z.string().nullable(),
+  title: z.string().min(1),
+  servings: z.number().int().positive(),
+  startedAt: z.iso.datetime(),
+  completedAt: z.iso.datetime(),
+});
+
+export const cookHistoryResponseSchema = z.object({
+  sessions: z.array(cookHistoryEntrySchema).max(50),
+});
+
+export const recipeFavoriteItemSchema = z.object({
+  recipeId: z.string().min(1).max(120),
+  slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).nullable(),
+  title: z.string().min(1),
+  createdAt: z.iso.datetime(),
+});
+
+export const recipeFavoritesResponseSchema = z.object({
+  favorites: z.array(recipeFavoriteItemSchema).max(200),
+});
+
+export const recipeFavoriteMutationRequestSchema = z
+  .object({
+    recipeId: z.string().min(1).max(120),
+  })
+  .strict();
+
+export const recipeFavoriteMutationResponseSchema = z.discriminatedUnion("status", [
+  z.object({
+    status: z.literal("added"),
+    favorite: recipeFavoriteItemSchema,
+    replayed: z.boolean(),
+  }),
+  z.object({
+    status: z.literal("removed"),
+    replayed: z.boolean(),
+  }),
+]);
+
+// Shared household shopping list. Items are short human labels with an optional
+// concept link for consistent category and ingredient identity.
+export const shoppingListItemSchema = z.object({
+  id: z.uuid(),
+  name: z.string().trim().min(1).max(120),
+  category: z.string().trim().min(1).max(80),
+  foodConceptId: z.string().trim().min(1).max(120).nullable(),
+  quantityText: z.string().trim().min(1).max(40).nullable(),
+  done: z.boolean(),
+  addedByName: z.string().trim().min(1).max(80),
+  createdAt: z.iso.datetime(),
+});
+
+export const shoppingListResponseSchema = z.object({
+  items: z.array(shoppingListItemSchema).max(100),
+});
+
+export const shoppingListAddRequestSchema = z
+  .object({
+    items: z
+      .array(
+        z.object({
+          name: z.string().trim().min(1).max(120),
+          category: z.string().trim().min(1).max(80),
+          foodConceptId: z.string().trim().min(1).max(120).nullable(),
+          quantityText: z.string().trim().min(1).max(40).nullable(),
+        }),
+      )
+      .min(1)
+      .max(16),
+  })
+  .strict();
+
+export const shoppingListAddResponseSchema = z.object({
+  items: z.array(shoppingListItemSchema).max(100),
+  added: z.number().int().min(0),
+  replayedNames: z.array(z.string().trim().min(1).max(120)).max(16),
+});
+
+export const shoppingListUpdateRequestSchema = z
+  .object({
+    done: z.boolean(),
+  })
+  .strict();
+
+export const shoppingListItemResponseSchema = z.object({
+  item: shoppingListItemSchema,
+});
+
 export type InventorySyncResponse = z.infer<
   typeof inventorySyncResponseSchema
 >;
@@ -528,3 +634,29 @@ export type BarcodeLookupResponse = z.infer<
 >;
 export type RecipeFlagReason = z.infer<typeof recipeFlagReasonSchema>;
 export type RecipeFlagResponse = z.infer<typeof recipeFlagResponseSchema>;
+export type RecipeCatalogResponse = z.infer<
+  typeof recipeCatalogResponseSchema
+>;
+export type RecipeDetailResponse = z.infer<
+  typeof recipeDetailResponseSchema
+>;
+export type CookHistoryEntry = z.infer<typeof cookHistoryEntrySchema>;
+export type CookHistoryResponse = z.infer<
+  typeof cookHistoryResponseSchema
+>;
+export type RecipeFavoritesResponse = z.infer<
+  typeof recipeFavoritesResponseSchema
+>;
+export type RecipeFavoriteMutationResponse = z.infer<
+  typeof recipeFavoriteMutationResponseSchema
+>;
+export type ShoppingListItem = z.infer<typeof shoppingListItemSchema>;
+export type ShoppingListResponse = z.infer<
+  typeof shoppingListResponseSchema
+>;
+export type ShoppingListAddRequest = z.infer<
+  typeof shoppingListAddRequestSchema
+>;
+export type ShoppingListAddResponse = z.infer<
+  typeof shoppingListAddResponseSchema
+>;
