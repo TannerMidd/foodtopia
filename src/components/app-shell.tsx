@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { Camera, Home, Refrigerator, Sun, Utensils } from "lucide-react";
+import { Camera, Home, Refrigerator, ShoppingBasket, Sun, Utensils } from "lucide-react";
 import { OfflineProvider, useOfflineInventory } from "./offline-provider";
 import { ServiceWorkerRegistration } from "./service-worker-registration";
 import { cn } from "./ui";
@@ -11,10 +11,10 @@ import { cn } from "./ui";
 const navItems = [
   { href: "/", label: "today", icon: Sun },
   { href: "/inventory", label: "kitchen", icon: Refrigerator },
+  { href: "/shopping", label: "shopping", icon: ShoppingBasket },
   { href: "/capture", label: "add food", icon: Camera, desktopOnly: true },
   { href: "/recipes", label: "cook", icon: Utensils },
-  // "house" keeps the four mobile tabs inside the floating bar; the desktop
-  // rail spells the destination out in full.
+  // The desktop rail spells this compact mobile label out in full.
   { href: "/household", label: "household", shortLabel: "house", icon: Home },
 ];
 
@@ -169,7 +169,7 @@ function ShellChrome({ children }: { children: ReactNode }) {
         </div>
       </aside>
 
-      <div className="min-w-0 flex-1 pb-[calc(6.5rem+env(safe-area-inset-bottom))] md:pb-0">
+      <div className="min-w-0 flex-1 pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
         {/* Mobile: the same mark and the same one line of status. */}
         <header className="safe-top flex items-center justify-between gap-3 px-5 pb-1 md:hidden">
           <Link
@@ -208,10 +208,12 @@ function ShellChrome({ children }: { children: ReactNode }) {
 
         {children}
 
-        {/* Mobile: a floating pill bar. The active destination is the one
-            solid terracotta pill on the screen. */}
-        <nav className="fixed inset-x-0 bottom-0 z-40 px-2 pb-[max(1.25rem,env(safe-area-inset-bottom))] md:hidden">
-          <div className="flex h-16 items-center justify-between rounded-[32px] bg-[var(--ground-hi)] px-1 shadow-[0_8px_24px_rgba(23,19,16,0.55)]">
+        {/* Mobile: a full-width dock, attached to the bottom edge. */}
+        <nav
+          aria-label="Primary"
+          className="fixed inset-x-0 bottom-0 z-40 bg-[var(--ground-hi)] pb-[env(safe-area-inset-bottom)] md:hidden"
+        >
+          <div className="grid h-16 grid-cols-5">
             {navItems
               .filter((item) => !item.desktopOnly)
               .map((item) => {
@@ -222,16 +224,12 @@ function ShellChrome({ children }: { children: ReactNode }) {
                     href={item.href}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "flex min-h-12 items-center gap-1.5 rounded-3xl text-[13px] transition",
-                      active
-                        ? "bg-[var(--accent)] px-2.5 font-semibold text-[var(--accent-ink)]"
-                        : "px-2 font-medium text-[var(--ink-5)]",
+                      "flex min-w-0 flex-col items-center justify-center gap-1 px-1 text-[10.5px] font-semibold transition",
+                      active ? "text-[var(--accent)]" : "text-[var(--ink-5)]",
                     )}
                   >
-                    {/* Only the active destination gets its icon — the design's
-                        quiet bar keeps the inactive tabs to words alone. */}
-                    {active && <item.icon className="size-4 shrink-0" aria-hidden="true" />}
-                    <span>{item.shortLabel ?? item.label}</span>
+                    <item.icon className="size-[18px] shrink-0" aria-hidden="true" />
+                    <span className="truncate">{item.shortLabel ?? item.label}</span>
                   </Link>
                 );
               })}

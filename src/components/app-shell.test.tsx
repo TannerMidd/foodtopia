@@ -76,4 +76,13 @@ describe("AppShell sync errors", () => {
     expect(screen.getByText(/sync paused · You do not have access/i)).toBeInTheDocument();
     expect(offline.syncEnabled).toEqual([true]);
   });
+
+  it("gives shopping its own active navigation tab", () => {
+    pathname.mockReturnValue("/shopping");
+    render(<AppShell>Shopping content</AppShell>);
+
+    const links = screen.getAllByRole("link", { name: "shopping" });
+    expect(links).toHaveLength(2);
+    links.forEach((link) => expect(link).toHaveAttribute("aria-current", "page"));
+  });
 });
