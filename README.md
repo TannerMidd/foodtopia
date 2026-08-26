@@ -32,7 +32,7 @@ An invite-only, mobile-first household food inventory PWA built on one dependabl
 
 <div align="center">
 
-<img src="docs/showcase/screens.png" alt="Foodtopia screens — Today, Kitchen, Add food, Cook, Household" width="90%">
+<img src="docs/showcase/screens.png" alt="Foodtopia screens — Today, Kitchen, Shopping, Add food, Cook, Household" width="90%">
 
 </div>
 
@@ -148,6 +148,6 @@ pnpm eval:vision path/to/manifest.json path/to/vision-results.json
 
 ## Deliberate boundaries
 
-Foodtopia does not claim allergen safety, nutrition accuracy, freshness, edibility, or printed-date safety. Curated substitutions are directed, deterministic, visible, and require confirmation; they are not identity aliases or allergy guidance. When deterministic matching returns nothing, the configured household model may create one strict draft from confirmed global food concepts and staples. The draft cannot be cooked, suggested, or shared publicly until a member approves it as a private household recipe; denial clears its payload. Raw meal prompts and inventory labels are not retained with proposals. The initial release still excludes barcode/receipt OCR, automatic date extraction, public AI-generated recipes, shopping lists, meal calendars, nutrition optimization, push reminders, billing, native apps, and multi-household switching.
+Foodtopia does not claim allergen safety, nutrition accuracy, freshness, edibility, or printed-date safety. Curated substitutions are directed, deterministic, visible, and require confirmation; they are not identity aliases or allergy guidance. When deterministic matching returns nothing, the configured household model may create one strict draft from confirmed global food concepts and staples. The draft cannot be cooked, suggested, or shared publicly until a member approves it as a private household recipe; denial clears its payload. Raw meal prompts and inventory labels are not retained with proposals. The initial release still excludes receipt OCR, automatic date extraction, public AI-generated recipes, meal calendars, nutrition optimization, push reminders, billing, native apps, and multi-household switching.
 
 See [`docs/operations.md`](docs/operations.md) for raw-image retention, incident handling, and deletion procedures, and [`src/app/privacy/page.tsx`](src/app/privacy/page.tsx) for the user-facing beta notice.
