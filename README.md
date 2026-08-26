@@ -10,6 +10,8 @@ An invite-only, mobile-first household food inventory PWA built on one dependabl
 
 **Photograph food → review AI suggestions → update a shared inventory → choose a feasible recipe → reconcile what was used.**
 
+**[Engineering overview →](https://tannermidd.github.io/foodtopia/)**
+
 [![CI](https://github.com/TannerMidd/foodtopia/actions/workflows/ci.yml/badge.svg)](https://github.com/TannerMidd/foodtopia/actions/workflows/ci.yml)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)
 ![Next.js](https://img.shields.io/badge/Next.js-App%20Router-171310?logo=next.js)

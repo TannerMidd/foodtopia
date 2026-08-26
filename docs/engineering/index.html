@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Foodtopia engineering overview: architecture, data model, system flows, security, offline behavior, and operations.">
+  <meta name="theme-color" content="#171310">
+  <title>Foodtopia · Engineering Overview</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f5eee6;
+      --muted: #b8ada3;
+      --dim: #82766d;
+      --ground: #171310;
+      --surface: #211b17;
+      --raised: #2a211c;
+      --line: #49372d;
+      --terra: #d2734a;
+      --terra-soft: #4a2d23;
+      --sage: #9bad8c;
+      --sage-soft: #293426;
+      --gold: #d9ae67;
+      --blue: #8eaeb5;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 88% 4%, rgba(210, 115, 74, .13), transparent 28rem),
+        radial-gradient(circle at 10% 28%, rgba(155, 173, 140, .08), transparent 24rem),
+        var(--ground);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+    }
+    a { color: inherit; }
+    a:focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; border-radius: 4px; }
+    .shell { width: min(calc(100% - 40px), var(--max)); margin-inline: auto; }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 72px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; font-weight: 760; letter-spacing: -.02em; }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: var(--terra);
+      color: #171310;
+      font-family: Georgia, serif;
+      font-size: 19px;
+      font-weight: 800;
+      box-shadow: inset 0 0 0 6px rgba(23, 19, 16, .15);
+    }
+    .top-actions { display: flex; align-items: center; gap: 14px; color: var(--muted); font-size: 13px; }
+    .top-actions a { text-decoration: none; }
+    .top-actions a:hover { color: var(--ink); }
+    .status { display: inline-flex; align-items: center; gap: 7px; }
+    .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--sage); box-shadow: 0 0 0 4px rgba(155,173,140,.11); }
+
+    .hero { padding: 88px 0 68px; border-bottom: 1px solid var(--line); }
+    .eyebrow, .section-kicker {
+      margin: 0 0 14px;
+      color: var(--terra);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    h1, h2, h3 { margin-top: 0; text-wrap: balance; }
+    h1 {
+      max-width: 850px;
+      margin-bottom: 24px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(48px, 8vw, 88px);
+      font-weight: 500;
+      letter-spacing: -.055em;
+      line-height: .98;
+    }
+    .hero-copy { max-width: 760px; margin: 0; color: var(--muted); font-size: clamp(17px, 2.4vw, 21px); line-height: 1.55; }
+    .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 34px; }
+    .chip { padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; background: rgba(33,27,23,.7); color: var(--muted); font-size: 12px; }
+    .chip strong { color: var(--ink); font-weight: 700; }
+
+    .layout { display: grid; grid-template-columns: 205px minmax(0, 1fr); gap: 72px; align-items: start; }
+    .side-nav { position: sticky; top: 20px; padding: 48px 0; }
+    .side-nav p { margin: 0 0 12px; color: var(--dim); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .side-nav a { display: block; margin: 3px 0; padding: 7px 10px; border-radius: 8px; color: var(--muted); font-size: 13px; text-decoration: none; }
+    .side-nav a:hover { background: var(--surface); color: var(--ink); }
+    main { min-width: 0; }
+    section { padding: 72px 0; border-bottom: 1px solid var(--line); }
+    section:last-child { border-bottom: 0; }
+    h2 { margin-bottom: 16px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(32px, 5vw, 48px); font-weight: 500; letter-spacing: -.035em; line-height: 1.1; }
+    h3 { margin-bottom: 8px; font-size: 16px; letter-spacing: -.01em; }
+    .lede { max-width: 720px; margin: 0 0 34px; color: var(--muted); font-size: 17px; }
+    .card { border: 1px solid var(--line); border-radius: 18px; background: rgba(33,27,23,.78); }
+    .card-header { display: flex; align-items: start; justify-content: space-between; gap: 16px; padding: 18px 20px; border-bottom: 1px solid var(--line); }
+    .card-header h3 { margin: 0; }
+    .card-label { color: var(--dim); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; }
+    .card-body { padding: 22px; }
+
+    .metric-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+    .metric { min-height: 132px; padding: 18px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); }
+    .metric-value { display: block; margin-bottom: 9px; font-family: Georgia, serif; font-size: 36px; line-height: 1; color: var(--ink); }
+    .metric-name { display: block; color: var(--muted); font-size: 12px; line-height: 1.4; }
+    .metric small { display: block; margin-top: 6px; color: var(--dim); font-size: 10px; }
+
+    .principles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; }
+    .principle { padding: 20px; border-radius: 14px; background: var(--surface); }
+    .principle-num { display: inline-grid; place-items: center; width: 28px; height: 28px; margin-bottom: 18px; border-radius: 50%; background: var(--terra-soft); color: #efae8d; font: 700 12px ui-monospace, monospace; }
+    .principle p { margin: 0; color: var(--muted); font-size: 13px; }
+
+    .diagram { overflow: hidden; }
+    .diagram svg { display: block; width: 100%; height: auto; }
+    .diagram text { font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    .diagram .label { fill: var(--ink); font-size: 13px; font-weight: 700; }
+    .diagram .sub { fill: var(--muted); font-size: 10px; }
+    .diagram .zone { fill: var(--surface); stroke: var(--line); }
+    .diagram .node { fill: var(--raised); stroke: var(--line); }
+    .diagram .node-accent { fill: var(--terra-soft); stroke: #7a4732; }
+    .diagram .node-sage { fill: var(--sage-soft); stroke: #506348; }
+    .diagram .line { fill: none; stroke: #766053; stroke-width: 1.5; marker-end: url(#arrow); }
+    .diagram .line-dashed { fill: none; stroke: #766053; stroke-width: 1.5; stroke-dasharray: 5 5; marker-end: url(#arrow); }
+    .diagram-note { padding: 14px 20px; border-top: 1px solid var(--line); color: var(--dim); font-size: 12px; }
+
+    .flow-list { display: grid; gap: 12px; }
+    .flow { display: grid; grid-template-columns: 62px 1fr; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--surface); }
+    .flow-index { display: grid; place-items: center; background: var(--terra-soft); color: #efae8d; font: 700 13px ui-monospace, monospace; }
+    .flow-content { padding: 18px 20px; }
+    .flow-content p { margin: 3px 0 0; color: var(--muted); font-size: 13px; }
+    code { padding: 2px 5px; border-radius: 5px; background: #130f0d; color: #ddc9ba; font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+    pre { margin: 0; overflow-x: auto; padding: 20px; background: #110e0c; border-radius: 14px; color: #d9c9bb; font: 12px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+    .state-line { display: grid; grid-template-columns: repeat(8, minmax(86px, 1fr)); gap: 22px; overflow-x: auto; padding: 10px 4px 24px; }
+    .state { position: relative; min-width: 86px; text-align: center; }
+    .state:not(:last-child)::after { content: "→"; position: absolute; top: 10px; right: -18px; color: var(--dim); }
+    .state-dot { width: 28px; height: 28px; margin: 0 auto 9px; border: 7px solid var(--surface); border-radius: 50%; background: var(--sage); box-shadow: 0 0 0 1px var(--line); }
+    .state:nth-child(5) .state-dot { background: var(--gold); }
+    .state:nth-child(6) .state-dot { background: var(--terra); }
+    .state span { display: block; font: 11px ui-monospace, monospace; color: var(--muted); }
+    .terminal-row { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 14px; border-top: 1px solid var(--line); color: var(--dim); font-size: 12px; }
+    .terminal-row b { color: var(--muted); }
+
+    .domain-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .domain { padding: 20px; border: 1px solid var(--line); border-radius: 15px; background: var(--surface); }
+    .domain-top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; margin-bottom: 14px; }
+    .domain-top h3 { margin: 0; }
+    .domain-top span { color: var(--dim); font: 11px ui-monospace, monospace; }
+    .tables { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tables code { color: var(--muted); }
+    .domain p { margin: 14px 0 0; color: var(--muted); font-size: 12px; }
+
+    .er-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; align-items: stretch; }
+    .er-col { display: flex; flex-direction: column; gap: 10px; }
+    .er-node { position: relative; min-height: 88px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--raised); }
+    .er-node::after { content: "↓"; position: absolute; left: 50%; bottom: -20px; z-index: 2; color: var(--dim); transform: translateX(-50%); }
+    .er-col .er-node:last-child::after { display: none; }
+    .er-node strong { display: block; margin-bottom: 5px; font-size: 12px; }
+    .er-node small { display: block; color: var(--dim); font-size: 10px; line-height: 1.4; }
+    .er-node.accent { border-color: #7a4732; background: var(--terra-soft); }
+    .er-node.sage { border-color: #506348; background: var(--sage-soft); }
+
+    .chart { display: grid; gap: 16px; }
+    .bar-row { display: grid; grid-template-columns: 110px minmax(0, 1fr) 44px; gap: 12px; align-items: center; }
+    .bar-label { color: var(--muted); font-size: 12px; }
+    .bar-track { height: 10px; overflow: hidden; border-radius: 999px; background: #130f0d; }
+    .bar-fill { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--terra), #e19a75); }
+    .bar-row:nth-child(even) .bar-fill { background: linear-gradient(90deg, var(--sage), #becbad); }
+    .bar-value { color: var(--ink); font: 12px ui-monospace, monospace; text-align: right; }
+
+    .security-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 12px; }
+    .guard-stack { display: grid; gap: 8px; counter-reset: guard; }
+    .guard { display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; padding: 14px; background: var(--surface); border-radius: 12px; }
+    .guard::before { counter-increment: guard; content: counter(guard); display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--sage-soft); color: var(--sage); font: 700 11px ui-monospace, monospace; }
+    .guard p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+    .callout { padding: 24px; border: 1px solid #7a4732; border-radius: 16px; background: var(--terra-soft); }
+    .callout p { margin: 8px 0 0; color: #d9b9aa; font-size: 13px; }
+    .callout ul { margin: 18px 0 0; padding-left: 18px; color: #d9b9aa; font-size: 12px; }
+
+    .decision-table { width: 100%; border-collapse: collapse; }
+    .decision-table th, .decision-table td { padding: 16px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    .decision-table th { color: var(--dim); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
+    .decision-table td { color: var(--muted); font-size: 12px; }
+    .decision-table td:first-child { color: var(--ink); font-weight: 700; }
+    .decision-table tr:last-child td { border-bottom: 0; }
+
+    .ops-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .ops { padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+    .ops strong { display: block; margin-bottom: 8px; font-size: 13px; }
+    .ops p { margin: 0; color: var(--muted); font-size: 11px; }
+    .ops .big { display: block; margin-bottom: 11px; color: var(--terra); font: 26px Georgia, serif; }
+
+    .repo-map { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .repo-link { display: flex; gap: 14px; justify-content: space-between; align-items: center; padding: 14px 16px; border: 1px solid var(--line); border-radius: 11px; background: var(--surface); text-decoration: none; }
+    .repo-link:hover { border-color: #755342; background: var(--raised); }
+    .repo-link code { color: var(--ink); white-space: nowrap; }
+    .repo-link span { color: var(--dim); font-size: 11px; text-align: right; }
+
+    .boundary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .boundary { padding: 22px; border-radius: 15px; }
+    .boundary.in { border: 1px solid #506348; background: var(--sage-soft); }
+    .boundary.out { border: 1px solid var(--line); background: var(--surface); }
+    .boundary h3 { margin-bottom: 14px; }
+    .boundary ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 12px; }
+
+    footer { padding: 34px 0 56px; border-top: 1px solid var(--line); color: var(--dim); font-size: 12px; }
+    .footer-inner { display: flex; justify-content: space-between; gap: 20px; }
+    footer a { color: var(--muted); }
+
+    @media (max-width: 940px) {
+      .layout { grid-template-columns: 1fr; gap: 0; }
+      .side-nav { position: static; display: flex; gap: 4px; overflow-x: auto; padding: 16px 0; border-bottom: 1px solid var(--line); }
+      .side-nav p { display: none; }
+      .side-nav a { white-space: nowrap; }
+      .metric-grid { grid-template-columns: repeat(3, 1fr); }
+      .ops-grid { grid-template-columns: repeat(2, 1fr); }
+      .security-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 680px) {
+      .shell { width: min(calc(100% - 24px), var(--max)); }
+      .topbar { min-height: 62px; }
+      .top-actions .status { display: none; }
+      .hero { padding: 58px 0 48px; }
+      section { padding: 54px 0; }
+      .metric-grid, .principles, .domain-grid, .repo-map, .boundary-grid { grid-template-columns: 1fr; }
+      .metric { min-height: 104px; }
+      .er-grid { grid-template-columns: repeat(2, 1fr); }
+      .bar-row { grid-template-columns: 82px minmax(0, 1fr) 36px; gap: 8px; }
+      .flow { grid-template-columns: 44px 1fr; }
+      .flow-content { padding: 15px; }
+      .decision-table { display: block; overflow-x: auto; }
+      .ops-grid { grid-template-columns: 1fr 1fr; }
+      .footer-inner { flex-direction: column; }
+      .diagram .card-body { padding: 8px; overflow-x: auto; }
+      .diagram svg { min-width: 680px; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <header class="shell topbar">
+    <a class="brand" href="https://github.com/TannerMidd/foodtopia" aria-label="Foodtopia repository">
+      <span class="brand-mark" aria-hidden="true">F</span>
+      <span>Foodtopia <span style="color:var(--dim);font-weight:500">/ engineering</span></span>
+    </a>
+    <div class="top-actions">
+      <span class="status">Architecture snapshot</span>
+      <a href="https://github.com/TannerMidd/foodtopia">View source ↗</a>
+    </div>
+  </header>
+
+  <div class="shell hero">
+    <p class="eyebrow">System field guide · v0.1 alpha</p>
+    <h1>How Foodtopia works.</h1>
+    <p class="hero-copy">A technical map of the mobile-first household inventory system—from photo ingestion and deterministic recipe matching to offline writes, tenant isolation, and retention workers.</p>
+    <div class="hero-meta" aria-label="Technology stack">
+      <span class="chip"><strong>Web</strong> Next.js 16 · React 19</span>
+      <span class="chip"><strong>Data</strong> Supabase · PostgreSQL · Dexie</span>
+      <span class="chip"><strong>Jobs</strong> Inngest</span>
+      <span class="chip"><strong>AI</strong> OpenAI · OpenRouter</span>
+      <span class="chip"><strong>Deploy</strong> Vercel · GitHub Actions</span>
+    </div>
+  </div>
+
+  <div class="shell layout">
+    <nav class="side-nav" aria-label="On this page">
+      <p>On this page</p>
+      <a href="#overview">Overview</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#capture">Capture flow</a>
+      <a href="#offline">Offline sync</a>
+      <a href="#recipes">Recipe & cook</a>
+      <a href="#data">Data model</a>
+      <a href="#security">Security</a>
+      <a href="#operations">Operations</a>
+      <a href="#codebase">Codebase</a>
+      <a href="#boundaries">Boundaries</a>
+    </nav>
+
+    <main>
+      <section id="overview">
+        <p class="section-kicker">01 · At a glance</p>
+        <h2>One dependable loop.</h2>
+        <p class="lede">Photograph food → review AI suggestions → update shared inventory → choose a feasible recipe → reconcile what was used. The architecture protects that loop with explicit review gates, append-only evidence, and offline-safe commands.</p>
+
+        <div class="metric-grid" aria-label="Engineering footprint">
+          <div class="metric"><span class="metric-value">37</span><span class="metric-name">HTTP route handlers</span><small>36 versioned + Inngest</small></div>
+          <div class="metric"><span class="metric-value">30</span><span class="metric-name">PostgreSQL tables</span><small>public + private schemas</small></div>
+          <div class="metric"><span class="metric-value">39</span><span class="metric-name">RLS policies</span><small>tenant boundary in data</small></div>
+          <div class="metric"><span class="metric-value">70</span><span class="metric-name">test files</span><small>unit + contract + route</small></div>
+          <div class="metric"><span class="metric-value">160</span><span class="metric-name">owned recipes</span><small>validated catalog</small></div>
+        </div>
+
+        <div class="principles" aria-label="Core engineering principles">
+          <article class="principle"><span class="principle-num">01</span><h3>Drafts never mutate truth</h3><p>Vision and generated recipe output remain proposals until a person explicitly accepts them.</p></article>
+          <article class="principle"><span class="principle-num">02</span><h3>Unknown stays unknown</h3><p>Quantity certainty is modeled as unknown, estimated, or known; the matcher never invents evidence.</p></article>
+          <article class="principle"><span class="principle-num">03</span><h3>Commands cross boundaries</h3><p>Inventory changes use idempotency keys, expected versions, and database transactions—not client-side row writes.</p></article>
+          <article class="principle"><span class="principle-num">04</span><h3>Household is the tenant</h3><p>Server sessions derive one membership from Auth and RLS. Clients never choose a household ID for authorization.</p></article>
+        </div>
+      </section>
+
+      <section id="architecture">
+        <p class="section-kicker">02 · Runtime architecture</p>
+        <h2>A server-backed PWA with a local working set.</h2>
+        <p class="lede">Next.js is both the application shell and backend-for-frontend. PostgreSQL functions own high-integrity mutations; Inngest handles work that must survive the request; IndexedDB keeps the kitchen usable through a weak connection.</p>
+
+        <div class="card diagram">
+          <div class="card-header"><h3>System context</h3><span class="card-label">request + event paths</span></div>
+          <div class="card-body">
+            <svg viewBox="0 0 920 490" role="img" aria-labelledby="arch-title arch-desc">
+              <title id="arch-title">Foodtopia system architecture</title>
+              <desc id="arch-desc">Browser PWA talks to Next.js route handlers and Supabase. Next.js sends durable work to Inngest, which uses household AI providers and writes results through PostgreSQL.</desc>
+              <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#766053"/></marker></defs>
+              <rect class="zone" x="10" y="28" width="220" height="425" rx="18"/>
+              <rect class="zone" x="252" y="28" width="300" height="425" rx="18"/>
+              <rect class="zone" x="574" y="28" width="336" height="425" rx="18"/>
+              <text class="sub" x="28" y="52">DEVICE</text><text class="sub" x="270" y="52">VERCEL / NEXT.JS</text><text class="sub" x="592" y="52">MANAGED SERVICES</text>
+
+              <rect class="node-accent" x="32" y="78" width="176" height="72" rx="13"/><text class="label" x="50" y="107">React application</text><text class="sub" x="50" y="127">App Router · mobile UI</text>
+              <rect class="node" x="32" y="175" width="176" height="72" rx="13"/><text class="label" x="50" y="204">Dexie / IndexedDB</text><text class="sub" x="50" y="224">lots · outbox · recipes · cook</text>
+              <rect class="node" x="32" y="272" width="176" height="72" rx="13"/><text class="label" x="50" y="301">Service worker</text><text class="sub" x="50" y="321">static assets + offline shell</text>
+              <rect class="node" x="32" y="369" width="176" height="54" rx="13"/><text class="label" x="50" y="401">Camera / barcode</text>
+
+              <rect class="node-accent" x="276" y="78" width="252" height="72" rx="13"/><text class="label" x="294" y="107">Pages + route handlers</text><text class="sub" x="294" y="127">37 HTTP endpoints · Zod contracts</text>
+              <rect class="node" x="276" y="175" width="252" height="72" rx="13"/><text class="label" x="294" y="204">Auth + service layer</text><text class="sub" x="294" y="224">session · repositories · adapters</text>
+              <rect class="node-sage" x="276" y="272" width="252" height="72" rx="13"/><text class="label" x="294" y="301">Deterministic domain</text><text class="sub" x="294" y="321">normalization · units · ranking</text>
+              <rect class="node" x="276" y="369" width="252" height="54" rx="13"/><text class="label" x="294" y="401">Local demo adapters</text>
+
+              <rect class="node-sage" x="598" y="78" width="288" height="92" rx="13"/><text class="label" x="616" y="107">Supabase</text><text class="sub" x="616" y="127">Auth · PostgreSQL + RLS · Storage</text><text class="sub" x="616" y="146">RPC functions own atomic mutations</text>
+              <rect class="node" x="598" y="201" width="288" height="72" rx="13"/><text class="label" x="616" y="230">Inngest</text><text class="sub" x="616" y="250">analysis · recovery · retention</text>
+              <rect class="node" x="598" y="304" width="136" height="80" rx="13"/><text class="label" x="616" y="333">OpenAI</text><text class="sub" x="616" y="353">Responses API</text>
+              <rect class="node" x="750" y="304" width="136" height="80" rx="13"/><text class="label" x="768" y="333">OpenRouter</text><text class="sub" x="768" y="353">structured chat</text>
+
+              <path class="line" d="M208 112 H276"/><path class="line" d="M276 208 H222 V208 H208"/>
+              <path class="line" d="M208 211 H276"/><path class="line" d="M528 111 H598"/>
+              <path class="line" d="M528 210 H598"/><path class="line-dashed" d="M742 273 V304"/>
+              <path class="line" d="M666 304 V273"/><path class="line" d="M818 304 V273"/>
+              <path class="line" d="M598 130 H552 V306 H528"/>
+            </svg>
+          </div>
+          <div class="diagram-note">Solid lines are synchronous data paths. Dashed lines mark durable event dispatch. The database commit—not event delivery—is the acceptance boundary for uploaded analyses.</div>
+        </div>
+      </section>
+
+      <section id="capture">
+        <p class="section-kicker">03 · Photo-to-inventory flow</p>
+        <h2>AI proposes. People commit.</h2>
+        <p class="lede">Raw photo bytes have a short, controlled life. The user-visible batch and the storage objects are tracked separately so processing, review, and purging can be retried safely.</p>
+
+        <div class="flow-list">
+          <article class="flow"><div class="flow-index">01</div><div class="flow-content"><h3>Prepare on device</h3><p>The client accepts 1–3 photos, re-encodes to JPEG, limits the longest edge to 1600 px, strips EXIF, and enforces a 5 MB cap before upload.</p></div></article>
+          <article class="flow"><div class="flow-index">02</div><div class="flow-content"><h3>Create descriptors</h3><p><code>POST /api/v1/analyses</code> validates file metadata and creates an analysis plus bounded image assets. Production returns signed upload grants for the private <code>raw-images</code> bucket.</p></div></article>
+          <article class="flow"><div class="flow-index">03</div><div class="flow-content"><h3>Commit the upload set</h3><p>The completion route verifies object ownership, count, type, and byte size, moves the analysis to queued, then emits <code>foodtopia/analysis.requested</code>. A recovery cron redispatches stale committed rows.</p></div></article>
+          <article class="flow"><div class="flow-index">04</div><div class="flow-content"><h3>Analyze durably</h3><p>Inngest resolves the household’s encrypted BYO credential, downloads the exact assets, requests structured output from OpenAI or OpenRouter, normalizes concepts, and stores review candidates.</p></div></article>
+          <article class="flow"><div class="flow-index">05</div><div class="flow-content"><h3>Review and apply atomically</h3><p>The model output is inert. The user accepts, edits, or rejects each candidate; <code>apply_analysis_candidates</code> creates lots, commands, and immutable events in one PostgreSQL transaction.</p></div></article>
+          <article class="flow"><div class="flow-index">06</div><div class="flow-content"><h3>Delete raw bytes</h3><p>Apply and cancel attempt immediate removal. A scheduled sweeper claims leftovers, removes objects, and records tombstones; no uploaded photo may remain beyond 24 hours.</p></div></article>
+        </div>
+
+        <div class="card" style="margin-top:20px">
+          <div class="card-header"><h3>Analysis state machine</h3><span class="card-label">public.analyses.status</span></div>
+          <div class="card-body">
+            <div class="state-line" aria-label="Created, uploaded, queued, processing, needs review, applied">
+              <div class="state"><div class="state-dot"></div><span>created</span></div>
+              <div class="state"><div class="state-dot"></div><span>uploaded</span></div>
+              <div class="state"><div class="state-dot"></div><span>queued</span></div>
+              <div class="state"><div class="state-dot"></div><span>processing</span></div>
+              <div class="state"><div class="state-dot"></div><span>needs_review</span></div>
+              <div class="state"><div class="state-dot"></div><span>applied</span></div>
+            </div>
+            <div class="terminal-row"><b>Terminal exits:</b><span>failed</span><span>·</span><span>cancelled</span><span>·</span><span>expired</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="offline">
+        <p class="section-kicker">04 · Offline-first inventory</p>
+        <h2>Optimistic locally. Ordered globally.</h2>
+        <p class="lede">The service worker keeps only the shell and static assets. Household data lives in a tenant-bound Dexie database and is reconciled through versioned commands when connectivity returns.</p>
+
+        <div class="card diagram">
+          <div class="card-header"><h3>Offline write + synchronization</h3><span class="card-label">device → server → device</span></div>
+          <div class="card-body">
+            <svg viewBox="0 0 920 315" role="img" aria-labelledby="sync-title sync-desc">
+              <title id="sync-title">Offline inventory synchronization</title>
+              <desc id="sync-desc">A user edit updates IndexedDB and enters an ordered outbox. Replay sends idempotent commands to a PostgreSQL function. Conflicts pause replay until the user retries or discards.</desc>
+              <defs><marker id="arrow-sync" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#766053"/></marker></defs>
+              <style>.sline{fill:none;stroke:#766053;stroke-width:1.5;marker-end:url(#arrow-sync)}</style>
+              <rect class="node-accent" x="24" y="64" width="150" height="70" rx="13"/><text class="label" x="42" y="93">User edit</text><text class="sub" x="42" y="113">add · adjust · consume</text>
+              <rect class="node" x="218" y="64" width="174" height="70" rx="13"/><text class="label" x="236" y="93">Dexie transaction</text><text class="sub" x="236" y="113">optimistic lot + sequence</text>
+              <rect class="node" x="436" y="64" width="174" height="70" rx="13"/><text class="label" x="454" y="93">Ordered outbox</text><text class="sub" x="454" y="113">pending → sending</text>
+              <rect class="node-sage" x="654" y="64" width="242" height="70" rx="13"/><text class="label" x="672" y="93">apply_inventory_command</text><text class="sub" x="672" y="113">idempotency + expected version</text>
+              <path class="sline" d="M174 99 H218"/><path class="sline" d="M392 99 H436"/><path class="sline" d="M610 99 H654"/>
+              <rect class="node-sage" x="654" y="196" width="242" height="70" rx="13"/><text class="label" x="672" y="225">Lot + immutable event</text><text class="sub" x="672" y="245">atomic database result</text>
+              <rect class="node" x="436" y="196" width="174" height="70" rx="13"/><text class="label" x="454" y="225">Refresh snapshot</text><text class="sub" x="454" y="245">cursor: created_at + event id</text>
+              <rect class="node-accent" x="218" y="196" width="174" height="70" rx="13"/><text class="label" x="236" y="225">409 conflict</text><text class="sub" x="236" y="245">pause → retry or discard</text>
+              <path class="sline" d="M775 134 V196"/><path class="sline" d="M654 231 H610"/><path class="sline" d="M654 117 C595 160 512 166 392 221"/>
+            </svg>
+          </div>
+          <div class="diagram-note">Sync runs on launch, focus, reconnect, visibility return, and every 15 seconds while foregrounded. Replay stops at the first conflict so later commands cannot overtake it.</div>
+        </div>
+
+        <div class="domain-grid" style="margin-top:14px">
+          <article class="domain"><div class="domain-top"><h3>Local working set</h3><span>IndexedDB v2</span></div><div class="tables"><code>lots</code><code>outbox</code><code>snapshots</code><code>catalogRecipes</code><code>cookSessions</code></div><p>A household binding gates edits. Switching or losing access atomically clears all tenant rows and caches.</p></article>
+          <article class="domain"><div class="domain-top"><h3>Network policy</h3><span>Serwist</span></div><div class="tables"><code>API: network only</code><code>HTML: network only</code><code>assets: SWR</code><code>images: cache first</code></div><p>The offline fallback is static and data-free; no server-rendered household payload is cached.</p></article>
+        </div>
+      </section>
+
+      <section id="recipes">
+        <p class="section-kicker">05 · Recipe selection & cooking</p>
+        <h2>Determinism before generation.</h2>
+        <p class="lede">AI may parse a natural-language intent and add optional explanations, but readiness comes from project-owned TypeScript: normalized concepts, unit conversion, quantity certainty, accepted forms, and curated substitutions.</p>
+
+        <div class="flow-list">
+          <article class="flow"><div class="flow-index">A</div><div class="flow-content"><h3>Load trusted context</h3><p>Published recipes, approved household recipes, active lots, staples, dietary preferences, and exclusions are loaded under the current household session.</p></div></article>
+          <article class="flow"><div class="flow-index">B</div><div class="flow-content"><h3>Build ingredient evidence</h3><p>Every required ingredient becomes <code>present_sufficient</code>, <code>present_quantity_unknown</code>, <code>insufficient</code>, <code>missing</code>, or <code>ambiguous</code>. Name-only custom lots never become recipe evidence.</p></div></article>
+          <article class="flow"><div class="flow-index">C</div><div class="flow-content"><h3>Rank explainably</h3><p>Tier → missing count → substitution count → use-soon count → unknown quantity → prompt fit → duration → stable ID. Only recipes with at most two required gaps surface.</p></div></article>
+          <article class="flow"><div class="flow-index">D</div><div class="flow-content"><h3>Generate only on zero match</h3><p>One strict private draft may be generated when the catalog yields nothing. It is rate-limited, expires after 24 hours, and cannot be cooked until approval materializes a household recipe.</p></div></article>
+          <article class="flow"><div class="flow-index">E</div><div class="flow-content"><h3>Cook against a snapshot</h3><p>A cook session freezes recipe evidence and servings. The durable local context survives a restart; reconciliation confirms per-lot usage against expected versions and emits normal inventory commands.</p></div></article>
+        </div>
+
+        <div class="card" style="margin-top:20px">
+          <div class="card-header"><h3>Readiness tiers</h3><span class="card-label">deterministic output</span></div>
+          <div class="card-body chart">
+            <div class="bar-row"><span class="bar-label">Ready</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><span class="bar-value">0 gaps</span></div>
+            <div class="bar-row"><span class="bar-label">Likely ready</span><span class="bar-track"><span class="bar-fill" style="width:78%"></span></span><span class="bar-value">check</span></div>
+            <div class="bar-row"><span class="bar-label">Almost ready</span><span class="bar-track"><span class="bar-fill" style="width:52%"></span></span><span class="bar-value">≤ 2</span></div>
+            <div class="bar-row"><span class="bar-label">Incompatible</span><span class="bar-track"><span class="bar-fill" style="width:24%"></span></span><span class="bar-value">hidden</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="data">
+        <p class="section-kicker">06 · Data model</p>
+        <h2>PostgreSQL is the source of truth.</h2>
+        <p class="lede">Tables are grouped around bounded workflows rather than generic records. Append-only logs preserve what happened; mutable projections keep reads practical; RPC functions update both together.</p>
+
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-header"><h3>Domain relationship map</h3><span class="card-label">representative entities</span></div>
+          <div class="card-body er-grid">
+            <div class="er-col">
+              <div class="er-node accent"><strong>profiles</strong><small>Auth user + beta status</small></div>
+              <div class="er-node"><strong>household_members</strong><small>one owner/member role</small></div>
+              <div class="er-node sage"><strong>households</strong><small>tenant + deletion quarantine</small></div>
+            </div>
+            <div class="er-col">
+              <div class="er-node"><strong>analyses</strong><small>batch state machine</small></div>
+              <div class="er-node"><strong>image_assets</strong><small>private object descriptors</small></div>
+              <div class="er-node"><strong>analysis_candidates</strong><small>reviewable AI proposals</small></div>
+            </div>
+            <div class="er-col">
+              <div class="er-node sage"><strong>inventory_lots</strong><small>current projection</small></div>
+              <div class="er-node"><strong>inventory_commands</strong><small>idempotent intent</small></div>
+              <div class="er-node"><strong>inventory_events</strong><small>immutable audit trail</small></div>
+            </div>
+            <div class="er-col">
+              <div class="er-node"><strong>recipes + ingredients</strong><small>published / household scope</small></div>
+              <div class="er-node"><strong>cook_sessions</strong><small>recipe snapshot</small></div>
+              <div class="er-node"><strong>cook_reconciliations</strong><small>lot-level usage evidence</small></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="domain-grid">
+          <article class="domain"><div class="domain-top"><h3>Identity & tenancy</h3><span>7 tables</span></div><div class="tables"><code>profiles</code><code>households</code><code>household_members</code><code>household_invites</code><code>beta_invites</code></div><p>Admission status is separate from Auth. V1 intentionally allows one household membership per account.</p></article>
+          <article class="domain"><div class="domain-top"><h3>Food ontology</h3><span>3 tables</span></div><div class="tables"><code>food_concepts</code><code>food_aliases</code><code>household_custom_food_concepts</code></div><p>Global concepts support deterministic matching; custom foods remain inventory-only until explicitly mapped.</p></article>
+          <article class="domain"><div class="domain-top"><h3>Inventory ledger</h3><span>3 tables</span></div><div class="tables"><code>inventory_lots</code><code>inventory_commands</code><code>inventory_events</code></div><p>Versioned lots are projections. Commands provide replay safety; events are immutable evidence.</p></article>
+          <article class="domain"><div class="domain-top"><h3>Vision workflow</h3><span>3 tables</span></div><div class="tables"><code>analyses</code><code>image_assets</code><code>analysis_candidates</code></div><p>Batch state, byte retention, and human review are independently observable and retryable.</p></article>
+          <article class="domain"><div class="domain-top"><h3>Recipes & cooking</h3><span>7 tables</span></div><div class="tables"><code>recipes</code><code>recipe_ingredients</code><code>recipe_proposals</code><code>cook_sessions</code><code>cook_reconciliations</code></div><p>Public and household recipes share a shape; strict scope triggers prevent cross-tenant ingredients.</p></article>
+          <article class="domain"><div class="domain-top"><h3>Preferences & product</h3><span>7 tables</span></div><div class="tables"><code>shopping_list_items</code><code>household_recipe_favorites</code><code>household_preferences</code><code>product_events</code></div><p>Telemetry is bounded to approved names and properties; labels, prompts, photos, and emails are excluded.</p></article>
+        </div>
+      </section>
+
+      <section id="security">
+        <p class="section-kicker">07 · Security & privacy</p>
+        <h2>Defense follows the data.</h2>
+        <p class="lede">UI redirects improve experience; they are not the security boundary. Every protected API independently verifies Auth, account admission, and database-derived membership before RLS applies the same tenant boundary again.</p>
+
+        <div class="security-grid">
+          <div class="guard-stack">
+            <article class="guard"><div><h3>Verified identity</h3><p><code>supabase.auth.getUser()</code> validates the request with Supabase Auth; claims alone are not trusted.</p></div></article>
+            <article class="guard"><div><h3>Admission wall</h3><p>The caller’s own profile must be <code>enabled</code>. Pending and disabled accounts receive 403 from data APIs.</p></div></article>
+            <article class="guard"><div><h3>Derived tenancy</h3><p>The server reads the sole membership through RLS. Protected functions do not accept a household ID from the client.</p></div></article>
+            <article class="guard"><div><h3>Database enforcement</h3><p>RLS, scope triggers, immutable-row triggers, expected versions, and transactional RPCs protect every mutation path.</p></div></article>
+            <article class="guard"><div><h3>Short-lived raw data</h3><p>Storage paths include the household and analysis; signed upload grants are bounded; retention workers verify deletion.</p></div></article>
+          </div>
+          <aside class="callout">
+            <h3>BYO AI credentials</h3>
+            <p>Each household owner supplies an OpenAI or OpenRouter key. The browser can replace or clear it, but can never read it back.</p>
+            <ul>
+              <li>AES-256-GCM ciphertext in the private schema</li>
+              <li>Rotating server keyring with compare-and-swap re-encryption</li>
+              <li>Provider and model allowlists</li>
+              <li>No deployment-level fallback key</li>
+              <li>Missing or unreadable credentials fail closed</li>
+            </ul>
+          </aside>
+        </div>
+
+        <div class="card" style="margin-top:20px">
+          <div class="card-header"><h3>Important architecture decisions</h3><span class="card-label">why the system bends this way</span></div>
+          <div style="overflow-x:auto">
+            <table class="decision-table">
+              <thead><tr><th>Decision</th><th>Why</th><th>Trade-off</th></tr></thead>
+              <tbody>
+                <tr><td>PostgreSQL RPCs for core writes</td><td>Atomic validation, mutation, event creation, and idempotency at the source of truth.</td><td>More SQL to review and keep typed.</td></tr>
+                <tr><td>No realtime subscription</td><td>A cursor sync and foreground polling model is easier to make ordered and offline-safe.</td><td>Other-device updates may take up to 15 seconds to appear.</td></tr>
+                <tr><td>Static-only service worker cache</td><td>Prevents household HTML or API payloads from persisting in shared browser caches.</td><td>Navigation itself requires network or falls back to a data-free shell.</td></tr>
+                <tr><td>Deterministic recipe readiness</td><td>Every match can be explained from concepts, units, forms, and known inventory evidence.</td><td>The ontology and curated substitutions need stewardship.</td></tr>
+                <tr><td>AI output as proposals</td><td>Provider mistakes cannot silently alter inventory or publish a recipe.</td><td>Every AI path includes a review step.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="operations">
+        <p class="section-kicker">08 · Delivery & operations</p>
+        <h2>Designed for recoverable failure.</h2>
+        <p class="lede">Production runs on Vercel with Supabase and Inngest as managed dependencies. Scheduled recovery is based on committed database state, so event delivery and cleanup can be safely repeated.</p>
+
+        <div class="ops-grid">
+          <article class="ops"><span class="big">3×</span><strong>Analysis retries</strong><p>Transient provider failures retry; model refusals are terminal and never replayed as success.</p></article>
+          <article class="ops"><span class="big">15s</span><strong>Foreground sync</strong><p>Also triggered at launch, reconnect, focus, and visibility return.</p></article>
+          <article class="ops"><span class="big">24h</span><strong>Raw image ceiling</strong><p>Immediate deletion is normal; scheduled sweeps enforce the hard bound.</p></article>
+          <article class="ops"><span class="big">2h15</span><strong>Deletion quarantine</strong><p>Households remain inaccessible until issued upload grants have expired.</p></article>
+        </div>
+
+        <div class="card" style="margin-top:20px">
+          <div class="card-header"><h3>CI quality gate</h3><span class="card-label">.github/workflows/ci.yml</span></div>
+          <div class="card-body">
+            <pre aria-label="Continuous integration pipeline">install --frozen-lockfile
+  ├─ eslint
+  ├─ next typegen + tsc --noEmit
+  ├─ vitest (application + scripts)
+  ├─ recipe content validation
+  ├─ next build + service worker generation
+  └─ Playwright · Pixel 7 Chromium + iPhone 15 WebKit</pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="codebase">
+        <p class="section-kicker">09 · Codebase map</p>
+        <h2>Where to make a change.</h2>
+        <p class="lede">Routes stay thin, contracts cross the HTTP boundary, domain code stays deterministic, repositories own persistence, and services coordinate external work.</p>
+
+        <div class="repo-map">
+          <a class="repo-link" href="https://github.com/TannerMidd/foodtopia/tree/main/src/app"><code>src/app</code><span>pages + route handlers</span></a>
+          <a class="repo-link" href="https://github.com/TannerMidd/foodtopia/tree/main/src/components"><code>src/components</code><span>product screens</span></a>
+          <a class="repo-link" href="https://github.com/TannerMidd/foodtopia/tree/main/src/contracts"><code>src/contracts</code><span>Zod boundary types</span></a>
+          <a class="repo-link" href="https://github.com/TannerMidd/foodtopia/tree/main/src/domain"><code>src/domain</code><span>pure business rules</span></a>
+          <a class="repo-link" href="https://github.com/TannerMidd/foodtopia/tree/main/src/server/repositories"><code>src/server/repositories</code><span>persistence adapters</span></a>
+          <a class="repo-link" href="https://github.com/TannerMidd/foodtopia/tree/main/src/server/services"><code>src/server/services</code><span>workflow coordination</span></a>
+          <a class="repo-link" href="https://github.com/TannerMidd/foodtopia/tree/main/src/server/ai"><code>src/server/ai</code><span>provider adapters</span></a>
+          <a class="repo-link" href="https://github.com/TannerMidd/foodtopia/tree/main/src/lib/offline"><code>src/lib/offline</code><span>Dexie + sync engine</span></a>
+          <a class="repo-link" href="https://github.com/TannerMidd/foodtopia/tree/main/src/inngest"><code>src/inngest</code><span>durable workers</span></a>
+          <a class="repo-link" href="https://github.com/TannerMidd/foodtopia/tree/main/supabase"><code>supabase</code><span>schema + RLS + seed</span></a>
+          <a class="repo-link" href="https://github.com/TannerMidd/foodtopia/tree/main/content/recipes"><code>content/recipes</code><span>catalog source</span></a>
+          <a class="repo-link" href="https://github.com/TannerMidd/foodtopia/tree/main/e2e"><code>e2e</code><span>mobile + offline checks</span></a>
+        </div>
+
+        <div class="card" style="margin-top:20px">
+          <div class="card-header"><h3>Local development</h3><span class="card-label">Node 22 · pnpm 11.19</span></div>
+          <div class="card-body"><pre>pnpm install --frozen-lockfile
+pnpm dev -p 3100        # no cloud env → in-memory demo adapters
+pnpm check              # lint + types + tests + recipe validation
+pnpm build              # production build + Serwist worker
+pnpm test:e2e           # mobile browser workflows</pre></div>
+        </div>
+      </section>
+
+      <section id="boundaries">
+        <p class="section-kicker">10 · Scope boundaries</p>
+        <h2>Know what the system does not promise.</h2>
+        <p class="lede">These constraints are part of the architecture, not missing polish. They keep the alpha’s evidence and safety claims narrow enough to defend.</p>
+        <div class="boundary-grid">
+          <article class="boundary in"><h3>Built and supported</h3><ul><li>One shared household per account</li><li>Photo-assisted inventory with review</li><li>Offline inventory commands and recipe browsing</li><li>Deterministic readiness and curated substitutions</li><li>Private household recipe drafts</li><li>Shopping list, favorites, and cook history</li></ul></article>
+          <article class="boundary out"><h3>Explicitly out of scope</h3><ul><li>Allergen, nutrition, freshness, or edibility guarantees</li><li>Receipt OCR or automatic printed-date extraction</li><li>Meal calendars or nutrition optimization</li><li>Public AI-generated recipes</li><li>Push reminders, billing, or native apps</li><li>Multi-household switching</li></ul></article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    <div class="shell footer-inner">
+      <span>Foodtopia engineering overview · derived from the repository source of truth</span>
+      <span><a href="https://github.com/TannerMidd/foodtopia/blob/main/docs/operations.md">Operations</a> · <a href="https://github.com/TannerMidd/foodtopia/blob/main/docs/beta-runbook.md">Beta runbook</a> · <a href="https://github.com/TannerMidd/foodtopia">Repository</a></span>
+    </div>
+  </footer>
+</body>
+</html>
