@@ -12,6 +12,7 @@
   <meta property="og:image" content="https://tannermidd.github.io/foodtopia/images/social-card.png">
   <meta name="twitter:card" content="summary_large_image">
   <title>Foodtopia — Cook what you have</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <style>
     :root {
       color-scheme: dark;
@@ -77,12 +78,17 @@
     .hero-copy { max-width: 610px; margin: 0; color: var(--muted); font-size: clamp(18px, 2vw, 22px); line-height: 1.55; }
     .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
     .hero-note { margin: 18px 0 0; color: var(--dim); font-size: 13px; }
-    .hero-visual { position: relative; min-height: 650px; }
-    .hero-orbit { position: absolute; inset: 6% -20% 3% 4%; border: 1px solid var(--line); border-radius: 50%; opacity: .55; }
-    .phone { position: absolute; overflow: hidden; aspect-ratio: 780 / 1688; border: 1px solid #493a30; border-radius: 39px; background: #110e0c; box-shadow: 0 30px 80px rgba(0,0,0,.36); }
+    .hero-visual { position: relative; min-height: 650px; display: grid; align-content: center; justify-items: center; }
+    .hero-orbit { position: absolute; inset: 5% 4% 10% 8%; border: 1px solid var(--line); border-radius: 50%; opacity: .55; }
+    .phone { position: relative; overflow: hidden; aspect-ratio: 780 / 1688; border: 1px solid #493a30; border-radius: 39px; background: #110e0c; box-shadow: 0 30px 80px rgba(0,0,0,.36); }
     .phone img { width: 100%; height: 100%; object-fit: cover; }
-    .phone-main { right: 3%; bottom: 0; width: auto; height: 96%; transform: rotate(2deg); }
-    .phone-back { top: 2%; left: 0; width: auto; height: 80%; opacity: .86; transform: rotate(-5deg); }
+    .phone-main { width: auto; height: min(62vh, 620px); transform: rotate(1.5deg); }
+    .phone-main .rot { position: absolute; inset: 0; opacity: 0; transition: opacity 800ms ease; }
+    .phone-main .rot.active { opacity: 1; }
+    .hero-caption { margin-top: 30px; color: var(--ink); font-size: 13px; font-weight: 750; letter-spacing: .05em; text-transform: uppercase; }
+    .hero-dots { display: flex; justify-content: center; gap: 7px; margin-top: 14px; }
+    .hero-dot { width: 8px; height: 8px; border-radius: 50%; background: #4a3a2e; transition: background 300ms ease, transform 300ms ease; }
+    .hero-dot.active { background: var(--terra); transform: scale(1.18); }
     .float-card { position: absolute; right: -3%; top: 18%; width: 210px; padding: 18px; border: 1px solid var(--line); border-radius: 18px; background: rgba(42,33,27,.94); box-shadow: 0 18px 55px rgba(0,0,0,.28); }
     .float-card strong { display: block; margin-bottom: 4px; font-size: 15px; }
     .float-card span { color: var(--muted); font-size: 12px; }
@@ -141,6 +147,15 @@
     .footer-links { display: flex; flex-wrap: wrap; gap: 20px; }
     .footer-links a:hover { color: var(--ink); }
 
+    html.js .reveal { opacity: 0; transform: translateY(22px); transition: opacity 650ms ease, transform 650ms ease; }
+    html.js .reveal.in { opacity: 1; transform: none; }
+    html.js .steps .reveal:nth-child(2) { transition-delay: 90ms; }
+    html.js .steps .reveal:nth-child(3) { transition-delay: 180ms; }
+    html.js .stats-grid .reveal:nth-child(2) { transition-delay: 70ms; }
+    html.js .stats-grid .reveal:nth-child(3) { transition-delay: 140ms; }
+    html.js .stats-grid .reveal:nth-child(4) { transition-delay: 210ms; }
+    .final-proof { color: rgba(33,16,6,.82); font-size: 13px; }
+
     @media (max-width: 900px) {
       .hero { min-height: auto; grid-template-columns: 1fr; padding-top: 62px; }
       .hero-visual { width: min(100%, 660px); min-height: 680px; margin-inline: auto; }
@@ -161,8 +176,10 @@
     }
     @media (max-width: 650px) {
       .shell { width: min(calc(100% - 24px), var(--max)); }
-      nav a:not(.nav-cta) { display: none; }
-      .topbar { min-height: 66px; }
+      .topbar { min-height: 66px; flex-wrap: wrap; gap: 8px; padding: 10px 0; }
+      nav { gap: 13px; }
+      nav a { font-size: 13px; }
+      .nav-cta { padding-inline: 14px; }
       .brand { font-size: 16px; }
       .hero { padding: 52px 0 64px; }
       h1 { font-size: clamp(48px, 15vw, 68px); }
@@ -211,40 +228,45 @@
           <a class="button" href="https://foodtopia-mu.vercel.app/sign-up">Request beta access</a>
           <a class="button secondary" href="#how">See how it works</a>
         </div>
-        <p class="hero-note">Installable on any phone. Beta access requires approval.</p>
+        <p class="hero-note">Installable on any phone. Households are admitted in small batches.</p>
       </div>
-      <div class="hero-visual" aria-label="Foodtopia shown on two phones">
+      <div class="hero-visual" aria-label="Foodtopia shown across its core screens">
         <div class="hero-orbit" aria-hidden="true"></div>
-        <div class="phone phone-back"><img src="images/add-food-mobile.png" alt="Foodtopia grocery photo capture screen" width="780" height="1688"></div>
-        <div class="phone phone-main"><img src="images/today-mobile.png" alt="Foodtopia home screen showing food to use soon" width="780" height="1688"></div>
+        <div class="phone phone-main">
+          <img class="rot active" src="images/add-food-mobile.webp" alt="Foodtopia grocery photo capture screen" width="780" height="1688">
+          <img class="rot" src="images/cook-mobile.webp" alt="Foodtopia recipe finder using the household inventory" width="780" height="1688">
+          <img class="rot" src="images/today-mobile.webp" alt="Foodtopia home screen showing food to use soon" width="780" height="1688">
+        </div>
         <div class="float-card"><strong><span class="float-dot"></span>Household synced</strong><span>Everyone sees the same shelves.</span></div>
+        <div class="hero-caption" aria-hidden="true"><span>Add food</span></div>
+        <div class="hero-dots" aria-hidden="true"></div>
       </div>
     </div>
 
     <div class="stats" aria-label="Foodtopia highlights">
       <div class="shell stats-grid">
-        <div class="stat"><strong>160 recipes</strong><span>Project-owned catalog</span></div>
-        <div class="stat"><strong>Offline-first</strong><span>Useful in a real kitchen</span></div>
-        <div class="stat"><strong>One household</strong><span>Inventory and list stay shared</span></div>
-        <div class="stat"><strong>Your AI key</strong><span>Private, encrypted, replaceable</span></div>
+        <div class="stat reveal"><strong>160 recipes</strong><span>Project-owned catalog</span></div>
+        <div class="stat reveal"><strong>Offline-first</strong><span>Useful in a real kitchen</span></div>
+        <div class="stat reveal"><strong>One household</strong><span>Inventory and list stay shared</span></div>
+        <div class="stat reveal"><strong>Your AI key</strong><span>Model access you own — swap anytime</span></div>
       </div>
     </div>
 
     <section class="shell" id="how">
-      <div class="section-head">
+      <div class="section-head reveal">
         <p class="eyebrow">One dependable loop</p>
         <h2>Less typing. Less guessing. Less waste.</h2>
         <p class="lede">Foodtopia keeps the everyday flow short: capture what arrived, confirm what is true, then decide what to make.</p>
       </div>
       <div class="steps">
-        <article class="step"><h3>Photograph the groceries</h3><p>Take one clear photo instead of entering every item by hand. Images are resized and stripped of location data on your device.</p></article>
-        <article class="step"><h3>Keep what is right</h3><p>AI suggestions remain a draft until you confirm them. Unknown quantities stay unknown—Foodtopia does not invent certainty.</p></article>
-        <article class="step"><h3>Make tonight easier</h3><p>Find recipes that fit the shelves, see what is missing, and add those ingredients to the household shopping list.</p></article>
+        <article class="step reveal"><h3>Photograph the groceries</h3><p>Take one clear photo instead of entering every item by hand. Images are resized and stripped of location data on your device.</p></article>
+        <article class="step reveal"><h3>Keep what is right</h3><p>AI suggestions remain a draft until you confirm them. Unknown quantities stay unknown—Foodtopia does not invent certainty.</p></article>
+        <article class="step reveal"><h3>Make tonight easier</h3><p>Find recipes that fit the shelves, see what is missing, and add those ingredients to the household shopping list.</p></article>
       </div>
     </section>
 
     <section class="shell" id="features">
-      <div class="feature">
+      <div class="feature reveal">
         <div class="feature-copy">
           <p class="eyebrow">Capture without the chore</p>
           <h2>A photo starts the inventory.</h2>
@@ -255,10 +277,10 @@
             <li>Storage locations suggested for every item</li>
           </ul>
         </div>
-        <div class="screen-stage"><img src="images/add-food-mobile.png" alt="Capture flow explaining private on-device photo preparation" loading="lazy" width="780" height="1688"></div>
+        <div class="screen-stage"><img src="images/add-food-mobile.webp" alt="Capture flow explaining private on-device photo preparation" loading="lazy" width="780" height="1688"></div>
       </div>
 
-      <div class="feature">
+      <div class="feature reveal">
         <div class="feature-copy">
           <p class="eyebrow">Dinner, grounded in reality</p>
           <h2>Recipes that know your shelves.</h2>
@@ -269,30 +291,31 @@
             <li>Add missing ingredients to shopping in one tap</li>
           </ul>
         </div>
-        <div class="screen-stage sage"><img src="images/cook-mobile.png" alt="Recipe finder using the household food inventory" loading="lazy" width="780" height="1688"></div>
+        <div class="screen-stage sage"><img src="images/cook-mobile.webp" alt="Recipe finder using the household food inventory" loading="lazy" width="780" height="1688"></div>
       </div>
     </section>
 
     <section class="shell">
       <div class="values">
-        <div class="value-lead">
+        <div class="value-lead reveal">
           <p class="eyebrow">Calm by design</p>
           <h2>Your household stays in charge.</h2>
           <p>Foodtopia treats model output as a suggestion, dates as quality cues rather than safety claims, and shared data as something that deserves clear boundaries.</p>
         </div>
         <div class="value-stack">
-          <div class="value"><strong>Human-confirmed</strong><span>AI drafts cannot silently change inventory.</span></div>
-          <div class="value"><strong>Private by default</strong><span>Raw images are private and removed after review.</span></div>
-          <div class="value"><strong>Built for interruption</strong><span>Offline sync and saved cooking context survive kitchen life.</span></div>
+          <div class="value reveal"><strong>Human-confirmed</strong><span>AI drafts cannot silently change inventory.</span></div>
+          <div class="value reveal"><strong>Private by default</strong><span>Raw images are private and removed after review.</span></div>
+          <div class="value reveal"><strong>Built for interruption</strong><span>Offline sync and saved cooking context survive kitchen life.</span></div>
         </div>
       </div>
     </section>
 
     <section class="shell final">
-      <div class="final-card">
+      <div class="final-card reveal">
         <h2>What is already home could be tonight's dinner.</h2>
         <p>Request Foodtopia beta access and give your household one calmer place for groceries, recipes, and the next shop. New accounts are reviewed before approval.</p>
         <a class="button" href="https://foodtopia-mu.vercel.app/sign-up">Request beta access</a>
+        <p class="final-proof">160 ready-to-cook recipes · admitted in small batches · your AI key stays yours</p>
       </div>
     </section>
   </main>
@@ -307,5 +330,58 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    (function () {
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) return;
+      document.documentElement.classList.add('js');
+
+      // Reveal on scroll (deterministic bounding-rect check)
+      var reveals = [].slice.call(document.querySelectorAll('.reveal'));
+      var raf = null;
+      function check() {
+        var vh = window.innerHeight;
+        reveals.forEach(function (el) {
+          if (el.classList.contains('in')) return;
+          if (el.getBoundingClientRect().top < vh) el.classList.add('in');
+        });
+        raf = null;
+      }
+      function onScroll() { if (!raf) raf = requestAnimationFrame(check); }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      check();
+
+      // Hero screen rotator
+      var wrap = document.querySelector('.hero-visual');
+      var slides = wrap ? [].slice.call(wrap.querySelectorAll('.phone-main .rot')) : [];
+      var caption = wrap ? wrap.querySelector('.hero-caption span') : null;
+      var dotsWrap = wrap ? wrap.querySelector('.hero-dots') : null;
+      if (slides.length > 1 && caption && dotsWrap) {
+        var labels = ['Add food', 'Cook', 'Today'];
+        var dots = slides.map(function (_, i) {
+          var d = document.createElement('span');
+          d.className = 'hero-dot' + (i === 0 ? ' active' : '');
+          dotsWrap.appendChild(d);
+          return d;
+        });
+        var i = 0, timer;
+        function go(n) {
+          i = (n + slides.length) % slides.length;
+          slides.forEach(function (s, k) { s.classList.toggle('active', k === i); });
+          caption.textContent = labels[i] || '';
+          dots.forEach(function (d, k) { d.classList.toggle('active', k === i); });
+        }
+        function start() { stop(); timer = setInterval(function () { go(i + 1); }, 3800); }
+        function stop() { if (timer) { clearInterval(timer); timer = null; } }
+        wrap.addEventListener('mouseenter', stop);
+        wrap.addEventListener('mouseleave', start);
+        wrap.addEventListener('focusin', stop);
+        document.addEventListener('visibilitychange', function () { document.hidden ? stop() : start(); });
+        start();
+      }
+    })();
+  </script>
 </body>
 </html>
