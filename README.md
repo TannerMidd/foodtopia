@@ -60,6 +60,32 @@ pnpm dev -p 3100
 
 Open `http://localhost:3100`. With no cloud variables, development automatically runs the in-memory demo with local vision/recipe assistants — no accounts, no cloud, no retained image bytes.
 
+## Docker
+
+Requirements: Docker with Compose.
+
+### Try the demo
+
+```bash
+docker compose up --build
+```
+
+Open `http://localhost:3000`. No environment file or cloud account is needed; the container defaults to the in-memory demo. Use another host port with `APP_PORT=8080 docker compose up --build`.
+
+### Deploy production
+
+1. Copy `.env.example` to `.env`.
+2. Set the production URLs, Supabase credentials, credential keyring, and Inngest keys. Keep `FOODTOPIA_DEMO_MODE=false`.
+3. Start the container:
+
+```bash
+docker compose up --build -d
+```
+
+Compose reads `.env` automatically, and `.dockerignore` prevents it from entering the image. `NEXT_PUBLIC_*` values are embedded during the image build, so rebuild after changing them. The container listens on port `3000`, runs as a non-root user, and stores application data in Supabase rather than a local volume.
+
+For an internet-facing deployment, terminate TLS and enforce request limits at a reverse proxy or container platform. Platforms that build the `Dockerfile` directly must provide `NEXT_PUBLIC_*` as both build arguments and runtime variables; provide server-only credentials only at runtime. See [`docs/operations.md`](docs/operations.md) for container operations.
+
 ## Production setup
 
 1. Create a Supabase project and apply every migration in `supabase/migrations/` in filename order.
@@ -70,7 +96,7 @@ Open `http://localhost:3100`. With no cloud variables, development automatically
 6. Create an Inngest application pointed at `/api/inngest` and set its event/signing keys.
 7. Configure the deployment-wide default model IDs (optional pre-fill hints). Direct OpenAI uses synchronous Responses requests with `store: false`; OpenRouter uses its OpenAI-compatible Chat Completions endpoint with structured outputs, zero-data-retention routing, and provider data collection denied. Owners select the provider and both model IDs in Settings.
 8. Configure the AES-GCM keyring — it is required. Foodtopia is BYO-only: household owners supply their own provider key in Settings, encrypted before storage and never returned after saving. The deployment never holds a provider key, so AI stays unconfigured until each household adds one.
-9. Deploy to Vercel and set the environment variables below. Do not set demo mode in production.
+9. Deploy with Docker (above) or Vercel and set the environment variables below. Do not set demo mode in production.
 10. Share the open-beta invite link `https://your-foodtopia.example/sign-up`. New accounts start **pending** and see an "Account not enabled" screen until admitted. Review and enable accounts in batches at `/admin/beta` (sign in as the configured administrator), where you can also close the signup window entirely. Personal beta-invite rows created through a controlled operator process remain an instant-access fast lane: share `/onboarding/{raw-token}` only with that email owner. Raw tokens are stored only as hashes in Postgres.
 11. Run the security, retention, device, and content gates in [`docs/beta-runbook.md`](docs/beta-runbook.md) before admitting a household.
 
@@ -83,7 +109,7 @@ NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
 SUPABASE_SERVICE_ROLE_KEY=...
 # Optional testing-only username alias. Set its password directly on the mapped
-# Supabase Auth user; never store the password in Vercel or this repository.
+# Supabase Auth user; never store the password in deployment variables or this repository.
 FOODTOPIA_ADMIN_LOGIN_ENABLED=true
 FOODTOPIA_ADMIN_USERNAME=Admin
 FOODTOPIA_ADMIN_EMAIL=admin@example.com

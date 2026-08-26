@@ -1,5 +1,26 @@
 # Foodtopia beta operations
 
+## Docker deployment
+
+Production configuration lives in the host's `.env` file; it is not copied into the image. Keep `FOODTOPIA_DEMO_MODE=false`. The four `NEXT_PUBLIC_*` values are build inputs, while server credentials are runtime environment variables, so rebuild whenever a public value changes.
+
+```bash
+# Start or update the checked-out revision
+docker compose up --build -d
+
+# Verify and inspect
+docker compose ps
+curl --fail https://your-foodtopia.example/~offline
+docker compose logs -f foodtopia
+
+# Stop the application
+docker compose down
+```
+
+The container is stateless and requires no application-data volume; durable data remains in Supabase. `docker compose down` does not remove Supabase data. Before exposing port 3000, place a TLS-terminating reverse proxy or managed load balancer in front of it and configure request-size limits, rate limits, streaming, and a 10–30 second graceful-shutdown window.
+
+Deploy one container unless shared Next.js cache and multi-instance coordination have been configured. To roll back, check out the last known-good revision and rerun `docker compose up --build -d`; database migration compatibility must be assessed separately.
+
 ## Open-beta admissions
 
 - The public invite link is `/sign-up`. Accounts created there start `pending`: they can sign in but see only the "Account not enabled" page, and every data API returns `403 ACCOUNT_NOT_ENABLED`.
