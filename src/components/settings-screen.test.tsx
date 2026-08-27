@@ -55,4 +55,14 @@ describe("SettingsScreen beta admissions entry point", () => {
       "/admin/beta",
     );
   });
+
+  it("spaces the device actions as one ledger", () => {
+    render(<SettingsScreen isAdmin />);
+
+    const ledger = screen.getByText("Install Foodtopia").closest(".ledger");
+    expect(ledger).toHaveClass("mt-4");
+    expect(ledger).toContainElement(screen.getByRole("link", { name: "The beta privacy notice" }));
+    expect(ledger).toContainElement(screen.getByText("Beta admissions"));
+    expect(ledger).toContainElement(screen.getByText("Sign out and clear this device"));
+  });
 });

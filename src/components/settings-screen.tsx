@@ -323,45 +323,47 @@ export function SettingsScreen({ isAdmin = false }: { isAdmin?: boolean }) {
             Snapshots and queued edits live on this device for the active household. Raw photos never
             do. Signing out clears both, along with Foodtopia&rsquo;s local keys and caches.
           </p>
-          <div className="row">
-            <span className="bd min-w-0 flex-1 text-[var(--ink-2)]">Install Foodtopia</span>
-            {installed ? (
-              <span className="m text-[10.5px] text-[var(--ink-5)]">installed</span>
-            ) : installPrompt ? (
+          <div className="ledger mt-4">
+            <div className="row">
+              <span className="bd min-w-0 flex-1 text-[var(--ink-2)]">Install Foodtopia</span>
+              {installed ? (
+                <span className="m text-[10.5px] text-[var(--ink-5)]">installed</span>
+              ) : installPrompt ? (
+                <button
+                  type="button"
+                  className="m inline-flex min-h-9 items-center rounded-lg bg-[var(--ground-tint)] px-3.5 text-[11.5px] font-semibold text-[var(--sage)] transition hover:bg-[var(--page)]"
+                  onClick={() => void install()}
+                >
+                  install
+                </button>
+              ) : (
+                <span className="m text-[10.5px] text-[var(--ink-5)]">
+                  {isIOS ? "share → add to home screen" : "from the browser menu"}
+                </span>
+              )}
+            </div>
+            <Link href="/privacy" className="row row-link">
+              <span className="bd min-w-0 flex-1 text-[var(--ink-2)]">The beta privacy notice</span>
+              <ChevronRight className="size-4 text-[var(--ink-5)]" aria-hidden="true" />
+            </Link>
+            {isAdmin && (
+              <Link href="/admin/beta" className="row row-link">
+                <span aria-hidden="true" className="bd min-w-0 flex-1 text-[var(--ink-2)]">Beta admissions</span>
+                <span className="m text-[11px] font-semibold text-[var(--sage)]">review signups</span>
+              </Link>
+            )}
+            <div className="row">
+              <span className="bd min-w-0 flex-1 text-[var(--accent)]">Sign out and clear this device</span>
               <button
                 type="button"
-                className="m inline-flex min-h-9 items-center rounded-lg bg-[var(--ground-tint)] px-3.5 text-[11.5px] font-semibold text-[var(--sage)] transition hover:bg-[var(--page)]"
-                onClick={() => void install()}
+                className="m inline-flex items-center gap-2 text-[12px] font-semibold text-[var(--accent)] transition hover:opacity-80 disabled:opacity-40"
+                disabled={signingOut}
+                onClick={() => void logout()}
               >
-                install
+                <LogOut className="size-4" aria-hidden="true" />
+                {signingOut ? "signing out…" : "sign out"}
               </button>
-            ) : (
-              <span className="m text-[10.5px] text-[var(--ink-5)]">
-                {isIOS ? "share → add to home screen" : "from the browser menu"}
-              </span>
-            )}
-          </div>
-          <Link href="/privacy" className="row row-link">
-            <span className="bd min-w-0 flex-1 text-[var(--ink-2)]">The beta privacy notice</span>
-            <ChevronRight className="size-4 text-[var(--ink-5)]" aria-hidden="true" />
-          </Link>
-          {isAdmin && (
-            <Link href="/admin/beta" className="row row-link">
-              <span aria-hidden="true" className="bd min-w-0 flex-1 text-[var(--ink-2)]">Beta admissions</span>
-              <span className="m text-[11px] font-semibold text-[var(--sage)]">review signups</span>
-            </Link>
-          )}
-          <div className="row">
-            <span className="bd min-w-0 flex-1 text-[var(--accent)]">Sign out and clear this device</span>
-            <button
-              type="button"
-              className="m inline-flex items-center gap-2 text-[12px] font-semibold text-[var(--accent)] transition hover:opacity-80 disabled:opacity-40"
-              disabled={signingOut}
-              onClick={() => void logout()}
-            >
-              <LogOut className="size-4" aria-hidden="true" />
-              {signingOut ? "signing out…" : "sign out"}
-            </button>
+            </div>
           </div>
         </Section>
 
